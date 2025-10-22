@@ -1,0 +1,1 @@
+/Users/twade/Sites/experience12/wp-content/plugins/query-monitor/wp-content/db.php
