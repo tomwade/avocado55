@@ -131,14 +131,10 @@ final class Breeze_CloudFlare_Helper {
 			return false;
 		}
 
-		if ( ! is_array( $home_url ) ) {
-			$home_url = array();
-		}
-
 		/**
 		 * Execute code if this function is not called by WP-CLI.
 		 */
-		if ( 'cli' !== php_sapi_name() ) {
+		if ( empty( $home_url ) ) {
 
 			// For multisite network, clear cache for all sub-sites.
 			if ( ( is_multisite() && is_network_admin() ) ) {
@@ -217,8 +213,6 @@ final class Breeze_CloudFlare_Helper {
 	private function remove_not_url_elements( array $url_list = array() ): array {
 		// Remove any white spaces from URL list.
 		$url_list = array_map( 'trim', $url_list );
-		// Making sure the urls have the "/" ar the end.
-		$url_list = array_map( 'trailingslashit', $url_list );
 		// Making sure there are no duplicates.
 		$url_list = array_unique( $url_list );
 
@@ -428,7 +422,7 @@ final class Breeze_CloudFlare_Helper {
 				error_log( 'Error: Microservice url is not defined ' );
 			}
 
-			return false;
+			return 'baseUrlNotFound';
 		}
 
 		$call_endpoint_url = $microservice_url . $endpoint_path;
@@ -444,7 +438,7 @@ final class Breeze_CloudFlare_Helper {
 		curl_setopt( $connection, CURLOPT_POST, true );
 		curl_setopt( $connection, CURLOPT_USERAGENT, $rop_user_agent );
 		curl_setopt( $connection, CURLOPT_REFERER, home_url() );
-		curl_setopt( $connection, CURLOPT_TIMEOUT, 4 );
+		curl_setopt( $connection, CURLOPT_TIMEOUT, 30 );
 
 		// Array to send to microservice.
 		$data_to_send = array(
@@ -482,12 +476,22 @@ final class Breeze_CloudFlare_Helper {
 		curl_setopt( $connection, CURLOPT_FOLLOWLOCATION, true );
 
 		$server_response_body = curl_exec( $connection );
+		$http_code = curl_getinfo( $connection, CURLINFO_HTTP_CODE );
+		// Add curl error in logs.
+		if ( $server_response_body === false ) {
+			$curl_error = curl_error( $connection );
+			$curl_errno = curl_errno( $connection );
+		
+			if ( true === self::is_log_enabled() ) {
+				error_log( 'cURL Error: ' . $curl_error . ' (Code: ' . $curl_errno . ')' );
+			}
+		}
 		curl_close( $connection );
 		if ( true === self::is_log_enabled() ) {
 			error_log( 'Microservice response: ' . var_export( $server_response_body, true ) );
 		}
 
-		return $server_response_body;
+		return $http_code;
 	}
 
 	/**

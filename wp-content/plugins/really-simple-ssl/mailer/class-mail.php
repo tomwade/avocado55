@@ -44,6 +44,12 @@ if ( ! class_exists( 'rsssl_mailer' ) ) {
 
 		}
 
+        public function set_to( $email )
+        {
+            $this->to = sanitize_email( $email );
+            rsssl_update_option('notifications_email_address', $email);
+        }
+
 		/**
 		 * Send a test email
 		 * @return array
@@ -107,6 +113,7 @@ if ( ! class_exists( 'rsssl_mailer' ) ) {
 					'page'                    => 'really-simple-security',
 					'rsssl_nonce'             => wp_create_nonce( 'rsssl_email_verification_' . $user_id ),
 					'rsssl_verification_code' => $verification_code,
+					'verified_email'          => '1',
 				),
 				rsssl_admin_url([], '#settings/general')
 			);
@@ -181,7 +188,6 @@ if ( ! class_exists( 'rsssl_mailer' ) ) {
 					'{what_now}',
 					'{sent_to_text}',
 					'{sent_by_text}',
-					'{domain}',
 				],
 				[
 					sanitize_text_field( $this->title ),
@@ -196,13 +202,12 @@ if ( ! class_exists( 'rsssl_mailer' ) ) {
 					$this->what_now_text,
 					$this->sent_to_text,
 					$this->sent_by_text,
-					site_url(),
 				], $template );
 			$success   = wp_mail( $this->to, sanitize_text_field( $this->subject ), $body, array( 'Content-Type: text/html; charset=UTF-8' ) );
 			if ( $success ) {
 				return [
 					'success' => true,
-					'title'   => __( "Email verification", 'really-simple-ssl' ),
+					'title'   => __( "Email validation", 'really-simple-ssl' ),
 					'message' => __( 'Email sent! Please check your mail', "really-simple-ssl" )
 				];
 			}

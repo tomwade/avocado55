@@ -15,7 +15,7 @@ if ( ! function_exists( 'add_filter' ) ) {
  * {@internal Nobody should be able to overrule the real version number as this can cause
  *            serious issues with the options, so no if ( ! defined() ).}}
  */
-define( 'WPSEO_VERSION', '23.8' );
+define( 'WPSEO_VERSION', '26.2' );
 
 
 if ( ! defined( 'WPSEO_PATH' ) ) {
@@ -34,9 +34,9 @@ define( 'YOAST_VENDOR_NS_PREFIX', 'YoastSEO_Vendor' );
 define( 'YOAST_VENDOR_DEFINE_PREFIX', 'YOASTSEO_VENDOR__' );
 define( 'YOAST_VENDOR_PREFIX_DIRECTORY', 'vendor_prefixed' );
 
-define( 'YOAST_SEO_PHP_REQUIRED', '7.2.5' );
-define( 'YOAST_SEO_WP_TESTED', '6.7' );
-define( 'YOAST_SEO_WP_REQUIRED', '6.5' );
+define( 'YOAST_SEO_PHP_REQUIRED', '7.4' );
+define( 'YOAST_SEO_WP_TESTED', '6.8.3' );
+define( 'YOAST_SEO_WP_REQUIRED', '6.7' );
 
 if ( ! defined( 'WPSEO_NAMESPACES' ) ) {
 	define( 'WPSEO_NAMESPACES', true );
@@ -221,10 +221,8 @@ function _wpseo_activate() {
 	WPSEO_Options::ensure_options_exist();
 
 	if ( ! is_multisite() || ! ms_is_switched() ) {
-		if ( WPSEO_Options::get( 'stripcategorybase' ) === true ) {
-			// Constructor has side effects so this registers all hooks.
-			$GLOBALS['wpseo_rewrite'] = new WPSEO_Rewrite();
-		}
+		// Constructor has side effects so this registers all hooks.
+		$GLOBALS['wpseo_rewrite'] = new WPSEO_Rewrite();
 	}
 	add_action( 'shutdown', [ 'WPSEO_Utils', 'clear_rewrites' ] );
 
@@ -341,8 +339,22 @@ function wpseo_init() {
 	WPSEO_Options::get_instance();
 	WPSEO_Meta::init();
 
-	if ( version_compare( WPSEO_Options::get( 'version', 1 ), WPSEO_VERSION, '<' ) ) {
-		if ( function_exists( 'opcache_reset' ) ) {
+	if ( version_compare( WPSEO_Options::get( 'version', 1, [ 'wpseo' ] ), WPSEO_VERSION, '<' ) ) {
+		// Invalidate the opcache in 10% of the cases, randomly staggered based on the site URL.
+		// @TODO: Move the staggering logic to its own class, but only after a few releases after the complete sunset of the opcache invalidation.
+		$random_seed               = hexdec( substr( hash( 'sha256', site_url() ), 0, 8 ) );
+		$should_invalidate_opcache = ( $random_seed % 10 ) !== 0;
+
+		/**
+		 * Filter: 'Yoast\WP\SEO\should_invalidate_opcache' - Allow developers to enable / disable
+		 * opcache invalidation upon upgrade of the Yoast SEO plugin.
+		 *
+		 * @since 26.1
+		 *
+		 * @param bool $should_invalidate Whether opcache should be invalidated.
+		 */
+		$should_invalidate_opcache = (bool) apply_filters( 'Yoast\WP\SEO\should_invalidate_opcache', $should_invalidate_opcache );
+		if ( $should_invalidate_opcache && function_exists( 'opcache_reset' ) ) {
 			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- Prevent notices when opcache.restrict_api is set.
 			@opcache_reset();
 		}
@@ -351,11 +363,9 @@ function wpseo_init() {
 		// Get a cleaned up version of the $options.
 	}
 
-	if ( WPSEO_Options::get( 'stripcategorybase' ) === true ) {
-		$GLOBALS['wpseo_rewrite'] = new WPSEO_Rewrite();
-	}
+	$GLOBALS['wpseo_rewrite'] = new WPSEO_Rewrite();
 
-	if ( WPSEO_Options::get( 'enable_xml_sitemap' ) === true ) {
+	if ( WPSEO_Options::get( 'enable_xml_sitemap', null, [ 'wpseo' ] ) === true ) {
 		$GLOBALS['wpseo_sitemaps'] = new WPSEO_Sitemaps();
 	}
 

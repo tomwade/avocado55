@@ -3,7 +3,7 @@
  * Functions and definitions.
  *
  * @package WordPress
- * @subpackage Experience 12
+ * @subpackage Avocado55
  * @since 0.0.1
  */
 
@@ -11,13 +11,13 @@
 require_once get_template_directory() . '/acf/config.php';
 
 // Load our custom post types
-require_once get_template_directory() . '/post-types/career.php';
 require_once get_template_directory() . '/post-types/client.php';
-require_once get_template_directory() . '/post-types/project.php';
-require_once get_template_directory() . '/post-types/team.php';
+require_once get_template_directory() . '/post-types/partner.php';
+require_once get_template_directory() . '/post-types/sector.php';
+require_once get_template_directory() . '/post-types/service.php';
 
 
-class ExperienceTwelve {
+class Avocado55 {
 
   public function __construct() {
     // Set up our theme
@@ -153,4 +153,4 @@ class ExperienceTwelve {
 
 }
 
-new ExperienceTwelve;
+new Avocado55;

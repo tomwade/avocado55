@@ -42,7 +42,7 @@ function rsssl_menu() {
 							'helpLink' => 'instructions/about-our-general-settings',
 							'premium'  => true,
 							'premium_title' => __( 'Captcha', 'really-simple-ssl' ),
-							'intro'      => __( "Really Simple Security can trigger a Captcha to limit access to your site or the login form.", 'really-simple-ssl' ),
+							'intro'      => __( "Really Simple Security can trigger a Captcha to limit access to your site or the log in form.", 'really-simple-ssl' ),
 							'premium_text' => __( 'Protect your website against brute-force attacks with a captcha. Choose between Google reCAPTCHA or hCaptcha.', 'really-simple-ssl' ),
 						],
 						[
@@ -80,7 +80,7 @@ function rsssl_menu() {
 							'id' => 'mixed-content-general',
 							'group_id' => 'mixed-content-general',
 							'title' => __( 'Mixed content', 'really-simple-ssl' ),
-							'helpLink' => 'remove-htaccess-redirect-site-lockout',
+							'helpLink' => 'instructions/using-the-mixed-content-scan',
 						],
 						[
 							'id' => 'mixed-content-scan',
@@ -89,7 +89,7 @@ function rsssl_menu() {
 							'premium' => true,
 							'premium_title' => __( "Mixed Content Scan", 'really-simple-ssl' ),
 							'premium_text' => __( "The extensive mixed content scan will list all issues and provide a fix, or instructions to fix manually.", 'really-simple-ssl' ),
-							'helpLink' => rsssl_link('mixedcontent', 'instructions'),
+							'helpLink' => 'instructions/using-the-mixed-content-scan',
 						],
 					],
 				],
@@ -157,10 +157,10 @@ function rsssl_menu() {
 									'id'                   => 'content_security_policy_source_directives',
 									'group_id'             => 'content_security_policy_source_directives',
 									'networkwide_required' => true,
-									'helpLink'             => 'instructions/source-directives/',
+									'helpLink'             => 'instructions/configuring-the-content-security-policy/',
 									'premium'              => true,
-									'premium_title'                => 'Source Directives with Learning Mode',
-									'premium_text'         => __( "Allow only necessary third party resources to be loaded on your website, thus preventing common attacks. Use our unique learning mode to automatically configure your Content Security Policy.", 'really-simple-ssl' ),
+									'premium_title'        => 'Source Directives with Learning Mode',
+									'premium_text'         => __( "Allow only necessary third-party resources to be loaded on your website, thus preventing common attacks. Use our unique learning mode to automatically configure your Content Security Policy.", 'really-simple-ssl' ),
 									'title'                => 'Source Directives',
 								]
 							],
@@ -222,7 +222,7 @@ function rsssl_menu() {
 									'premium' => true,
 									'helpLink' => 'instructions/about-vulnerabilities#measures',
 									'premium_title' => __( "Automated Measures", 'really-simple-ssl' ),
-									'premium_text' => __( "Maintain peace of mind with our simple, but effective automated measures when vulnerabilities are discovered. When needed Really Simple Security will force update or quarantaine vulnerable components, on your terms!", 'really-simple-ssl' ),
+									'premium_text' => __( "Maintain peace of mind with our simple, but effective automated measures when vulnerabilities are discovered. When needed Really Simple Security will force update or quarantine vulnerable components, on your terms!", 'really-simple-ssl' ),
 								],
 							],
 						],
@@ -266,36 +266,6 @@ function rsssl_menu() {
 								],
 							],
 						],
-						[
-							'id' => 'hardening-file-change',
-							'group_id' => 'hardening-file-change',
-							'title' => __( 'File Change Detection', 'really-simple-ssl' ),
-							'premium' => true,
-							'groups' => [
-								[
-									'id' => 'hardening-file-change-main',
-									'group_id' => 'hardening-file-change-main',
-									'premium' => true,
-									'premium_text' =>__( 'Keep your site secure by monitoring unexpected file changes.', 'really-simple-ssl' ),
-									'upgrade' => 'https://really-simple-ssl.com/pro/?mtm_campaign=hardening&mtm_source=free&mtm_content=upgrade',
-									'helpLink' => 'https://really-simple-ssl.com/instructions/about-file-change-detection?mtm_campaign=instructions&mtm_source=free',
-									'title' => __( 'File Change Detection', 'really-simple-ssl' ),
-									'intro' => __( "File Change Detection generates a snapshot of every .php and .js file. On a daily basis, each file is then compared to this snapshot.", 'really-simple-ssl' )
-									           . ' ' .__( "You will receive an email warning if changes are detected.", 'really-simple-ssl' )
-									           . ' ' .__( "If unexpected file changes have occurred, this could be an indication that your site is compromised.", 'really-simple-ssl' )
-									           . ' ' .__( "The snapshots will be updated after WordPress, plugins or themes are activated or updated.", 'really-simple-ssl' ),
-								],
-								[
-									'id' => 'hardening-file-change-datatable',
-									'group_id' => 'hardening-file-change-datatable',
-									'helpLink' => 'https://really-simple-ssl.com/instructions/about-file-change-detection',
-									'title' => __( 'Detected File Changes', 'really-simple-ssl' ),
-									'intro' => __( 'The daily scan will report any detected file changes in the table below.', 'really-simple-ssl' )
-									.' '.__( 'If you recognize the detected changes, you can add the files to the exclude list, or ignore them just once.', 'really-simple-ssl' )
-									.' '.__( 'You can reset the report and generate a new snapshot, for example if you made changes via FTP.', 'really-simple-ssl' ),
-								],
-							],
-						],
 					],
 				],
 				[
@@ -310,7 +280,7 @@ function rsssl_menu() {
 							'premium'              => false,
 							'premium_text'         => __( 'Get two-factor authentication with Really Simple Security Pro', 'really-simple-ssl' ),
 							'helpLink'             => 'instructions/about-login-protection',
-							'title'                =>  __('Two-Factor Authentication', 'really-simple-ssl'),
+							'title'                =>  __('Login Authentication', 'really-simple-ssl'),
 							'groups'  => [
 								[
 									'id'       => 'two_fa_general',
@@ -318,19 +288,29 @@ function rsssl_menu() {
 									'premium'              => false,
 									'premium_text'         => __( "Start login protection by adding an additional layer during authentication. This will leave authentication less dependent on just a single password. Want to force strong passwords? Check out Password Security.", 'really-simple-ssl' ),
 									'helpLink'      => 'instructions/about-login-protection',
-									'title'    => __( 'Two-Factor Authentication', 'really-simple-ssl' ),
-									'intro'    => __( 'Two-Factor authentication allows users to login using a second authentication method, other than their e-mail address and password. It is one of the most powerful ways to prevent account theft.', 'really-simple-ssl' ),
+									'title'    => __( 'Login Authentication', 'really-simple-ssl' ),
+									'intro'    => __( 'Prevent account theft by offering more secure authentication methods. You can configure which methods are available per user role, or even enforce usage of secure authentication. Secure authentication can be either Two-Factor Authentication or Passkey login.', 'really-simple-ssl' ),
 								],
 								[
 									'id'            => 'two_fa_email',
 									'group_id'      => 'two_fa_email',
 									'premium'       => false,
+									'disabled'      => (rsssl_is_email_verified() === false),
 									'premium_text'  => __( 'Send an email code during login. You can force user roles to use two-factor authentication, or leave the choose with your users, if so desired.', 'really-simple-ssl' ),
 									'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=2fa&mtm_source=free&mtm_content=upgrade',
 									'helpLink' => 'instructions/two-factor-authentication',
-									'title'         => __( 'Email Verification', 'really-simple-ssl' ),
-									'intro'         => __( 'Email Verification sends a verification code to the user’s email address. This method provides protection against leaked or weak passwords, though it is less secure than other 2FA methods. If a user’s email inbox is compromised, one could still get access to the user account. It is not recommended to allow Email Verification for administrators.', 'really-simple-ssl' ),
+									'title'         => __( 'Two-Factor Authentication', 'really-simple-ssl' ),
+									'intro'         => __( 'Choose between Email Verification (less secure and not recommended for administrators) or the TOTP method with an authenticator app, depending on your convenience and security needs.', 'really-simple-ssl' ),
 								],
+                                [
+                                    'id'       => 'two_fa_passkey',
+                                    'group_id' => 'two_fa_passkey',
+                                    'premium'              => true,
+                                    'premium_text'         => __( 'Get Login Protection with %sReally Simple SSL Pro%s', 'really-simple-ssl' ),
+                                    'helpLink' => 'https://really-simple-ssl.com/instructions/two-factor-authentication',
+                                    'title'    => __( 'Passkey', 'really-simple-ssl' ),
+                                    'intro'    => __( '', 'really-simple-ssl' ),
+                                ],
 								[
 									'id'       => 'two_fa_totp',
 									'group_id' => 'two_fa_totp',
@@ -352,25 +332,23 @@ function rsssl_menu() {
 									'intro'         => __( 'Here you can see which users have configured Two-Factor Authentication. The reset button will trigger the 2FA onboarding for the selected user(s) again and allow the configured grace period.', 'really-simple-ssl' ),
 									'groupFilter'  => [
 										'default' => 'active',
-										'id'      => 'two_fa_user_filter',
+										'id'      => 'user_role',
 										'options' => [
 											[
 												'id'   => 'all',
 												'title' => __('All', 'really-simple-ssl'),
 											],
-											[
-												'id'    => 'active',
-												'title' => __('Active', 'really-simple-ssl'),
-											],
-											[
-												'id'    => 'open',
-												'title' => __('Open', 'really-simple-ssl'),
-											],
-											[
-												'id'    => 'disabled',
-												'title' => __('Disabled', 'really-simple-ssl'),
-											]
-										],
+                                            ...array_map(
+                                                static function( $role, $roleKey ) {
+                                                    return [
+                                                        'id'    => $roleKey,               // Use the key as the id.
+                                                        'title' => ucfirst( $role['name'] ), // Capitalize the role name.
+                                                    ];
+                                                },
+                                                (new WP_Roles())->roles,           // The roles array.
+                                                array_keys( (new WP_Roles())->roles ) // Its keys.
+                                            ),
+                                        ]
 									],
 								],
 							],
@@ -737,7 +715,7 @@ function rsssl_menu() {
 					'id'         => 'le-system-status',
 					'group_id'         => 'le-system-status',
 					'title'      => __('System status', 'really-simple-ssl'),
-					'intro'      => __('Letʼs Encrypt is a free, automated and open certificate authority brought to you by the nonprofit Internet Security Research Group (ISRG).',
+					'intro'      => __('Letʼs Encrypt is a free, automated and open certificate authority brought to you by the non-profit Internet Security Research Group (ISRG).',
 						'really-simple-ssl'),
 					'helpLink'   => 'about-lets-encrypt',
 					'tests_only' => true,
@@ -849,5 +827,3 @@ function rsssl_link( $slug = 'pro', $mtm_campaign = 'notification', $mtm_src = '
 
 	return $url;
 }
-
-

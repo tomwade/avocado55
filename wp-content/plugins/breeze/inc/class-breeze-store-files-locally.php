@@ -64,7 +64,12 @@ class Breeze_Store_Files {
 			$file_dir        = $files_dir . $font_title . '/';
 			$stored_file_uri = $stored_files_uri . $font_title . '/';
 
-			$font_api_response = wp_remote_get( esc_url_raw( $font_url ) );
+			$font_api_response = wp_remote_get(
+				esc_url_raw( $font_url ),
+				array(
+					'headers' => 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
+				)
+			);
 			$font_content      = wp_remote_retrieve_body( $font_api_response );
 
 			$local_css = $this->rewrite_google_fonts_files( $font_content, $font_title, $file_dir, $stored_file_uri );
@@ -110,13 +115,13 @@ class Breeze_Store_Files {
 		$local_css_file_dir  = $file_dir . $local_css_file_name;
 		$local_css_file_uri  = $stored_files_uri . $local_css_file_name;
 
-		if ( file_exists( $file_dir ) ) {
-			$css_file = fopen( $local_css_file_dir, 'w' );
-			fwrite( $css_file, $css );
-			fclose( $css_file );
+		$wp_filesystem = breeze_get_filesystem();
+
+		if ( $wp_filesystem->exists( $file_dir ) ) {
+			$wp_filesystem->put_contents( $local_css_file_dir, $css );
 		}
 
-		if ( file_exists( $local_css_file_dir ) ) {
+		if ( $wp_filesystem->exists( $local_css_file_dir ) ) {
 			return $local_css_file_uri;
 		}
 
@@ -148,11 +153,11 @@ class Breeze_Store_Files {
 			$configValue = $gtm_id[1];
 
 			preg_match( '/' . preg_quote( $gtm_url, '/' ) . '/', $html, $gtm_file_url );
-			$gtm_file_url = $gtm_file_url[0] . '?id=GTM-' . $configValue;
 
 			if ( ! empty( $gtm_file_url ) ) {
-				$local_file = $this->download_files_locally( $gtm_file_url, $file_dir, 'gtm.js', '.js' );
-				$log        = 'User: ' . $_SERVER['REMOTE_ADDR'] . ' - ' . date( 'F j, Y, g:i a' ) . PHP_EOL .
+				$gtm_file_url = $gtm_file_url[0] . '?id=GTM-' . $configValue;
+				$local_file   = $this->download_files_locally( $gtm_file_url, $file_dir, 'gtm.js', '.js' );
+				$log          = 'User: ' . $_SERVER['REMOTE_ADDR'] . ' - ' . date( 'F j, Y, g:i a' ) . PHP_EOL .
 						'Attempt: gtm_not_empty' . PHP_EOL .
 						'URL Gtm: ' . print_r( $gtm_file_url, true ) . PHP_EOL;
 
@@ -168,10 +173,10 @@ class Breeze_Store_Files {
 			$configValue = $gtag_id[1];
 
 			preg_match( '/' . preg_quote( $gtag_url, '/' ) . '/', $html, $gtag_file_url );
-			$gtag_file_url = $gtag_file_url[0] . '?id=' . $configValue;
 
 			if ( ! empty( $gtag_file_url[0] ) ) {
-				$local_file = $this->download_files_locally( $gtag_file_url, $file_dir, 'gtag.js', '.js' );
+				$gtag_file_url = $gtag_file_url[0] . '?id=' . $configValue;
+				$local_file    = $this->download_files_locally( $gtag_file_url, $file_dir, 'gtag.js', '.js' );
 
 				if ( $local_file ) {
 					$local_file_url = $stored_files_uri . 'google/gtag.js';
@@ -263,8 +268,11 @@ class Breeze_Store_Files {
 	 * @return bool|false
 	 */
 	public function download_files_locally( $url, $file_dir, $file_name, $file_type = '.css' ) {
-		if ( ! file_exists( $file_dir ) ) {
-			mkdir( $file_dir, 0775, true );
+		$wp_filesystem = breeze_get_filesystem();
+
+		if ( ! $wp_filesystem->exists( $file_dir ) ) {
+			// Use PHP filesystem function with FS_CHMOD_DIR. $wp_filesystem->mkdir does not support a recursive flag.
+			mkdir( $file_dir, defined( 'FS_CHMOD_DIR' ) ? FS_CHMOD_DIR : 0775, true );
 		}
 
 		if ( $file_type = '.css' ) {
@@ -275,9 +283,17 @@ class Breeze_Store_Files {
 
 		$local_file_path = $file_dir . $file_name;
 
-		// Check if the file exists and is less than 1 week old
-		if ( file_exists( $local_file_path ) && time() - filemtime( $local_file_path ) < $max_age_in_seconds ) {
+		// Check if the file exists and is less than 1 week old.
+		if (
+			$wp_filesystem->exists( $local_file_path ) &&
+			time() - filemtime( $local_file_path ) < $max_age_in_seconds
+		) {
 			return true; // File is already up-to-date
+		}
+
+		// Validate the url.
+		if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+			return false;
 		}
 
 		$original_file_content = file_get_contents( $url );
@@ -286,11 +302,14 @@ class Breeze_Store_Files {
 			return false;
 		}
 
-		$file = fopen( $local_file_path, 'w' );
-		fwrite( $file, $original_file_content );
-		fclose( $file );
+		// Write the file.
+		$result = $wp_filesystem->put_contents( $local_file_path, $original_file_content );
 
-		if ( ! file_exists( $local_file_path ) ) {
+		// Check if file was created successfully.
+		if (
+			! $result ||
+			! $wp_filesystem->exists( $local_file_path )
+		) {
 			return false;
 		}
 
@@ -303,23 +322,46 @@ class Breeze_Store_Files {
 	 * @return bool
 	 */
 	public static function cleanup_all_extra_folder() {
-		global $wp_filesystem;
-		if ( empty( $wp_filesystem ) ) {
-			require_once ABSPATH . '/wp-admin/includes/file.php';
-			WP_Filesystem();
-		}
+		$wp_filesystem = breeze_get_filesystem();
+
 		$ret = true;
-
-		$folder = untrailingslashit( WP_CONTENT_DIR ) . '/cache/breeze-extra';
-
-		if ( ! $wp_filesystem->delete( $folder, true ) ) {
-			$ret = false;
-		}
 
 		$folder = untrailingslashit( WP_CONTENT_DIR ) . '/uploads/breeze';
 
 		if ( ! $wp_filesystem->delete( $folder, true ) ) {
 			$ret = false;
+		}
+
+		/**
+		 * For cache folder we only delete specific folders since the folder is being used by other plugins.
+		 */
+		$folder = untrailingslashit( WP_CONTENT_DIR ) . '/cache/breeze'; // HTML cache
+
+		if ( ! $wp_filesystem->delete( $folder, true ) ) {
+			$ret = false;
+		}
+
+		$folder = untrailingslashit( WP_CONTENT_DIR ) . '/cache/breeze-extra'; // Gravatars.
+
+		if ( ! $wp_filesystem->delete( $folder, true ) ) {
+			$ret = false;
+		}
+
+		$folder = untrailingslashit( WP_CONTENT_DIR ) . '/cache/breeze-minification'; // CSS/JS minified files.
+
+		if ( ! $wp_filesystem->delete( $folder, true ) ) {
+			$ret = false;
+		}
+
+		$folder = untrailingslashit( WP_CONTENT_DIR ) . '/cache/uncss'; // Clean of unneeded CSS.
+
+		if ( ! $wp_filesystem->delete( $folder, true ) ) {
+			$ret = false;
+		}
+
+		$folder = untrailingslashit( WP_CONTENT_DIR ) . '/cache'; // Cache folder in wp-content
+		if ( true === breeze_is_folder_empty( $folder ) ) {
+			$wp_filesystem->delete( $folder, true );
 		}
 
 		return $ret;

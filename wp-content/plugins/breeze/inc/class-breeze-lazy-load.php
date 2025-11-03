@@ -69,9 +69,12 @@ class Breeze_Lazy_Load {
 				'lazy-slider-img',
 				'data-srcset',
 				'data-spai',
+				'data-src-webp',
+				'data-srcset-webp',
+				'data-src-img',
+				'data-srcset-img',
 			)
 		);
-
 	}
 
 	/**
@@ -118,7 +121,7 @@ class Breeze_Lazy_Load {
 		// Remove any image tags that have \ inside as it's probably targeted by other scripts
 		$img_matches[0] = array_filter(
 			$img_matches[0],
-			function( $tag ) {
+			function ( $tag ) {
 				return strpos( $tag, '\\' ) === false;
 			}
 		);
@@ -172,7 +175,7 @@ class Breeze_Lazy_Load {
 					$current_src = ! empty( $src_value[1] ) ? $src_value[1] : '';
 					if ( true !== $this->excluded_images( $current_src ) ) {
 						// Add lazy-load data attribute.
-						$img_match_new = preg_replace( '/(<img\s+)/', '$1data-breeze="' . trim($current_src) . '" ', $img_match );
+						$img_match_new = preg_replace( '/(<img\s+)/', '$1data-breeze="' . trim( $current_src ) . '" ', $img_match );
 
 						// Remove the current image source.
 						$img_match_new = preg_replace( '/(<img.+)(src=(?:"|\').+?(?:"|\'))(.+?>)/', '$1$3', $img_match_new );
@@ -227,50 +230,61 @@ class Breeze_Lazy_Load {
 		$apply_to_iframes = apply_filters( 'breeze_enable_lazy_load_iframes', $apply_to_iframes );
 
 		if ( true === filter_var( $apply_to_iframes, FILTER_VALIDATE_BOOLEAN ) ) {
-			$allowed_iframes_url = apply_filters(
-				'breeze_iframe_lazy_load_list',
-				array(
-					'youtube.com',
-					'dailymotion.com/embed/video',
-					'facebook.com/plugins/video.php',
-					'player.vimeo.com',
-					'fast.wistia.net/embed/',
-					'players.brightcove.net',
-					's3.amazonaws.com',
-					'cincopa.com/media',
-					'twitch.tv',
-					'bitchute.com',
-					'media.myspace.com/play/video',
-					'tiktok.com/embed',
-				)
-			);
-
-			// Match and process iframes.
-			preg_match_all( '/<iframe.*<\/iframe>/isU', $content, $iframe_matches );
-
-			foreach ( $iframe_matches[0] as $iframe_tag ) {
-				$src = preg_replace( '/^.*src=\"([^\"]+)\".*$/isU', '$1', $iframe_tag );
-
-				$allowed_url = false;
-				foreach ( $allowed_iframes_url as $iframe_url ) {
-					if ( false !== strpos( $src, $iframe_url ) ) {
-						$allowed_url = true;
-						break;
+			if ( $use_native ) {
+				preg_match_all( '/<iframe[^>]*>/', $content, $iframe_matches );
+				foreach ( $iframe_matches[0] as $iframe_tag ) {
+					if ( ! preg_match( '/loading=[\'"]\s*lazy\s*[\'"]/i', $iframe_tag ) ) {
+						$iframe_tag_new = preg_replace( '/<iframe\s/i', '<iframe loading="lazy" ', $iframe_tag );
+						$content        = str_replace( $iframe_tag, $iframe_tag_new, $content );
 					}
 				}
+				$apply_to_iframes = false;
+			} else {
+				$allowed_iframes_url = apply_filters(
+					'breeze_iframe_lazy_load_list',
+					array(
+						'youtube.com',
+						'dailymotion.com/embed/video',
+						'facebook.com/plugins/video.php',
+						'player.vimeo.com',
+						'fast.wistia.net/embed/',
+						'players.brightcove.net',
+						's3.amazonaws.com',
+						'cincopa.com/media',
+						'twitch.tv',
+						'bitchute.com',
+						'media.myspace.com/play/video',
+						'tiktok.com/embed',
+					)
+				);
 
-				if ( true === $allowed_url ) {
-					// Video Link
-					$video_link = explode( '/', $src );
-					$video_id   = end( $video_link );
+				// Match and process iframes.
+				preg_match_all( '/<iframe.*<\/iframe>/isU', $content, $iframe_matches );
 
-					// Get classes
-					$current_classes = $this->format_tag_ll_classes( $iframe_tag );
+				foreach ( $iframe_matches[0] as $iframe_tag ) {
+					$src = preg_replace( '/^.*src=\"([^\"]+)\".*$/isU', '$1', $iframe_tag );
 
-					// Forming iframe tag
-					$iframe_tag_new = preg_replace( '/<iframe/isU', '<iframe data-video-id="' . $video_id . '" class="' . $current_classes . '" data-breeze="' . $src . '"', $iframe_tag );
-					$iframe_tag_new = preg_replace( '/src=\"([^\"]+)\"/isU', '', $iframe_tag_new );
-					$content        = str_replace( $iframe_tag, $iframe_tag_new, $content );
+					$allowed_url = false;
+					foreach ( $allowed_iframes_url as $iframe_url ) {
+						if ( false !== strpos( $src, $iframe_url ) ) {
+							$allowed_url = true;
+							break;
+						}
+					}
+
+					if ( true === $allowed_url ) {
+						// Video Link
+						$video_link = explode( '/', $src );
+						$video_id   = end( $video_link );
+
+						// Get classes
+						$current_classes = $this->format_tag_ll_classes( $iframe_tag );
+
+						// Forming iframe tag
+						$iframe_tag_new = preg_replace( '/<iframe/isU', '<iframe data-video-id="' . $video_id . '" class="' . $current_classes . '" data-breeze="' . $src . '"', $iframe_tag );
+						$iframe_tag_new = preg_replace( '/src=\"([^\"]+)\"/isU', '', $iframe_tag_new );
+						$content        = str_replace( $iframe_tag, $iframe_tag_new, $content );
+					}
 				}
 			}
 		}
@@ -284,49 +298,29 @@ class Breeze_Lazy_Load {
 
 			foreach ( $video_matches[0] as $video_tag ) {
 
-				// TODO: We need a better placeholder
-				$placeholder      = BREEZE_PLUGIN_URL . 'assets/images/placeholder.mp4';
-				$placeholder_webp = BREEZE_PLUGIN_URL . 'assets/images/placeholder.webp';
+                // Exclude the WP video shortcode due to its reliance on the MediaElementPlayer library.
+                if ( preg_match( '/class=[\'"][^\'"]*\bwp-video-shortcode\b[^\'"]*[\'"]/i', $video_tag ) ) {
+                    continue;
+                }
+
+				$video_tag_edited = false;
 
 				// Lazy loading class
 				$lazy_class = 'br-lazy';
 
-				// Process each <source> element within the <video> tag.
-				if ( strpos( $video_tag, '<source' ) !== false ) {
-
-					continue;
-					// TODO: implement when finish the library for videos with sources
-					//                  $video_tag_new = preg_replace_callback(
-					//                      '/<source\s+[^>]*src="([^"]+)"/isU',
-					//                      function ( $matches ) use ( $placeholder, $placeholder_webp ) {
-					//                          $source_url = $matches[1];
-					//                          // Check for .webm and .webp extensions
-					//                          if ( preg_match( '/\.(webm|webp)$/i', $source_url ) ) {
-					//                              $placeholder_url = $placeholder_webp; // Use WebP placeholder for .webm or .webp files
-					//                          } else {
-					//                              $placeholder_url = $placeholder; // Default to MP4 placeholder
-					//                          }
-					//
-					//                          return str_replace( 'src="' . $source_url . '"', 'src="' . $placeholder_url . '" data-src="' . $source_url . '"', $matches[0] );
-					//                      },
-					//                      $video_tag_new
-					//                  );
-				}
-
 				// Add the lazy loading class to the <video> tag and process its src attribute.
 				$video_tag_new = preg_replace_callback(
 					'/<video\s+([^>]*)>/isU',
-					function ( $matches ) use ( $lazy_class, $placeholder, $placeholder_webp ) {
+					function ( $matches ) use ( $lazy_class ) {
 						$video_attrs = $matches[1];
 
 						// Determine the correct placeholder for the video src attribute.
 						if ( preg_match( '/src="([^"]+)"/i', $video_attrs, $src_matches ) ) {
-							$video_src       = $src_matches[1];
-							$placeholder_url = preg_match( '/\.webp$/i', $video_src ) ? $placeholder_webp : $placeholder;
-							$video_attrs     = str_replace( 'src="' . $video_src . '"', 'src="' . $placeholder_url . '" data-breeze="' . $video_src . '"', $video_attrs );
+							$video_src   = $src_matches[1];
+							$video_attrs = str_replace( 'src="' . $video_src . '"', 'data-breeze="' . $video_src . '"', $video_attrs );
 						}
 
-						// Add or update the class attribute with lazy loading class.
+						// Add or update the class attribute with a lazy loading class.
 						if ( strpos( $video_attrs, 'class="' ) !== false ) {
 							$video_attrs = preg_replace( '/class="([^"]*)"/i', 'class="$1 ' . $lazy_class . '"', $video_attrs );
 						} else {
@@ -338,15 +332,32 @@ class Breeze_Lazy_Load {
 					$video_tag
 				);
 
-				// Update the content.
-				$content = str_replace( $video_tag, $video_tag_new, $content );
+				// Process each <source> element within the <video> tag.
+				if ( strpos( $video_tag_new, '<source' ) !== false ) {
+
+					// TODO: implement when finish the library for videos with sources
+
+					$video_tag_new = preg_replace_callback(
+						'/<source\s+[^>]*src="([^"]+)"/isU',
+						function ( $matches ) {
+							$source_url = $matches[1];
+
+							return str_replace( 'src="' . $source_url . '"', 'data-breeze="' . $source_url . '"', $matches[0] );
+						},
+						$video_tag_new
+					);
+				}
+
+				if ( ! empty( $video_tag_new ) ) {
+					// Update the content.
+					$content = str_replace( $video_tag, $video_tag_new, $content );
+				}
 			}
 		}
 		// Buffer decoding.
 		$content = mb_decode_numericentity( $content, array( 0x80, 0x10FFFF, 0, ~0 ), 'UTF-8' );
 
 		return $content;
-
 	}
 
 	/**
