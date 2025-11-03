@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+
+@theme {
+  --color-dark: #416257;
+  --color-light: #CCFC80;
+  --color-neutral: #199A6A;
+
+  --font-raleway: "Raleway", sans-serif;
+  --font-geist: "Geist", sans-serif;
+}

@@ -67,6 +67,7 @@
     --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     --default-font-family: var(--font-sans);
     --default-mono-font-family: var(--font-mono);
+    --color-dark: #416257;
   }
 }
 @layer base {
@@ -961,6 +962,9 @@
     @supports (color: color-mix(in lab, red, red)) {
       color: color-mix(in oklab, var(--color-black) 80%, transparent);
     }
+  }
+  .text-dark {
+    color: var(--color-dark);
   }
   .text-gray-400 {
     color: var(--color-gray-400);

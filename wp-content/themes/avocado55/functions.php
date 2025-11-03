@@ -39,9 +39,6 @@ class Avocado55 {
 
     // Disable emojis for load speed
     add_action('init', [$this, 'disable_emojis']);
-
-  // Hook our projects archive to be random order
-  add_action( 'pre_get_posts', [$this, 'random_project_archive'] );
   }
 
   /**
@@ -162,13 +159,6 @@ class Avocado55 {
     remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
     remove_filter( 'comment_text_rss', 'wp_staticize_emoji' );
     remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
-  }
-
-  function random_project_archive($query) {
-    if( $query->is_main_query() && ! is_admin() && ($query->is_post_type_archive('project') || $query->is_tax(['project_service', 'project_industry'])) ) {
-        // Set parameters to modify the query
-        $query->set( 'orderby', 'rand' );
-    }
   }
 
 }
