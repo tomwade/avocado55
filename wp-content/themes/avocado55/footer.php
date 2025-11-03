@@ -87,7 +87,7 @@
       </div>
 
       <div class="mt-12 w-full text-center text-sm">
-        &copy; Copyright 2024. All Rights Reserved, Experience12 &nbsp; | &nbsp; <a href="/modern-slavery-statement/" title="Modern Slavery Statement" class="text-red underline">Modern Slavery Statement</a> | &nbsp; <a href="/privacy-policy/" title="Privacy Policy" class="text-red underline">Privacy Policy</a>
+        &copy; Copyright 2024. All Rights Reserved, Experiencavocado55 &nbsp; | &nbsp; <a href="/modern-slavery-statement/" title="Modern Slavery Statement" class="text-red underline">Modern Slavery Statement</a> | &nbsp; <a href="/privacy-policy/" title="Privacy Policy" class="text-red underline">Privacy Policy</a>
       </div>
     </div>
   </footer>

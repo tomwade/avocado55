@@ -72,8 +72,8 @@ class Avocado55 {
     // Register navigation menus
     register_nav_menus(
       array(
-        'header_menu' => esc_html__( 'Primary Menu', 'e12' ),
-        'footer_menu' => __( 'Footer Menu', 'e12' ),
+        'header_menu' => esc_html__( 'Primary Menu', 'avocado55' ),
+        'footer_menu' => __( 'Footer Menu', 'avocado55' ),
       )
     );
 
@@ -109,7 +109,7 @@ class Avocado55 {
     $ver = wp_get_theme()->get( 'Version' );
 
     # Include styles
-    wp_enqueue_style( 'e12-app', get_template_directory_uri() . '/assets/css/output.css', [], $ver );
+    wp_enqueue_style( 'avocado55-app', get_template_directory_uri() . '/assets/css/output.css', [], $ver );
 
     # Update jQuery version
     if (!is_admin()) {
@@ -118,7 +118,7 @@ class Avocado55 {
     }
 
     # Add our scripts
-    wp_enqueue_script( 'e12-app', get_template_directory_uri() . '/assets/js/app.js', [], $ver, true);
+    wp_enqueue_script( 'avocado55-app', get_template_directory_uri() . '/assets/js/app.js', [], $ver, true);
   }
 
   /**

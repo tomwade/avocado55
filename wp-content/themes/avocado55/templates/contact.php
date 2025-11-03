@@ -59,7 +59,7 @@ $map_link = get_field('google_maps_link');
           </p>
 
           <p>
-            <a href="mailto:info@experience12.com" class="text-red">info@experience12.com</a>
+            <a href="mailto:info@experiencavocado55.com" class="text-red">info@experiencavocado55.com</a>
           </p>
         </div>
       </div>
