@@ -34,6 +34,8 @@ class Avocado55 {
 
     // Customise the login page
     add_action('login_enqueue_scripts', [$this, 'my_login_stylesheet']);
+    add_filter('login_headerurl', [$this, 'my_login_logo_url']);
+    add_filter('login_headertext', [$this, 'my_login_logo_url_title']);
 
     // Disable emojis for load speed
     add_action('init', [$this, 'disable_emojis']);
@@ -131,7 +133,25 @@ class Avocado55 {
   }
 
   public function my_login_stylesheet() {
-      wp_enqueue_style( 'custom-login', get_stylesheet_directory_uri() . '/assets/css/app.min.css' );
+      wp_enqueue_style( 'custom-login', get_stylesheet_directory_uri() . '/assets/css/login.css' );
+  }
+
+  /**
+   * Change the login logo URL to point to the site home.
+   *
+   * @since 0.0.1
+   */
+  public function my_login_logo_url() {
+      return home_url();
+  }
+
+  /**
+   * Change the login logo URL title.
+   *
+   * @since 0.0.1
+   */
+  public function my_login_logo_url_title() {
+      return get_bloginfo('name');
   }
 
   public function disable_emojis() {

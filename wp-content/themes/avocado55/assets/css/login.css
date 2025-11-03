@@ -1,0 +1,134 @@
+/* WordPress Login Page Customization */
+
+/* Set background color and center content */
+body.login {
+  background-color: #cefe8a;
+  min-height: 100vh;
+  margin: 0;
+  position: relative;
+}
+
+/* Hide language selector and other top elements */
+body.login > div:not(#login) {
+  display: none;
+}
+
+/* Customize login form container - center it */
+#login {
+  padding: 0;
+  width: 100%;
+  max-width: 400px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.login form {
+  border: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  border-radius: 8px;
+  padding: 26px 24px 34px;
+}
+
+/* Logo styling */
+.login h1 a {
+  background-image: url('../images/logomark-avocado.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 200px;
+  height: 80px;
+  margin: 0 auto 40px;
+  display: block;
+  text-indent: -9999px;
+  overflow: hidden;
+}
+
+/* Input field styling */
+.login form .input,
+.login form input[type="text"],
+.login form input[type="password"] {
+  font-size: 14px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.login form .input:focus,
+.login form input[type="text"]:focus,
+.login form input[type="password"]:focus {
+  border-color: #cefe8a;
+  box-shadow: 0 0 0 1px #cefe8a;
+  outline: none;
+}
+
+/* Button styling */
+.login form .button-primary {
+  background: #416257;
+  border-color: #416257;
+  box-shadow: 0 1px 0 #416257;
+  color: #fff;
+  text-decoration: none;
+  text-shadow: none;
+  padding: 8px 20px;
+  height: auto;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.login form .button-primary:hover,
+.login form .button-primary:focus {
+  background: #345048;
+  border-color: #345048;
+  box-shadow: 0 1px 0 #345048;
+}
+
+/* Links styling */
+.login #nav a,
+.login #backtoblog a {
+  color: #000;
+  text-decoration: none;
+}
+
+.login #nav a:hover,
+.login #backtoblog a:hover {
+  color: #333;
+  text-decoration: underline;
+}
+
+/* Error and success messages */
+.login .message,
+.login #login_error {
+  border-left: 4px solid #000;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Remove WordPress logo link */
+.login h1 a:hover {
+  opacity: 0.9;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 782px) {
+  body.login {
+    padding: 20px;
+  }
+  
+  #login {
+    max-width: 100%;
+  }
+  
+  .login h1 a {
+    width: 150px;
+    height: 60px;
+  }
+  
+  .login form {
+    padding: 20px;
+  }
+}
+
