@@ -7,7 +7,7 @@
             "label": "Sector",
             "name": "sector",
             "aria-label": "",
-            "type": "relationship",
+            "type": "page_link",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -23,23 +23,17 @@
                 "publish"
             ],
             "taxonomy": "",
-            "filters": [
-                "search"
-            ],
-            "return_format": "id",
-            "min": "",
-            "max": "",
-            "allow_in_bindings": 0,
-            "elements": "",
-            "bidirectional": 0,
-            "bidirectional_target": []
+            "allow_archives": 0,
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 1
         },
         {
             "key": "field_6909369aa32ae",
             "label": "Service",
             "name": "service",
             "aria-label": "",
-            "type": "relationship",
+            "type": "page_link",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -55,16 +49,10 @@
                 "publish"
             ],
             "taxonomy": "",
-            "filters": [
-                "search"
-            ],
-            "return_format": "id",
-            "min": "",
-            "max": "",
-            "allow_in_bindings": 0,
-            "elements": "",
-            "bidirectional": 0,
-            "bidirectional_target": []
+            "allow_archives": 0,
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 1
         }
     ],
     "location": [
@@ -85,5 +73,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1762211518
+    "modified": 1762212444
 }
