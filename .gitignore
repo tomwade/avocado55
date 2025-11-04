@@ -51,6 +51,7 @@ wp-config.php
 
 # Misc.
 **/.DS_Store
+node_modules/
 
 # Caching
 /wp-content/cache/*
