@@ -1,13 +1,35 @@
-<div class="overflow-hidden <?php echo (get_sub_field('style') == 'light') ? 'my-20 bg-white text-neutral-800' : 'py-20 bg-dark-100 text-white'; ?> text-<?php echo get_sub_field('alignment'); ?>">
-  <div class="container max-w-screen-<?php echo (get_sub_field('content')) ? get_sub_field('content_width') : 'lg'; ?> mx-auto px-4 sm:px-6 lg:px-8">
-    <?php if ($label = get_sub_field('label')) { ?>
-      <h2 class="mb-4 text-sm <?php echo (get_sub_field('style') == 'light') ? 'text-neutral-400' : 'text-offwhite'; ?> font-semibold uppercase leading-tight tracking-subtitle"><?php echo $label; ?></h2>
-    <?php } ?>
+<?php
+$header = get_sub_field('header'); // Optional heading
+$body = get_sub_field('body'); // Required body text
+$text_alignment = get_sub_field('text_alignment'); // 'left', 'center', or 'right'
+$text_alignment = $text_alignment ?: 'left'; // Default to left if not set
 
-    <h2 class="<?php echo (get_sub_field('content')) ? 'font-medium' : 'font-normal'; ?> highlight-red text-4xl tracking-tight sm:text-6xl !leading-tight"><?php echo get_sub_field('title'); ?></h2>
+// Text alignment classes
+$text_align_classes = '';
+if ($text_alignment === 'center') {
+  $text_align_classes = 'text-center';
+} elseif ($text_alignment === 'right') {
+  $text_align_classes = 'text-right';
+} else {
+  $text_align_classes = 'text-left';
+}
+?>
 
-    <?php if ($content = get_sub_field('content')) { ?>
-      <div class="mt-6 text-left space-y-6 leading-loose text-neutral-500 text-xl post-content"><?php echo $content; ?></div>
-    <?php } ?>
+<?php if ($body): ?>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+    <div class="<?php echo esc_attr($text_align_classes); ?> max-w-4xl mx-auto">
+      
+      <?php if ($header): ?>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight text-gray-900 mb-6">
+          <?php echo esc_html($header); ?>
+        </h2>
+      <?php endif; ?>
+
+      <div class="text-gray-700 text-lg leading-relaxed">
+        <?php echo wp_kses_post($body); ?>
+      </div>
+
+    </div>
   </div>
-</div>
+<?php endif; ?>
+

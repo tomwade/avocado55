@@ -15,6 +15,8 @@ require_once get_template_directory() . '/post-types/client.php';
 require_once get_template_directory() . '/post-types/partner.php';
 require_once get_template_directory() . '/post-types/sector.php';
 require_once get_template_directory() . '/post-types/service.php';
+require_once get_template_directory() . '/post-types/story.php';
+require_once get_template_directory() . '/post-types/team.php';
 
 
 class Avocado55 {

@@ -1,26 +1,87 @@
-<div class="py-20">
-  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-    <?php if (get_sub_field('label')) { ?>
-      <h2 class="mt-12 mb-4 text-sm text-gray-400 font-semibold uppercase leading-tight tracking-subtitle"><?php echo get_sub_field('label'); ?></h2>
-    <?php } ?>
+<?php
+$title = get_sub_field('title'); // Title field
+$team_members = get_sub_field('team_members'); // Post Object field (multiple values) - array of team member post IDs
 
-    <h3 class="highlight-red text-4xl sm:text-6xl font-medium leading-tight max-w-xl"><?php echo get_sub_field('title'); ?></h3>
+// Get the selected team member posts
+$members = [];
+if ($team_members) {
+  // If it's an array of post IDs, use them
+  if (is_array($team_members)) {
+    $members = $team_members;
+  } else {
+    // If it's a single post, convert to array
+    $members = [$team_members];
+  }
+}
+?>
 
-    <ul role="list" class="mt-12 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-      <?php foreach (get_sub_field('team_members') as $team) { ?>
-        <li class="group relative mb-4 break-inside-avoid">
-          <div class="relative w-full overflow-hidden rounded-xl">
-            <?php if ($image = get_field('image', $team->ID)) { ?>
-              <img src="<?php echo $image['sizes']['team_member']; ?>" alt="<?php echo esc_attr(get_the_title($team->ID)); ?>" class="w-full object-cover">
-            <?php } ?>
+<?php if (!empty($members)): ?>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+    
+    <?php if ($title): ?>
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight text-gray-900 mb-12 text-center">
+        <?php echo esc_html($title); ?>
+      </h2>
+    <?php endif; ?>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+      
+      <?php foreach ($members as $member_id): ?>
+        <?php
+        $member_post = get_post($member_id);
+        if (!$member_post) continue;
+        
+        // Get ACF fields from the team member post
+        $image_id = get_post_thumbnail_id($member_id);
+        $image = $image_id ? wp_get_attachment_image_src($image_id, 'team_member') : null;
+        $role = get_field('role', $member_id);
+        $name = get_the_title($member_id);
+        $description = get_field('description', $member_id);
+        if (!$description) {
+          $member_post_obj = get_post($member_id);
+          if ($member_post_obj) {
+            $description = $member_post_obj->post_excerpt ?: wp_trim_words($member_post_obj->post_content, 20);
+          }
+        }
+        ?>
+        
+        <div class="bg-white rounded-lg">
+          
+          <?php if ($image): ?>
+            <div class="w-full mb-4">
+              <img 
+                src="<?php echo esc_url($image[0]); ?>" 
+                alt="<?php echo esc_attr($name); ?>"
+                class="w-full h-auto rounded-lg object-cover"
+              />
+            </div>
+          <?php endif; ?>
+
+          <div class="px-4 pb-4">
+            <?php if ($name): ?>
+              <h3 class="text-xl font-medium text-gray-900 mb-2">
+                <?php echo esc_html($name); ?>
+              </h3>
+            <?php endif; ?>
+
+            <?php if ($role): ?>
+              <div class="text-sm text-gray-600 mb-3">
+                <?php echo esc_html($role); ?>
+              </div>
+            <?php endif; ?>
+
+            <?php if ($description): ?>
+              <p class="text-gray-600 text-sm leading-relaxed">
+                <?php echo esc_html($description); ?>
+              </p>
+            <?php endif; ?>
           </div>
-          <hgroup class="text-center">
-            <h3 class="mt-5 block text-xl xl:text-2xl font-medium text-gray-900"><?php echo get_the_title($team->ID); ?></h3>
-            <h4 class="mt-2 block text-sm font-semibold text-gray-400 uppercase leading-tight tracking-subtitle"><?php echo get_field('job', $team->ID); ?></h4>
-          </hgroup>
-        </li>
-      <?php } ?>
-    </ul>
 
+        </div>
+
+      <?php endforeach; ?>
+
+    </div>
   </div>
-</div>
+<?php endif; ?>
+
