@@ -384,9 +384,16 @@ class Breeze_Configuration {
 			'breeze-store-facebookpixel-locally'   => ( isset( $_POST['breeze-store-facebookpixel-locally'] ) ? '1' : '0' ),
 			'breeze-store-gravatars-locally'       => ( isset( $_POST['breeze-store-gravatars-locally'] ) ? '1' : '0' ),
 			'breeze-enable-api'                    => ( isset( $_POST['breeze-enable-api'] ) ? '1' : '0' ),
-			'breeze-secure-api'                    => ( isset( $_POST['breeze-secure-api'] ) ? '1' : '0' ),
-			'breeze-api-token'                     => sanitize_text_field( $breeze_api_token ),
 		);
+
+        if ( !empty( $breeze_api_token ) && true === $this->is_api_token_valid( $breeze_api_token ) ) {
+            $advanced['breeze-api-token'] = sanitize_text_field($breeze_api_token);
+        }else{
+            $current_token = Breeze_Options_Reader::get_option_value( 'breeze-api-token' );
+            if( !empty( $current_token ) ){
+                $advanced['breeze-api-token'] = sanitize_text_field($current_token);
+            }
+        }
 
 		breeze_update_option( 'advanced_settings', $advanced, true );
 
@@ -399,6 +406,13 @@ class Breeze_Configuration {
 
 		wp_send_json( $response );
 	}
+
+    public function is_api_token_valid($provided_token){
+        if ( strlen( $provided_token ) < 32 ) {
+            return false;
+        }
+        return true;
+    }
 
 	/**
 	 *  Save the Heartbeat API settings via Ajax call.
@@ -1814,16 +1828,16 @@ class Breeze_Configuration {
 	 * @return string
 	 * @throws Exception
 	 */
-	public function breeze_generate_token( $length = 12 ) {
-		$characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-		$token      = '';
+    public static function breeze_generate_token( $length = 32 ){
+        $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        $token      = '';
 
-		for ( $i = 0; $i < $length; $i ++ ) {
-			$token .= $characters[ random_int( 0, strlen( $characters ) - 1 ) ];
-		}
+        for ( $i = 0; $i < $length; $i ++ ) {
+            $token .= $characters[ random_int( 0, strlen( $characters ) - 1 ) ];
+        }
 
-		return $token;
-	}
+        return $token;
+    }
 
 	/**
 	 * Perform database optimization.
@@ -1941,12 +1955,7 @@ class Breeze_Configuration {
 
 		$file = $default_file;
 
-		$characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-		$token      = '';
-
-		for ( $i = 0; $i < 12; $i ++ ) {
-			$token .= $characters[ random_int( 0, strlen( $characters ) - 1 ) ];
-		}
+        $token      = Breeze_Configuration::breeze_generate_token();
 
 		// Default Advanced
 		$default_advanced  = array(
@@ -1954,7 +1963,6 @@ class Breeze_Configuration {
 			'cached-query-strings' => array(),
 			'breeze-wp-emoji'      => '0',
 			'breeze-enable-api'    => '0',
-			'breeze-secure-api'    => '0',
 			'breeze-api-token'     => $token,
 		);
 		$default_heartbeat = array(

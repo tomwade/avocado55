@@ -3,8 +3,8 @@ class ACF_Config {
 
 	public function __construct() {
 		// Handle flat-file JSON storage for ACF fields
-		add_filter( 'acf/settings/save_json', array( $this, 'my_acf_json_save_point' ) );
-		// add_filter( 'acf/settings/load_json', array( $this, 'my_acf_json_load_point' ) );
+		// add_filter( 'acf/settings/save_json', array( $this, 'my_acf_json_save_point' ) );
+		add_filter( 'acf/settings/load_json', array( $this, 'my_acf_json_load_point' ) );
 
 		// Disable ACF settings on production servers
 		add_filter('acf/settings/show_admin', array( $this, 'my_acf_show_admin' ) );

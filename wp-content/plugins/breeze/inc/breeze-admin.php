@@ -341,7 +341,7 @@ INLINEJS;
 	/**
 	 * Enqueue CSS and JS files required for the plugin functionality.
 	 */
-	function load_admin_scripts() {
+	function load_admin_scripts( $hook ) {
 		if ( ! wp_script_is( 'jquery', 'enqueued' ) ) {
 			wp_enqueue_script( 'jquery' );
 		}
@@ -398,6 +398,27 @@ INLINEJS;
 		}
 
 		wp_localize_script( 'breeze-backend', 'breeze_token_name', $token_name );
+
+		// Only load on Breeze settings page to optimize performance
+		if ( false === strpos( $hook, 'breeze' ) ) {
+			return;
+		}
+
+		// Enqueue the WordPress password strength meter script
+		wp_enqueue_script( 'password-strength-meter' );
+
+		// This ensures the localization strings (pwsL10n) are available in JS
+		wp_localize_script(
+			'password-strength-meter',
+			'pwsL10n',
+			array(
+				'short'    => __( 'Very weak', 'breeze' ),
+				'bad'      => __( 'Weak', 'breeze' ),
+				'good'     => __( 'Medium', 'breeze' ),
+				'strong'   => __( 'Strong', 'breeze' ),
+				'mismatch' => __( 'Mismatch', 'breeze' ),
+			)
+		);
 	}
 
 	/**
@@ -646,12 +667,7 @@ INLINEJS;
 			$active_cache_users[ $usr_role ] = 0;
 		}
 
-		$characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-		$token      = '';
-
-		for ( $i = 0; $i < 12; $i++ ) {
-			$token .= $characters[ random_int( 0, strlen( $characters ) - 1 ) ];
-		}
+		$token = Breeze_Configuration::breeze_generate_token();
 
 		$default_basic = array(
 			'breeze-active'            => '1',
@@ -747,7 +763,6 @@ INLINEJS;
 			'breeze-store-facebookpixel-locally'   => '0',
 			'breeze-store-gravatars-locally'       => '0',
 			'breeze-enable-api'                    => '0',
-			'breeze-secure-api'                    => '0',
 			'breeze-api-token'                     => $token,
 		);
 		$default_data['advanced'] = array_merge( $default_advanced, $advanced );
@@ -1112,6 +1127,9 @@ INLINEJS;
 
 				// Delete transients.
 				delete_transient( 'breeze_custom_varnish_server_active' );
+
+				// Delete Minfication hashes.
+				delete_option( 'breeze_minified_hashes' );
 			}
 		}
 	}

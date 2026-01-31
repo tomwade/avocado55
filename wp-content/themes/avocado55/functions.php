@@ -71,7 +71,7 @@ class Avocado55 {
     // Register navigation menus
     register_nav_menus(
       array(
-        'header_menu' => esc_html__( 'Primary Menu', 'avocado55' ),
+        'header_menu' => esc_html__( 'Header Menu', 'avocado55' ),
         'footer_menu' => __( 'Footer Menu', 'avocado55' ),
       )
     );
@@ -109,6 +109,7 @@ class Avocado55 {
 
     # Include styles
     wp_enqueue_style( 'avocado55-app', get_template_directory_uri() . '/assets/css/output.css', [], $ver );
+    wp_enqueue_style( 'avocado55-styles', get_template_directory_uri() . '/style.css', [], $ver );
 
     # Update jQuery version
     if (!is_admin()) {
@@ -166,3 +167,25 @@ class Avocado55 {
 }
 
 new Avocado55;
+
+/**
+ * Custom Walker for Header Navigation
+ * Outputs menu items with Tailwind CSS classes
+ */
+class Avocado55_Header_Nav_Walker extends Walker_Nav_Menu {
+  
+  public function start_el( &$output, $item, $depth = 0, $args = null, $id = 0 ) {
+    $classes = 'text-sm/6 font-semibold text-gray-900 hover:text-brand-cta transition-colors';
+    
+    $output .= sprintf(
+      '<a href="%s" class="%s">%s</a>',
+      esc_url( $item->url ),
+      esc_attr( $classes ),
+      esc_html( $item->title )
+    );
+  }
+
+  public function end_el( &$output, $item, $depth = 0, $args = null ) {
+    // No closing tag needed since we're not wrapping in li
+  }
+}

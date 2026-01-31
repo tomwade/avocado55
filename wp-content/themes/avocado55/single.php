@@ -1,114 +1,196 @@
 <?php
 get_header();
 
-function abl1035_alx_embed_html( $html ) {
-  
-  return '<div class="video-container">' . $html . '</div>';
-}
-add_filter( 'embed_oembed_html', 'abl1035_alx_embed_html', 10, 3 );
-
-$title = get_the_title();
-
-$categories = get_the_category();
-if ( ! empty( $categories ) ) {
-	$subtitle = esc_html($categories[0]->name);
-}
-
-include(get_template_directory() . '/partials/archive-header.php');
-
 if ( have_posts() ) {
   while ( have_posts() ) {
     the_post();
-    ?>
+    
+    $post_id = get_the_ID();
+    $title = get_the_title();
+    $featured_image = get_the_post_thumbnail_url($post_id, 'large');
+    $date = get_the_date('d M Y');
+    $author_id = get_the_author_meta('ID');
+    $author_name = get_the_author();
+    $author_avatar = get_avatar_url($author_id, ['size' => 64]);
+    $author_bio = get_the_author_meta('description');
+    $author_role = get_the_author_meta('job_title') ?: 'Author';
+    
+    // Get primary category
+    $categories = get_the_category();
+    $category = !empty($categories) ? $categories[0] : null;
+?>
 
-	<?php if ($thumbnail = get_the_post_thumbnail_url(get_the_ID(), 'featured_image')) { ?>
-        <img src="<?php echo $thumbnail; ?>" class="max-w-screen-lg w-full mx-auto -mt-36 rounded-2xl relative z-30 !p-0" />
-        <div class="py-20">
-    <?php } else { ?>
-        <div class="pt-40 pb-20">
-    <?php } ?>
+<!-- Hero Section -->
+<section class="relative bg-brand-green overflow-hidden">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      
+      <!-- Content -->
+      <div class="text-white">
+        <!-- Category Badge -->
+        <?php if ($category) : ?>
+          <span class="inline-block bg-white/20 text-white text-xs font-medium px-3 py-1.5 rounded mb-6">
+            <?php echo esc_html($category->name); ?>
+          </span>
+        <?php endif; ?>
 
-      <div class="container max-w-screen-md mx-auto px-4 sm:px-6 lg:px-8">
-
-        <div class="post-content post-content-intro">
-          <?php the_content(); ?>
+        <!-- Meta -->
+        <div class="flex items-center gap-4 mb-6">
+          <?php if ($author_avatar) : ?>
+            <img src="<?php echo esc_url($author_avatar); ?>" alt="<?php echo esc_attr($author_name); ?>" class="w-10 h-10 rounded-full" />
+          <?php endif; ?>
+          <div class="flex items-center gap-2 text-sm text-white/80">
+            <span><?php echo esc_html($author_name); ?></span>
+            <span>&bull;</span>
+            <time datetime="<?php echo get_the_date('Y-m-d'); ?>"><?php echo esc_html($date); ?></time>
+          </div>
         </div>
 
+        <!-- Title -->
+        <h1 class="text-3xl lg:text-5xl font-semibold leading-tight">
+          <?php echo esc_html($title); ?>
+        </h1>
       </div>
+
+      <!-- Featured Image -->
+      <?php if ($featured_image) : ?>
+        <div class="relative">
+          <img 
+            src="<?php echo esc_url($featured_image); ?>" 
+            alt="<?php echo esc_attr($title); ?>" 
+            class="w-full h-auto rounded-2xl object-cover aspect-[4/3]"
+          />
+        </div>
+      <?php endif; ?>
+
+    </div>
+  </div>
+</section>
+
+<!-- Article Content -->
+<article class="bg-white py-16 lg:py-24">
+  <div class="mx-auto max-w-3xl px-6 lg:px-8">
+    
+    <div class="post-content prose prose-lg max-w-none">
+      <?php the_content(); ?>
     </div>
 
-    <style>
-.wp-embed-responsive .wp-block-embed__wrapper:before {
-  padding-top: 0 !important;
-}
+  </div>
+</article>
 
-.video-container { 
-  font-size: 1.3125rem;
-  line-height: 1.9375rem;
-  position: relative; 
-  padding-bottom: 56.25%; 
-  height: 0; 
-  overflow: hidden;
-  max-width: 100%;
-  margin: 0 auto 2rem;
-}
-  
-.video-container iframe, .video-container object, .video-container embed, .video-container video { 
-  position: absolute; 
-  top: 0; 
-  left: 0; 
-  right: 0;
-  width: 100%;
-  height: 100%;
-}
-
-    .post-content audio, .post-content canvas, .post-content embed, .post-content iframe, .post-content object, .post-content svg, .post-content video {
-        margin-left: auto;
-        margin-right: auto;
-        border-radius: 1rem;
-    }
-
-    #curve-related {
-      margin: 0 0 -6.25rem 0;
-      transform: rotate(180deg);
-    }
-
-    #curve-related path {
-      fill: #fff;
-    }
-    </style>
-
-    <div id="curve-related" class="curve">
-      <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-        <path d="M600,112.77C268.63,112.77,0,65.52,0,7.23V120H1200V7.23C1200,65.52,931.37,112.77,600,112.77Z"></path>
-      </svg>
-    </div>
-
-    <div class="bg-offwhite pt-36 pb-24">
-      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h3 class="text-4xl font-medium mb-12">Related News</h3>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-          <?php foreach (wp_get_recent_posts(['post_status' => 'publish', 'numberposts' => 3]) as $i => $post) { ?>
-            <article class="swiper-slide relative">
-              <a href="<?php echo get_the_permalink($post['ID']); ?>" title="<?php echo esc_attr(get_the_title($post['ID'])); ?>" class="absolute inset-0 z-10"></a>
-
-              <div class="relative w-full">
-                <img src="<?php echo get_the_post_thumbnail_url($post['ID'], 'full'); ?>" alt="" class="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]">
-              </div>
-              <div class="max-w-xl">
-                <div class="leading-7 group relative">
-                  <h3 class="mt-4 mb-1 text-xl font-medium text-gray-900"><?php echo get_the_title($post['ID']); ?></h3>
-                  <time datetime="2020-03-16" class="text-lg text-gray-400"><?php echo get_the_date('M j, Y', $post['ID']); ?></time>
-                </div>
-              </div>
-            </article>
-          <?php } ?>
+<!-- Author Bar -->
+<section class="bg-brand-light py-8">
+  <div class="mx-auto max-w-3xl px-6 lg:px-8">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+      
+      <div class="flex items-center gap-4">
+        <?php if ($author_avatar) : ?>
+          <img src="<?php echo esc_url($author_avatar); ?>" alt="<?php echo esc_attr($author_name); ?>" class="w-14 h-14 rounded-full" />
+        <?php endif; ?>
+        <div>
+          <p class="font-semibold text-gray-900"><?php echo esc_html($author_name); ?></p>
+          <p class="text-sm text-gray-600"><?php echo esc_html($author_role); ?></p>
         </div>
       </div>
+
+      <a href="<?php echo get_author_posts_url($author_id); ?>" class="button button--brand-cta">
+        Read bio
+      </a>
+      
+    </div>
+  </div>
+</section>
+
+<!-- Share Section -->
+<section class="bg-white py-8 border-b border-gray-200">
+  <div class="mx-auto max-w-3xl px-6 lg:px-8">
+    <div class="flex items-center justify-between">
+      
+      <p class="text-sm font-medium text-gray-900">SHARE THIS ARTICLE</p>
+
+      <div class="flex items-center gap-3">
+        <span class="w-9 h-9 border border-gray-300 rounded flex items-center justify-center hover:border-brand-green transition-colors cursor-pointer">
+          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/social-linkedin.png" alt="LinkedIn" class="w-4 h-4" />
+        </span>
+        <span class="w-9 h-9 border border-gray-300 rounded flex items-center justify-center hover:border-brand-green transition-colors cursor-pointer">
+          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/social-x.png" alt="X" class="w-4 h-4" />
+        </span>
+        <span class="w-9 h-9 border border-gray-300 rounded flex items-center justify-center hover:border-brand-green transition-colors cursor-pointer">
+          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/social-facebook.png" alt="Facebook" class="w-4 h-4" />
+        </span>
+      </div>
+      
+    </div>
+  </div>
+</section>
+
+<!-- Related Posts -->
+<section class="bg-white py-16 lg:py-24">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8">
+    
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-12">
+      <h2 class="text-2xl lg:text-3xl font-semibold text-brand-green leading-tight">
+        You might also be interested in...
+      </h2>
+
+      <a href="<?php echo get_permalink(get_option('page_for_posts')); ?>" class="button button--brand-green shrink-0">
+        View all
+      </a>
     </div>
 
-  <?php
+    <!-- Posts Grid -->
+    <?php
+    $related_args = [
+      'post_type' => 'post',
+      'post_status' => 'publish',
+      'posts_per_page' => 3,
+      'post__not_in' => [$post_id],
+      'orderby' => 'date',
+      'order' => 'DESC',
+    ];
+    $related_query = new WP_Query($related_args);
+    
+    if ($related_query->have_posts()) : ?>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <?php while ($related_query->have_posts()) : $related_query->the_post(); ?>
+          <?php get_template_part('partials/news-post', null, ['post_id' => get_the_ID()]); ?>
+        <?php endwhile; ?>
+      </div>
+      <?php wp_reset_postdata(); ?>
+    <?php endif; ?>
+
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="relative bg-brand-cta py-16 lg:py-24 overflow-hidden">
+  <!-- Background Avocado Mark -->
+  <div class="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/4 w-80 lg:w-[500px] opacity-20 pointer-events-none">
+    <img 
+      src="<?php echo get_template_directory_uri(); ?>/assets/images/avacado-mark.png" 
+      alt="" 
+      class="w-full h-auto"
+      aria-hidden="true"
+    />
+  </div>
+
+  <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="max-w-2xl">
+      <h2 class="text-3xl lg:text-4xl font-semibold text-white leading-tight mb-4">
+        Ready to find your best way forward? Let's start with a conversation.
+      </h2>
+      <p class="text-white/80 mb-8">
+        Get in touch, we're here to help you make the leap.
+      </p>
+      <a href="/contact/" class="button bg-white text-brand-cta hover:bg-gray-100">
+        Contact us
+      </a>
+    </div>
+  </div>
+</section>
+
+<?php
   }
 }
 

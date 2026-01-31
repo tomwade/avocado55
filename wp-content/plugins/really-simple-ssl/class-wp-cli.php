@@ -297,10 +297,12 @@ class rsssl_wp_cli {
 			rsssl_update_option( 'enable_vulnerability_scanner', false );
 
 			// Deactivate essential WordPress hardening features
-			$recommended_hardening_fields = RSSSL()->onboarding->get_hardening_fields();
-			foreach ( $recommended_hardening_fields as $field ) {
-				rsssl_update_option( $field, false );
-			}
+            if (isset(RSSSL()->settingsConfigService)) {
+                $recommended_hardening_fields = RSSSL()->settingsConfigService->getRecommendedHardeningSettings();
+                foreach ( $recommended_hardening_fields as $field ) {
+                    rsssl_update_option( $field, false );
+                }
+            }
 
 			// Disable Email login protection
 			rsssl_update_option( 'login_protection_enabled', false );
@@ -357,10 +359,12 @@ class rsssl_wp_cli {
 	public function activate_recommended_hardening_features() {
 		if ( ! $this->check_pro_command_preconditions() ) return;
 		try {
-			$recommended_hardening_fields = RSSSL()->onboarding->get_hardening_fields();
-			foreach ( $recommended_hardening_fields as $field ) {
-				rsssl_update_option( $field, true );
-			}
+            if (isset(RSSSL()->settingsConfigService)) {
+                $recommended_hardening_fields = RSSSL()->settingsConfigService->getRecommendedHardeningSettings();
+                foreach ( $recommended_hardening_fields as $field ) {
+                    rsssl_update_option( $field, true );
+                }
+            }
 			do_action('rsssl_update_rules');
 			WP_CLI::success( 'Recommended hardening features activated.' );
 		} catch ( Exception $e ) {
@@ -376,10 +380,12 @@ class rsssl_wp_cli {
 	public function deactivate_recommended_hardening_features() {
 		if ( ! $this->check_pro_command_preconditions() ) return;
 		try {
-			$recommended_hardening_fields = RSSSL()->onboarding->get_hardening_fields();
-			foreach ( $recommended_hardening_fields as $field ) {
-				rsssl_update_option( $field, false );
-			}
+            if (isset(RSSSL()->settingsConfigService)) {
+                $recommended_hardening_fields = RSSSL()->settingsConfigService->getRecommendedHardeningSettings();
+                foreach ( $recommended_hardening_fields as $field ) {
+                    rsssl_update_option( $field, false );
+                }
+            }
 			do_action('rsssl_update_rules');
 			WP_CLI::success( 'Recommended hardening features deactivated.' );
 		} catch ( Exception $e ) {
@@ -725,13 +731,13 @@ class rsssl_wp_cli {
 	/**
 	 * Reset the 2FA status of a user to disabled
 	 *
-	 * Usage: wp rsssl reset_login_protection 123
+	 * Usage: wp rsssl reset_2fa 123
 	 *
 	 * @param array $args User ID should be the first element
 	 *
 	 * @throws \WP_CLI\ExitException
 	 */
-	public function reset_login_protection( $args ): void
+	public function reset_2fa( $args ): void
     {
         if ( ! $this->check_pro_command_preconditions() ) return;
         // When empty array is passed, WP_CLI will return an error
@@ -757,7 +763,7 @@ class rsssl_wp_cli {
 		    delete_user_meta( $user->ID, 'rsssl_passkey_configured'); // Remove passkey configuration if it exists
 	    }
 
-        WP_CLI::success( 'Successfully reset Login Protection for user id ' . $user_id );
+        WP_CLI::success( 'Successfully reset 2FA for user id ' . $user_id );
 	}
 
     /**
@@ -1525,9 +1531,16 @@ class rsssl_wp_cli {
 				'synopsis'    => [],
 				'pro'         => false,
 			],
-			'reset_login_protection'    => [
-				'description' => __( 'Reset the settings for the Login Protection.', 'really-simple-ssl' ),
-				'synopsis'    => [],
+			'reset_2fa'    => [
+				'description' => __( 'Reset the 2FA status and methods for a user.', 'really-simple-ssl' ),
+				'synopsis'    => [
+					[
+						'type'        => 'positional',
+						'name'        => 'user_id',
+						'optional'    => false,
+						'description' => __( 'The user ID to reset 2FA for.', 'really-simple-ssl' ),
+					],
+				],
 				'pro'         => false,
 			],
             'twofa_preview' => [

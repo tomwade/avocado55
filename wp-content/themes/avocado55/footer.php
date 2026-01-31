@@ -1,93 +1,113 @@
-  <footer class="my-24">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="w-full mb-16">
-        <?php if ($logo = get_field('logo_footer', 'option')) { ?>
-          <img src="<?php echo $logo['url']; ?>" title="<?php echo esc_attr(get_bloginfo('name')); ?>" alt="<?php echo esc_attr(get_bloginfo('name')); ?>" style="max-width: 268px; max-height: 51px;" />
-        <?php } ?>
-      </div>
+  <footer class="bg-white border-t border-gray-200">
+    <!-- Main Footer -->
+    <div class="mx-auto max-w-7xl px-6 lg:px-8 py-12 lg:py-16">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        
+        <!-- Logo & Social Column -->
+        <div class="lg:col-span-3">
+          <!-- Logo -->
+          <a href="<?php echo home_url(); ?>" class="inline-block mb-8">
+            <span class="text-2xl font-bold text-brand-green">Avocado55</span>
+          </a>
 
-      <div class="flex flex-col sm:flex-row space-y-12 sm:space-y-0">
-        <div class="flex-initial w-48 h-48">
-          <ul class="flex flex-col space-y-4">
-            <?php
-            $menu_name = 'footer_menu';
-            if (($locations = get_nav_menu_locations()) && isset($locations[$menu_name])) {
-              $menu = wp_get_nav_menu_object( $locations[ $menu_name ] );
-              $menu_items = wp_get_nav_menu_items($menu->term_id);
-
-              foreach ((array) $menu_items as $key => $menu_item) {
-                echo '<li><a href="' . $menu_item->url . '" title="' . esc_attr($menu_item->title) . '">' . $menu_item->title . '</a></li>';
-              }
-            }
-            ?>
-          </ul>
-        </div>
-
-        <div class="flex-1">
-          <h4><strong>Memberships</strong></h4>
-
-          <div class="flex flex-col sm:flex-row space-y-8 sm:space-y-0 sm:space-x-8 mt-4 items-center">
-            <?php if ($memberships = get_field('memberships', 'option')) { ?>
-              <?php foreach ($memberships as $membership) { ?>
-                <a href="<?php echo $membership['link']; ?>" target="_blank"><img src="<?php echo $membership['image']['url']; ?>" class="w-auto h-auto" style="max-height: 100px; max-width: 100px" /></a>
-              <?php } ?>
-            <?php } ?>
+          <!-- Social Icons -->
+          <div class="flex items-center gap-3">
+            <a href="https://linkedin.com" target="_blank" rel="nofollow" class="w-9 h-9 border border-gray-300 rounded flex items-center justify-center hover:border-brand-green transition-colors">
+              <img src="<?php echo get_template_directory_uri(); ?>/assets/images/social-linkedin.png" alt="LinkedIn" class="w-4 h-4" />
+            </a>
+            <a href="https://x.com" target="_blank" rel="nofollow" class="w-9 h-9 border border-gray-300 rounded flex items-center justify-center hover:border-brand-green transition-colors">
+              <img src="<?php echo get_template_directory_uri(); ?>/assets/images/social-x.png" alt="X" class="w-4 h-4" />
+            </a>
+            <a href="https://facebook.com" target="_blank" rel="nofollow" class="w-9 h-9 border border-gray-300 rounded flex items-center justify-center hover:border-brand-green transition-colors">
+              <img src="<?php echo get_template_directory_uri(); ?>/assets/images/social-facebook.png" alt="Facebook" class="w-4 h-4" />
+            </a>
+            <a href="https://youtube.com" target="_blank" rel="nofollow" class="w-9 h-9 border border-gray-300 rounded flex items-center justify-center hover:border-brand-green transition-colors">
+              <img src="<?php echo get_template_directory_uri(); ?>/assets/images/social-youtube.png" alt="YouTube" class="w-4 h-4" />
+            </a>
           </div>
         </div>
 
-        <div class="flex-initial w-96 space-y-2">
-          <h4><strong>Connect</strong></h4>
+        <!-- Navigation Columns -->
+        <div class="lg:col-span-9">
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8">
+            
+            <!-- Services Column -->
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900 mb-4">Services</h3>
+              <ul class="space-y-3">
+                <li><a href="/services/consulting/" class="text-sm text-gray-600 hover:text-brand-green">Service goes here</a></li>
+                <li><a href="/services/training/" class="text-sm text-gray-600 hover:text-brand-green">Service goes here</a></li>
+                <li><a href="/services/support/" class="text-sm text-gray-600 hover:text-brand-green">Service goes here</a></li>
+                <li><a href="/services/analytics/" class="text-sm text-gray-600 hover:text-brand-green">Service goes here</a></li>
+              </ul>
+            </div>
 
-          <ul class="!my-4 flex space-x-8">
-            <?php if ($social = get_field('instagram', 'option')) { ?>
-              <li>
-                <a href="<?php echo $social; ?>" target="_blank" rel="nofollow" title="Connect with us on Instagram">
-                  <span class="social-icon social-icon--instagram"></span>
-                </a>
-              </li>
-            <?php } ?>
+            <!-- Partnerships Column -->
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900 mb-4">Partnerships</h3>
+              <ul class="space-y-3">
+                <li><a href="/partnerships/" class="text-sm text-gray-600 hover:text-brand-green">Our Partners</a></li>
+                <li><a href="/partnerships/become-a-partner/" class="text-sm text-gray-600 hover:text-brand-green">Become a Partner</a></li>
+              </ul>
+            </div>
 
-            <?php if ($social = get_field('twitter', 'option')) { ?>
-              <li>
-                <a href="<?php echo $social; ?>" target="_blank" rel="nofollow" title="Connect with us on Twitter">
-                  <span class="social-icon social-icon--twitter"></span>
-                </a>
-              </li>
-            <?php } ?>
+            <!-- Sectors Column -->
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900 mb-4">Sectors</h3>
+              <ul class="space-y-3">
+                <li><a href="/sectors/financial-services/" class="text-sm text-gray-600 hover:text-brand-green">Financial Services</a></li>
+                <li><a href="/sectors/healthcare/" class="text-sm text-gray-600 hover:text-brand-green">Healthcare</a></li>
+                <li><a href="/sectors/retail/" class="text-sm text-gray-600 hover:text-brand-green">Retail</a></li>
+              </ul>
+            </div>
 
-            <?php if ($social = get_field('linkedin', 'option')) { ?>
-              <li>
-                <a href="<?php echo $social; ?>" target="_blank" rel="nofollow" title="Connect with us on LinkedIn">
-                  <span class="social-icon social-icon--linkedin"></span>
-                </a>
-              </li>
-            <?php } ?>
+            <!-- Client Stories Column -->
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900 mb-4">Client Stories</h3>
+              <ul class="space-y-3">
+                <li><a href="/stories/" class="text-sm text-gray-600 hover:text-brand-green">All Stories</a></li>
+                <li><a href="/stories/case-studies/" class="text-sm text-gray-600 hover:text-brand-green">Case Studies</a></li>
+              </ul>
+            </div>
 
-            <?php if ($social = get_field('vimeo', 'option')) { ?>
-              <li>
-                <a href="<?php echo $social; ?>" target="_blank" rel="nofollow" title="Connect with us on Vimeo">
-                  <span class="social-icon social-icon--vimeo"></span>
-                </a>
-              </li>
-            <?php } ?>
-          </ul>
+            <!-- About Us Column -->
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900 mb-4">About Us</h3>
+              <ul class="space-y-3">
+                <li><a href="/about/" class="text-sm text-gray-600 hover:text-brand-green">Our Story</a></li>
+                <li><a href="/about/team/" class="text-sm text-gray-600 hover:text-brand-green">Our Team</a></li>
+                <li><a href="/about/careers/" class="text-sm text-gray-600 hover:text-brand-green">Careers</a></li>
+              </ul>
+            </div>
 
-          <?php if ($address = get_field('address', 'option')) { ?>
-            <address class="not-italic"><?php echo $address; ?></address>
-          <?php } ?>
+            <!-- Insights Column -->
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900 mb-4">Insights</h3>
+              <ul class="space-y-3">
+                <li><a href="/insights/" class="text-sm text-gray-600 hover:text-brand-green">All Insights</a></li>
+                <li><a href="/insights/blog/" class="text-sm text-gray-600 hover:text-brand-green">Blog</a></li>
+                <li><a href="/insights/resources/" class="text-sm text-gray-600 hover:text-brand-green">Resources</a></li>
+              </ul>
+            </div>
 
-          <?php if ($telephone = get_field('phone_number', 'option')) { ?>
-            <p><a href="tel:<?php echo $telephone; ?>"><?php echo $telephone; ?></a></p>
-          <?php } ?>
-
-          <?php if ($email = get_field('email', 'option')) { ?>
-            <p><a href="mailto:<?php echo $email; ?>" class="text-red"><?php echo $email; ?></a></p>
-          <?php } ?>
+          </div>
         </div>
-      </div>
 
-      <div class="mt-12 w-full text-center text-sm">
-        &copy; Copyright 2024. All Rights Reserved, Experiencavocado55 &nbsp; | &nbsp; <a href="/modern-slavery-statement/" title="Modern Slavery Statement" class="text-red underline">Modern Slavery Statement</a> | &nbsp; <a href="/privacy-policy/" title="Privacy Policy" class="text-red underline">Privacy Policy</a>
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="border-t border-gray-200">
+      <div class="mx-auto max-w-7xl px-6 lg:px-8 py-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <p class="text-xs text-gray-500 uppercase tracking-wide">
+            AVOCADO55 &copy; <?php echo date('Y'); ?> ALL RIGHTS RESERVED
+          </p>
+          <div class="flex items-center gap-6">
+            <a href="/privacy-policy/" class="text-xs text-gray-500 hover:text-brand-green">Privacy Policy</a>
+            <a href="/terms-and-conditions/" class="text-xs text-gray-500 hover:text-brand-green">Terms and conditions</a>
+          </div>
+        </div>
       </div>
     </div>
   </footer>

@@ -7,6 +7,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
 
   <?php wp_head(); ?>
 </head>
@@ -14,19 +17,39 @@
 <body <?php body_class(); ?>>
 	<?php wp_body_open(); ?>
 
-  <?php if ($logo = get_field('logo', 'option')) { ?>
-    <div class="absolute top-8 left-8 z-10">
-      <a href="<?php echo site_url(); ?>" title="<?php echo esc_attr(get_bloginfo('name')); ?>">
-        <img src="<?php echo $logo['url']; ?>" title="<?php echo esc_attr(get_bloginfo('name')); ?>" alt="<?php echo esc_attr(get_bloginfo('name')); ?>" style="max-width: 268px; max-height: 44px;" />
-      </a>
-    </div>
-  <?php } ?>
+  <header class="bg-white">
+    <nav aria-label="Global" class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
+      <div class="flex lg:flex-1">
+        <a href="#" class="-m-1.5 p-1.5">
+          <span class="sr-only">Avacado 55</span>
+          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="Avacado 55" class="h-8 w-auto" />
+        </a>
+      </div>
 
-  <input type="checkbox" id="main-navigation-toggle" class="btn btn--close" title="Toggle main navigation" />
-  <label for="main-navigation-toggle" class="absolute top-8 right-8 p-3 py-4 space-y-1 bg-white rounded-full z-50">
-      <span class="block w-6 h-0.5 bg-slate-900"></span>
-      <span class="block w-6 h-0.5 bg-slate-900"></span>
-      <span class="block w-6 h-0.5 bg-slate-900"></span>
-  </label>
+      <div class="flex lg:hidden">
+        <button type="button" command="show-modal" commandfor="mobile-menu" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700">
+          <span class="sr-only">Open main menu</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
+            <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+      </div>
 
-  <?php include(get_template_directory() . '/partials/overlay-nav.php'); ?>
+      <div class="hidden lg:flex lg:gap-x-12">
+        <?php
+          wp_nav_menu([
+            'theme_location' => 'header_menu',
+            'container'      => false,
+            'items_wrap'     => '%3$s',
+            'fallback_cb'    => false,
+            'walker'         => new Avocado55_Header_Nav_Walker(),
+          ]);
+        ?>
+      </div>
+
+      <div class="hidden lg:flex lg:flex-1 lg:justify-end">
+        <a href="#" class="button button--brand-cta">Contact us</a>
+      </div>
+    </nav>
+  </header>
+

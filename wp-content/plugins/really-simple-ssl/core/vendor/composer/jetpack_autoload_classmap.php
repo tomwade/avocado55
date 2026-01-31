@@ -94,17 +94,29 @@ return array(
 		'version' => 'dev-main',
 		'path'    => $baseDir . '/app/Features/Onboarding/OnboardingController.php'
 	),
+	'ReallySimplePlugins\\RSS\\Core\\Features\\Onboarding\\OnboardingFeatureService' => array(
+		'version' => 'dev-main',
+		'path'    => $baseDir . '/app/Features/Onboarding/OnboardingFeatureService.php'
+	),
 	'ReallySimplePlugins\\RSS\\Core\\Features\\Onboarding\\OnboardingLoader' => array(
 		'version' => 'dev-main',
 		'path'    => $baseDir . '/app/Features/Onboarding/OnboardingLoader.php'
 	),
-	'ReallySimplePlugins\\RSS\\Core\\Features\\Onboarding\\OnboardingService' => array(
-		'version' => 'dev-main',
-		'path'    => $baseDir . '/app/Features/Onboarding/OnboardingService.php'
-	),
 	'ReallySimplePlugins\\RSS\\Core\\Features\\Onboarding\\OnboardingStepsGenerator' => array(
 		'version' => 'dev-main',
 		'path'    => $baseDir . '/app/Features/Onboarding/OnboardingStepsGenerator.php'
+	),
+	'ReallySimplePlugins\\RSS\\Core\\Features\\Pro\\HibpPasswordCheck\\HibpPasswordCheckController' => array(
+		'version' => 'dev-main',
+		'path'    => $baseDir . '/app/Features/Pro/HibpPasswordCheck/HibpPasswordCheckController.php'
+	),
+	'ReallySimplePlugins\\RSS\\Core\\Features\\Pro\\HibpPasswordCheck\\HibpPasswordCheckLoader' => array(
+		'version' => 'dev-main',
+		'path'    => $baseDir . '/app/Features/Pro/HibpPasswordCheck/HibpPasswordCheckLoader.php'
+	),
+	'ReallySimplePlugins\\RSS\\Core\\Features\\Pro\\HibpPasswordCheck\\HibpPasswordCheckService' => array(
+		'version' => 'dev-main',
+		'path'    => $baseDir . '/app/Features/Pro/HibpPasswordCheck/HibpPasswordCheckService.php'
 	),
 	'ReallySimplePlugins\\RSS\\Core\\Interfaces\\ControllerInterface' => array(
 		'version' => 'dev-main',
@@ -165,6 +177,10 @@ return array(
 	'ReallySimplePlugins\\RSS\\Core\\Services\\EmailService' => array(
 		'version' => 'dev-main',
 		'path'    => $baseDir . '/app/Services/EmailService.php'
+	),
+	'ReallySimplePlugins\\RSS\\Core\\Services\\GlobalOnboardingService' => array(
+		'version' => 'dev-main',
+		'path'    => $baseDir . '/app/Services/GlobalOnboardingService.php'
 	),
 	'ReallySimplePlugins\\RSS\\Core\\Services\\RelatedPluginService' => array(
 		'version' => 'dev-main',

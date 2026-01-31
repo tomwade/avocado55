@@ -59,7 +59,7 @@ $icon = BREEZE_PLUGIN_URL . 'assets/images/advanced-active.png';
 				$placeholder_never_cache_url = 'Exclude Single URL:&#10;https://demo.com/example/&#10;&#10;Exclude Multiple URL using wildcard&#10;https://demo.com/example/(.*)';
 				?>
 				<textarea cols="100" rows="7" id="exclude-urls" name="exclude-urls"
-						  placeholder="<?php echo esc_attr( $placeholder_never_cache_url ); ?>"><?php echo $never_cache_urls; ?></textarea>
+							placeholder="<?php echo esc_attr( $placeholder_never_cache_url ); ?>"><?php echo $never_cache_urls; ?></textarea>
 				<div class="br-note">
 					<p>
 						<?php
@@ -98,7 +98,7 @@ $icon = BREEZE_PLUGIN_URL . 'assets/images/advanced-active.png';
 				$placeholder_cache_query_str = 'Include Single Query String:&#10;city&#10;&#10;Include Multiple Query Strings using wildcard&#10;city(.*)';
 				?>
 				<textarea cols="100" rows="7" id="cache-query-str" name="cache-query-str"
-						  placeholder="<?php esc_attr_e( $placeholder_cache_query_str ); ?>"><?php echo $cached_query_strings; ?></textarea>
+							placeholder="<?php esc_attr_e( $placeholder_cache_query_str ); ?>"><?php echo $cached_query_strings; ?></textarea>
 				<div class="br-note">
 					<p>
 						<?php
@@ -132,7 +132,7 @@ $icon = BREEZE_PLUGIN_URL . 'assets/images/advanced-active.png';
 				<div class="on-off-checkbox">
 					<label class="br-switcher">
 						<input id="breeze-wpjs-emoji" name="breeze-wpjs-emoji" type="checkbox" class="br-box"
-							   value="1" <?php echo $is_enabled; ?>>
+								value="1" <?php echo $is_enabled; ?>>
 						<div class="br-see-state">
 						</div>
 					</label><br>
@@ -171,8 +171,8 @@ $icon = BREEZE_PLUGIN_URL . 'assets/images/advanced-active.png';
 				<div class="on-off-checkbox">
 					<label class="br-switcher">
 						<input id="breeze-store-googlefonts-locally" name="breeze-store-googlefonts-locally"
-							   type="checkbox" class="br-box"
-							   value="1" <?php echo $is_enabled; ?>>
+								type="checkbox" class="br-box"
+								value="1" <?php echo $is_enabled; ?>>
 						<div class="br-see-state">
 						</div>
 					</label><br>
@@ -191,8 +191,8 @@ $icon = BREEZE_PLUGIN_URL . 'assets/images/advanced-active.png';
 				<div class="on-off-checkbox">
 					<label class="br-switcher">
 						<input id="breeze-store-googleanalytics-locally" name="breeze-store-googleanalytics-locally"
-							   type="checkbox" class="br-box"
-							   value="1" <?php echo $is_enabled; ?>>
+								type="checkbox" class="br-box"
+								value="1" <?php echo $is_enabled; ?>>
 						<div class="br-see-state">
 						</div>
 					</label><br>
@@ -211,8 +211,8 @@ $icon = BREEZE_PLUGIN_URL . 'assets/images/advanced-active.png';
 				<div class="on-off-checkbox">
 					<label class="br-switcher">
 						<input id="breeze-store-facebookpixel-locally" name="breeze-store-facebookpixel-locally"
-							   type="checkbox" class="br-box"
-							   value="1" <?php echo $is_enabled; ?>>
+								type="checkbox" class="br-box"
+								value="1" <?php echo $is_enabled; ?>>
 						<div class="br-see-state">
 						</div>
 					</label><br>
@@ -231,8 +231,8 @@ $icon = BREEZE_PLUGIN_URL . 'assets/images/advanced-active.png';
 				<div class="on-off-checkbox">
 					<label class="br-switcher">
 						<input id="breeze-store-gravatars-locally" name="breeze-store-gravatars-locally" type="checkbox"
-							   class="br-box"
-							   value="1" <?php echo $is_enabled; ?>>
+								class="br-box"
+								value="1" <?php echo $is_enabled; ?>>
 						<div class="br-see-state">
 						</div>
 					</label><br>
@@ -268,7 +268,7 @@ $icon = BREEZE_PLUGIN_URL . 'assets/images/advanced-active.png';
 				<div class="on-off-checkbox">
 					<label class="br-switcher">
 						<input id="breeze-enable-api" name="breeze-enable-api" type="checkbox" class="br-box"
-							   value="1" <?php echo $is_enabled; ?>>
+								value="1" <?php echo $is_enabled; ?>>
 						<div class="br-see-state">
 						</div>
 					</label><br>
@@ -286,9 +286,6 @@ $icon = BREEZE_PLUGIN_URL . 'assets/images/advanced-active.png';
 
 		<!-- START OPTION -->
 		<?php
-		$basic_value = isset( $options['breeze-secure-api'] ) ? filter_var( $options['breeze-secure-api'], FILTER_VALIDATE_BOOLEAN ) : false;
-		$is_enabled  = ( isset( $basic_value ) && true === $basic_value ) ? checked( $options['breeze-secure-api'], '1', false ) : '';
-
 		$disable_group_css = '';
 		$disable_overlay   = '';
 
@@ -300,24 +297,13 @@ $icon = BREEZE_PLUGIN_URL . 'assets/images/advanced-active.png';
 		<div class="br-option-item<?php echo $disable_overlay; ?>">
 			<div class="br-label">
 				<div class="br-option-text">
-					<?php _e( 'Authentication', 'breeze' ); ?>
+					<?php _e( 'Authentication Token', 'breeze' ); ?>
 				</div>
 			</div>
 			<div class="br-option">
-				<!-- Checkbox -->
-				<div class="on-off-checkbox">
-					<label class="br-switcher">
-						<input id="breeze-secure-api" name="breeze-secure-api" type="checkbox" class="br-box"
-							   value="1" <?php echo $is_enabled; ?> <?php echo $disable_group_css; ?>>
-						<div class="br-see-state">
-						</div>
-					</label><br>
-				</div>
-
-
 				<div class="br-note">
-					<p>
-						<?php _e( 'Secure Breeze API Endpoint with authentication key, allowing the ability option to safeguard the purge endpoint from unauthorized access. Use the option below to autogenerate a random key.', 'breeze' ); ?>
+					<p style="margin-top:0">
+						<?php _e( 'Authentication is required for the Breeze API Endpoint. Provide an authentication key to secure the purge endpoint from unauthorized access. Use the refresh icon to autogenerate a random key.', 'breeze' ); ?>
 					</p>
 				</div>
 
@@ -330,16 +316,22 @@ $icon = BREEZE_PLUGIN_URL . 'assets/images/advanced-active.png';
 				?>
 				<div>
 					<input type="text" id="breeze-api-token" name="breeze-api-token"
-						   placeholder="5a1404a010241e0b79aecb67581009d5"
-						   value="<?php echo $api_token_output; ?>"/>
+							placeholder="5a1404a010241e0b79aecb67581009d5"
+							value="<?php echo $api_token_output; ?>" readonly/>
 					<a id="refresh-api-token" title="<?php esc_attr_e( 'Refresh Token', 'breeze' ); ?>">
 						<span class="dashicons dashicons-update"></span>
 					</a>
+					<a style="display: inline-block;color: #11ACDF;  margin-left: 15px;cursor:pointer;" id="copy-api-token"
+						title="<?php esc_attr_e( 'Copy Token', 'breeze' ); ?>">
+						<span style="font-size: 22px;" class="dashicons dashicons-clipboard"></span>
+					</a>
+
+					<div id="breeze-password-strength-meter" style="display:none; margin-top: 5px; padding: 5px; font-weight: bold;"></div>
+					<div id="breeze-password-hint" style="display:none; color: #d63638; font-size: 12px; margin-top: 5px;"></div>
 				</div>
 				<div class="br-note">
 
 				</div>
-
 
 			</div>
 		</div>
