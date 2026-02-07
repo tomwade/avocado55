@@ -30,7 +30,7 @@ $category = !empty($categories) ? $categories[0] : null;
 
 <article class="group">
   <!-- Image Container -->
-  <div class="relative aspect-[4/3] rounded-xl overflow-hidden mb-4">
+  <a href="<?php echo esc_url($permalink); ?>" class="block relative aspect-[4/3] rounded-xl overflow-hidden mb-4">
     <?php if ($featured_image) : ?>
       <img 
         src="<?php echo esc_url($featured_image); ?>" 
@@ -47,7 +47,7 @@ $category = !empty($categories) ? $categories[0] : null;
         <?php echo esc_html($category->name); ?>
       </span>
     <?php endif; ?>
-  </div>
+  </a>
 
   <!-- Meta: Date & Author -->
   <div class="flex items-center gap-4 mb-3">

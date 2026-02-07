@@ -24,7 +24,7 @@ $attribution = get_sub_field('attribution');
 
     <!-- Quote -->
     <?php if ($quote) : ?>
-      <blockquote class="text-2xl lg:text-4xl font-light text-white italic leading-relaxed mb-8">
+      <blockquote class="text-2xl lg:text-4xl font-light text-white leading-relaxed mb-8">
         "<?php echo esc_html($quote); ?>"
       </blockquote>
     <?php endif; ?>

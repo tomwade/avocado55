@@ -1,10 +1,12 @@
 <?php
-
 /**
  * Class that handles the export and import of Breeze options
  *
  * Class Breeze_Settings_Import_Export
  */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 class Breeze_Settings_Import_Export {
 
 	function __construct() {

@@ -21,33 +21,28 @@ if ( have_posts() ) {
 ?>
 
 <!-- Hero Section -->
-<section class="relative bg-brand-green overflow-hidden">
+<section class="relative bg-brand-light overflow-hidden">
   <div class="mx-auto max-w-7xl px-6 lg:px-8 py-16 lg:py-24">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
       
       <!-- Content -->
-      <div class="text-white">
-        <!-- Category Badge -->
-        <?php if ($category) : ?>
-          <span class="inline-block bg-white/20 text-white text-xs font-medium px-3 py-1.5 rounded mb-6">
-            <?php echo esc_html($category->name); ?>
-          </span>
-        <?php endif; ?>
-
-        <!-- Meta -->
+      <div>
+        <!-- Meta: Date & Author -->
         <div class="flex items-center gap-4 mb-6">
-          <?php if ($author_avatar) : ?>
-            <img src="<?php echo esc_url($author_avatar); ?>" alt="<?php echo esc_attr($author_name); ?>" class="w-10 h-10 rounded-full" />
-          <?php endif; ?>
-          <div class="flex items-center gap-2 text-sm text-white/80">
-            <span><?php echo esc_html($author_name); ?></span>
-            <span>&bull;</span>
-            <time datetime="<?php echo get_the_date('Y-m-d'); ?>"><?php echo esc_html($date); ?></time>
+          <time datetime="<?php echo get_the_date('Y-m-d'); ?>" class="text-xs font-medium text-gray-500 uppercase tracking-wide">
+            <?php echo esc_html(strtoupper(get_the_date('d M Y'))); ?>
+          </time>
+          
+          <div class="flex items-center gap-2">
+            <?php if ($author_avatar) : ?>
+              <img src="<?php echo esc_url($author_avatar); ?>" alt="<?php echo esc_attr($author_name); ?>" class="w-6 h-6 rounded-full object-cover" />
+            <?php endif; ?>
+            <span class="text-sm font-medium text-brand-green"><?php echo esc_html($author_name); ?></span>
           </div>
         </div>
 
         <!-- Title -->
-        <h1 class="text-3xl lg:text-5xl font-semibold leading-tight">
+        <h1 class="text-3xl lg:text-5xl font-semibold text-brand-green leading-tight">
           <?php echo esc_html($title); ?>
         </h1>
       </div>
@@ -69,7 +64,7 @@ if ( have_posts() ) {
 
 <!-- Article Content -->
 <article class="bg-white py-16 lg:py-24">
-  <div class="mx-auto max-w-3xl px-6 lg:px-8">
+  <div class="mx-auto max-w-5xl px-6 lg:px-8">
     
     <div class="post-content prose prose-lg max-w-none">
       <?php the_content(); ?>
@@ -134,13 +129,19 @@ if ( have_posts() ) {
         You might also be interested in...
       </h2>
 
-      <a href="<?php echo get_permalink(get_option('page_for_posts')); ?>" class="button button--brand-green shrink-0">
+      <a href="<?php echo esc_url(get_permalink(get_option('page_for_posts')) ?: home_url()); ?>" class="button button--brand-green shrink-0">
         View all
       </a>
     </div>
 
-    <!-- Posts Grid -->
+    <!-- Posts Grid - Same Category -->
     <?php
+    // Get category IDs for the current post
+    $category_ids = [];
+    if ($category) {
+      $category_ids[] = $category->term_id;
+    }
+    
     $related_args = [
       'post_type' => 'post',
       'post_status' => 'publish',
@@ -149,44 +150,52 @@ if ( have_posts() ) {
       'orderby' => 'date',
       'order' => 'DESC',
     ];
+    
+    // Add category filter if we have a category
+    if (!empty($category_ids)) {
+      $related_args['category__in'] = $category_ids;
+    }
+    
     $related_query = new WP_Query($related_args);
     
-    if ($related_query->have_posts()) : ?>
+    // If not enough posts in same category, get any posts
+    if ($related_query->post_count < 3 && !empty($category_ids)) {
+      $exclude_ids = [$post_id];
+      foreach ($related_query->posts as $related_post) {
+        $exclude_ids[] = $related_post->ID;
+      }
+      
+      $fallback_args = [
+        'post_type' => 'post',
+        'post_status' => 'publish',
+        'posts_per_page' => 3 - $related_query->post_count,
+        'post__not_in' => $exclude_ids,
+        'orderby' => 'date',
+        'order' => 'DESC',
+      ];
+      $fallback_query = new WP_Query($fallback_args);
+    }
+    
+    if ($related_query->have_posts() || (isset($fallback_query) && $fallback_query->have_posts())) : ?>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <?php while ($related_query->have_posts()) : $related_query->the_post(); ?>
+        <?php 
+        // Show category-matched posts first
+        while ($related_query->have_posts()) : $related_query->the_post(); ?>
           <?php get_template_part('partials/news-post', null, ['post_id' => get_the_ID()]); ?>
-        <?php endwhile; ?>
+        <?php endwhile; 
+        wp_reset_postdata();
+        
+        // Show fallback posts if needed
+        if (isset($fallback_query) && $fallback_query->have_posts()) :
+          while ($fallback_query->have_posts()) : $fallback_query->the_post(); ?>
+            <?php get_template_part('partials/news-post', null, ['post_id' => get_the_ID()]); ?>
+          <?php endwhile;
+          wp_reset_postdata();
+        endif;
+        ?>
       </div>
-      <?php wp_reset_postdata(); ?>
     <?php endif; ?>
 
-  </div>
-</section>
-
-<!-- CTA Section -->
-<section class="relative bg-brand-cta py-16 lg:py-24 overflow-hidden">
-  <!-- Background Avocado Mark -->
-  <div class="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/4 w-80 lg:w-[500px] opacity-20 pointer-events-none">
-    <img 
-      src="<?php echo get_template_directory_uri(); ?>/assets/images/avacado-mark.png" 
-      alt="" 
-      class="w-full h-auto"
-      aria-hidden="true"
-    />
-  </div>
-
-  <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
-    <div class="max-w-2xl">
-      <h2 class="text-3xl lg:text-4xl font-semibold text-white leading-tight mb-4">
-        Ready to find your best way forward? Let's start with a conversation.
-      </h2>
-      <p class="text-white/80 mb-8">
-        Get in touch, we're here to help you make the leap.
-      </p>
-      <a href="/contact/" class="button bg-white text-brand-cta hover:bg-gray-100">
-        Contact us
-      </a>
-    </div>
   </div>
 </section>
 

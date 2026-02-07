@@ -26,16 +26,16 @@ $align_class = $alignment_classes[$text_alignment] ?? 'text-left';
 
 <section class="<?php echo esc_attr($bg_class); ?> py-16 lg:py-24">
   <div class="mx-auto max-w-7xl px-6 lg:px-8">
-    <div class="max-w-3xl space-y-6 <?php echo esc_attr($align_class); ?>">
+    <div class="max-w-5xl space-y-6 <?php echo esc_attr($align_class); ?>">
       
       <?php if ($title) : ?>
-        <h2 class="text-3xl lg:text-4xl font-semibold text-brand-green italic leading-tight">
+        <h2 class="text-3xl <?php if ($excerpt) : ?>lg:text-5xl<?php else : ?>lg:text-4xl<?php endif; ?> font-semibold text-brand-green leading-tight">
           <?php echo esc_html($title); ?>
         </h2>
       <?php endif; ?>
 
       <?php if ($excerpt) : ?>
-        <p class="text-gray-600 leading-relaxed">
+        <p class="max-w-xl <?php echo $text_alignment == 'center' ? 'mx-auto' : ''; ?> text-gray-600 leading-relaxed">
           <?php echo $excerpt; ?>
         </p>
       <?php endif; ?>

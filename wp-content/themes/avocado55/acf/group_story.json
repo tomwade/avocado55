@@ -85,6 +85,69 @@
             "placeholder": "",
             "prepend": "",
             "append": ""
+        },
+        {
+            "key": "field_story_sector",
+            "label": "Sector",
+            "name": "sector",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "The sector this story relates to, e.g. Financial Services, Healthcare",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_story_service",
+            "label": "Service",
+            "name": "service",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "The service provided, e.g. Consulting, Training",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_story_result",
+            "label": "Result",
+            "name": "result",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "The key result achieved, e.g. 30% cost reduction",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
         }
     ],
     "location": [

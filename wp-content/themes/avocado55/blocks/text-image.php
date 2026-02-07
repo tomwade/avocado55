@@ -14,7 +14,18 @@ $image_position = get_sub_field('image_position') ?: 'right';
 $background_color = get_sub_field('background_color') ?: 'white';
 
 // Background color class
-$bg_class = $background_color === 'brand-light' ? 'bg-brand-light' : 'bg-white';
+switch ($background_color) {
+  case 'light_green':
+    $bg_class = 'bg-brand-light';
+    break;
+  case 'dark_green':
+    $bg_class = 'bg-brand-green';
+    break;
+  case 'white':
+  default:
+    $bg_class = 'bg-white';
+    break;
+}
 
 // Set order classes based on image position
 $image_order = $image_position === 'left' ? 'order-1 lg:order-1' : 'order-1 lg:order-2';
@@ -22,13 +33,13 @@ $text_order = $image_position === 'left' ? 'order-2 lg:order-2' : 'order-2 lg:or
 ?>
 
 <section class="<?php echo esc_attr($bg_class); ?> py-16 lg:py-24">
-  <div class="mx-auto max-w-7xl px-6 lg:px-8">
+  <div class="mx-auto max-w-7xl">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
       
       <!-- Text Column -->
       <div class="<?php echo esc_attr($text_order); ?> space-y-6">
         <?php if ($title) : ?>
-          <h2 class="text-3xl lg:text-4xl font-semibold text-brand-green italic leading-tight">
+          <h2 class="text-3xl lg:text-5xl font-semibold text-brand-green leading-none">
             <?php echo esc_html($title); ?>
           </h2>
         <?php endif; ?>

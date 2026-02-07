@@ -285,7 +285,11 @@ INLINEJS;
 				add_action(
 					'wp_footer',
 					function () use ( $inline_js ) {
-						printf( '<script type="text/javascript">%s</script>', $inline_js );
+						// Sanitize JavaScript code for output - validate UTF-8 and ensure safe output
+						$sanitized_js = wp_check_invalid_utf8( $inline_js );
+						$sanitized_js = preg_replace( '/[\x00-\x1F\x7F]/u', '', $sanitized_js );
+						// For JavaScript code blocks, use wp_kses_post which allows safe content
+						printf( '<script type="text/javascript">%s</script>', wp_kses_post( $sanitized_js ) );
 					},
 					99
 				);
@@ -316,7 +320,7 @@ INLINEJS;
 	function define_ajaxurl() {
 		if ( current_user_can( 'manage_options' ) ) {
 			echo '<script type="text/javascript">
-           var ajaxurl = "' . admin_url( 'admin-ajax.php' ) . '";
+           var ajaxurl = "' . esc_js( admin_url( 'admin-ajax.php' ) ) . '";
              </script>';
 		}
 	}
@@ -333,7 +337,7 @@ INLINEJS;
 
 			$message = __( 'Thanks for installing Breeze. It is always recommended not to use more than one caching plugin at the same time. We recommend you to purge cache if necessary.', 'breeze' );
 
-			printf( '<div class="%1$s"><p>%2$s <button class="button" id="breeze-hide-install-msg">' . __( 'Hide message', 'breeze' ) . '</button></p></div>', esc_attr( $class ), esc_html( $message ) );
+			printf( '<div class="%1$s"><p>%2$s <button class="button" id="breeze-hide-install-msg">' . esc_html__( 'Hide message', 'breeze' ) . '</button></p></div>', esc_attr( $class ), esc_html( $message ) );
 			update_option( 'breeze_first_install', 'no' );
 		}
 	}

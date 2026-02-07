@@ -110,15 +110,19 @@ class Avocado55 {
     # Include styles
     wp_enqueue_style( 'avocado55-app', get_template_directory_uri() . '/assets/css/output.css', [], $ver );
     wp_enqueue_style( 'avocado55-styles', get_template_directory_uri() . '/style.css', [], $ver );
+    
+    # Slick Carousel (CDN)
+    wp_enqueue_style( 'slick-carousel', 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css', [], '1.8.1' );
+    wp_enqueue_style( 'slick-carousel-theme', 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css', ['slick-carousel'], '1.8.1' );
 
-    # Update jQuery version
-    if (!is_admin()) {
-      wp_dequeue_script( 'jquery');
-      wp_deregister_script( 'jquery');
-    }
+    # Enqueue jQuery (required for Slick)
+    wp_enqueue_script( 'jquery' );
+    
+    # Slick Carousel JS
+    wp_enqueue_script( 'slick-carousel', 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js', ['jquery'], '1.8.1', true );
 
     # Add our scripts
-    wp_enqueue_script( 'avocado55-app', get_template_directory_uri() . '/assets/js/app.js', [], $ver, true);
+    wp_enqueue_script( 'avocado55-app', get_template_directory_uri() . '/assets/js/app.js', ['jquery'], $ver, true);
   }
 
   /**
@@ -170,22 +174,58 @@ new Avocado55;
 
 /**
  * Custom Walker for Header Navigation
- * Outputs menu items with Tailwind CSS classes
+ * Outputs menu items with Tailwind CSS classes and active states
  */
 class Avocado55_Header_Nav_Walker extends Walker_Nav_Menu {
   
   public function start_el( &$output, $item, $depth = 0, $args = null, $id = 0 ) {
-    $classes = 'text-sm/6 font-semibold text-gray-900 hover:text-brand-cta transition-colors';
+    $is_active = false;
+    
+    // Check WordPress's built-in current classes
+    if (in_array('current-menu-item', $item->classes) || 
+        in_array('current-menu-ancestor', $item->classes) ||
+        in_array('current-menu-parent', $item->classes)) {
+      $is_active = true;
+    }
+    
+    // Check for blog/insights - active when on blog archive or single post
+    $blog_page_id = get_option('page_for_posts');
+    if ($item->object_id == $blog_page_id && (is_home() || is_singular('post') || is_category() || is_tag())) {
+      $is_active = true;
+    }
+    
+    // Check for Client Stories - active when on stories archive or single story
+    $item_url = $item->url;
+    if (strpos($item_url, '/stories') !== false && (is_post_type_archive('story') || is_singular('story'))) {
+      $is_active = true;
+    }
+    
+    // Check for current page ancestors (child pages)
+    if ($item->object === 'page' && is_page()) {
+      $current_page_id = get_queried_object_id();
+      $ancestors = get_post_ancestors($current_page_id);
+      if (in_array($item->object_id, $ancestors)) {
+        $is_active = true;
+      }
+    }
+    
+    $link_classes = 'text-sm/6 font-medium text-gray-900 p-3';
+    $container_classes = 'nav-item relative';
+    
+    if ($is_active) {
+      $container_classes .= ' nav-item--active';
+    }
     
     $output .= sprintf(
-      '<a href="%s" class="%s">%s</a>',
+      '<div class="%s"><a href="%s" class="%s">%s</a></div>',
+      esc_attr( $container_classes ),
       esc_url( $item->url ),
-      esc_attr( $classes ),
+      esc_attr( $link_classes ),
       esc_html( $item->title )
     );
   }
 
   public function end_el( &$output, $item, $depth = 0, $args = null ) {
-    // No closing tag needed since we're not wrapping in li
+    // No closing tag needed
   }
 }

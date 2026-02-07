@@ -31,8 +31,8 @@ class Breeze_Api_Handler {
 			'breeze/v1',
 			'/clear-all-cache',
 			array(
-				'methods'             => 'POST',
-				'callback'            => array( $this, 'breeze_clear_cache' ),
+			'methods'             => 'POST',
+			'callback'            => array( $this, 'breeze_clear_cache' ),
 				'permission_callback' => array( $this, 'permission_check_purge' ),
 			)
 		);
@@ -70,7 +70,7 @@ class Breeze_Api_Handler {
 				__( 'Invalid or missing authentication token.', 'breeze' ),
 				array( 'status' => 401 )
 			);
-		}
+	}
 
 		// Get stored token
 		$stored_token = isset( $this->options['breeze-api-token'] ) ? $this->options['breeze-api-token'] : '';
@@ -112,7 +112,7 @@ class Breeze_Api_Handler {
 		return new WP_REST_Response(
 			array( 'message' => __( 'Cache Cleared', 'breeze' ) ),
 			200
-		);
+			);
 	}
 
 	/**
@@ -159,7 +159,7 @@ class Breeze_Api_Handler {
 		} else {
 			set_transient( $transient_key, $attempts + 1, 60 );
 		}
-	}
+		}
 
 	/**
 	 * Logs an authentication attempt for debugging purposes.
@@ -179,6 +179,6 @@ class Breeze_Api_Handler {
 					time()
 				)
 			);
-		}
-	}
+	    }
+    }
 }

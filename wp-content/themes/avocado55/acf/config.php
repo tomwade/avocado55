@@ -3,7 +3,7 @@ class ACF_Config {
 
 	public function __construct() {
 		// Handle flat-file JSON storage for ACF fields
-		// add_filter( 'acf/settings/save_json', array( $this, 'my_acf_json_save_point' ) );
+		add_filter( 'acf/settings/save_json', array( $this, 'my_acf_json_save_point' ) );
 		add_filter( 'acf/settings/load_json', array( $this, 'my_acf_json_load_point' ) );
 
 		// Disable ACF settings on production servers
@@ -17,13 +17,12 @@ class ACF_Config {
 
 	public function my_acf_json_load_point( $paths ) {
 	    
-	    // remove original path (optional)
+	    // Remove default path to prevent conflicts
 	    unset($paths[0]);
 	    
-	    // append path
+	    // Load from theme's acf folder only
 	    $paths[] = get_template_directory() . '/acf';
 	    
-	    // return
 	    return $paths;
 	}
 	 

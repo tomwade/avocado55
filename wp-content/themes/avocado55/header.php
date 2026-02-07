@@ -17,12 +17,12 @@
 <body <?php body_class(); ?>>
 	<?php wp_body_open(); ?>
 
-  <header class="bg-white">
-    <nav aria-label="Global" class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
+  <header class="bg-white relative z-10" style="box-shadow: 0px 6px 24.3px 0px #00000050;">
+    <nav aria-label="Global" class="mx-auto flex max-w-7xl items-center justify-between py-4">
       <div class="flex lg:flex-1">
-        <a href="#" class="-m-1.5 p-1.5">
-          <span class="sr-only">Avacado 55</span>
-          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="Avacado 55" class="h-8 w-auto" />
+        <a href="<?php echo home_url(); ?>" class="-m-1.5 p-1.5">
+          <span class="sr-only">Avocado 55</span>
+          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="Avocado 55" class="h-8 w-auto" />
         </a>
       </div>
 
@@ -35,7 +35,7 @@
         </button>
       </div>
 
-      <div class="hidden lg:flex lg:gap-x-12">
+      <div class="hidden lg:flex lg:gap-x-6">
         <?php
           wp_nav_menu([
             'theme_location' => 'header_menu',
@@ -48,7 +48,7 @@
       </div>
 
       <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-        <a href="#" class="button button--brand-cta">Contact us</a>
+        <a href="/contact-us/" class="button button--brand-cta">Contact us</a>
       </div>
     </nav>
   </header>

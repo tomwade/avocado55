@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Breeze
  * Description: Breeze is a cache plugin with extensive options to speed up your website. All the options including Varnish Cache are compatible with Cloudways hosting.
- * Version: 2.2.23
+ * Version: 2.2.24
  * Text Domain: breeze
  * Domain Path: /languages
  * Author: Cloudways

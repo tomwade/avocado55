@@ -41,7 +41,7 @@
 .button--brand-green {
   background-color: transparent;
   color: var(--color-brand-green);
-  border: 2px solid var(--color-brand-green);
+  border: 1px solid var(--color-brand-green);
 }
 
 .button--brand-green:hover {
@@ -51,6 +51,22 @@
 
 .button--brand-green:active {
   transform: scale(0.98);
+}
+
+/* Navigation Active State */
+.nav-item {
+  position: relative;
+}
+
+.nav-item:hover::after,
+.nav-item--active::after {
+  content: '';
+  position: absolute;
+  bottom: -1.7rem;
+  left: 0;
+  right: 0;
+  height: 7px;
+  background-color: #199A6A;
 }
 
 /* Post Content Styles */
@@ -86,6 +102,13 @@
 
 .post-content p {
   margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+/* First paragraph styling */
+.post-content > p:first-of-type {
+  font-size: 1.5rem;
+  line-height: 1.5;
 }
 
 .post-content a {
@@ -100,45 +123,71 @@
 .post-content ul,
 .post-content ol {
   margin-bottom: 1.5rem;
-  padding-left: 1.5rem;
+  padding-left: 0;
+  list-style: none;
 }
 
-.post-content ul {
-  list-style-type: disc;
+.post-content ul li,
+.post-content ol li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.post-content ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  width: 8px;
+  height: 8px;
+  background-color: #2CB276;
+  border-radius: 50%;
 }
 
 .post-content ol {
-  list-style-type: decimal;
+  counter-reset: list-counter;
 }
 
-.post-content li {
-  margin-bottom: 0.5rem;
+.post-content ol li {
+  counter-increment: list-counter;
+}
+
+.post-content ol li::before {
+  content: counter(list-counter) '.';
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-weight: 600;
+  color: #2CB276;
 }
 
 /* Blockquote / Pull Quote */
 .post-content blockquote {
   position: relative;
   margin: 2.5rem 0;
-  padding: 2rem 0;
-  border-top: 1px solid #e5e7eb;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 0;
+  border: none;
 }
 
 .post-content blockquote p {
-  font-size: 1.5rem;
-  font-weight: 300;
-  font-style: italic;
-  line-height: 1.5;
+  font-size: 1.875rem;
+  font-weight: 600;
+  line-height: 1.3;
   color: var(--color-brand-green);
   margin-bottom: 0;
 }
 
-.post-content blockquote p::before {
-  content: '"';
+@media (min-width: 1024px) {
+  .post-content blockquote p {
+    font-size: 3rem;
+  }
 }
 
+.post-content blockquote p::before,
 .post-content blockquote p::after {
-  content: '"';
+  content: none;
 }
 
 .post-content blockquote cite {
@@ -201,4 +250,188 @@
   width: 100%;
   height: 100%;
   margin: 0;
+}
+
+/* ===== Team Carousel ===== */
+.team-carousel-wrapper {
+  width: 100%;
+  overflow: visible;
+}
+
+.team-carousel .slick-list {
+  overflow: visible;
+}
+
+.team-carousel .slick-track {
+  display: flex !important;
+}
+
+.team-carousel .slick-slide {
+  height: inherit !important;
+}
+
+.team-carousel .slick-slide > div {
+  height: 100%;
+}
+
+.team-slide {
+  width: 270px !important;
+}
+
+@media (min-width: 1024px) {
+  .team-carousel-wrapper {
+    margin-left: calc((100vw - 80rem) / 2 + 2rem);
+    margin-right: calc((100vw - 80rem) / 2 + 2rem);
+  }
+}
+
+/* ===== Team Modal ===== */
+.team-modal {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.team-modal:not(.hidden) {
+  opacity: 1;
+  visibility: visible;
+}
+
+.team-modal-content {
+  transform: scale(0.95);
+  transition: transform 0.3s ease;
+}
+
+.team-modal:not(.hidden) .team-modal-content {
+  transform: scale(1);
+}
+
+/* ===== Contact Form 7 Styling ===== */
+.contact-form .wpcf7-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.contact-form .wpcf7-form-control-wrap {
+  display: block;
+  width: 100%;
+}
+
+.contact-form label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.25rem;
+}
+
+.contact-form input[type="text"],
+.contact-form input[type="email"],
+.contact-form input[type="tel"],
+.contact-form input[type="url"],
+.contact-form input[type="number"],
+.contact-form textarea,
+.contact-form select {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: #374151;
+  background-color: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.contact-form input[type="text"]:focus,
+.contact-form input[type="email"]:focus,
+.contact-form input[type="tel"]:focus,
+.contact-form input[type="url"]:focus,
+.contact-form input[type="number"]:focus,
+.contact-form textarea:focus,
+.contact-form select:focus {
+  outline: none;
+  border-color: var(--color-brand-green);
+  box-shadow: 0 0 0 2px rgba(65, 98, 87, 0.1);
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+.contact-form textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.contact-form select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1rem;
+  padding-right: 2rem;
+}
+
+.contact-form input[type="submit"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #fff;
+  background-color: var(--color-brand-green);
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+  margin-left: auto;
+}
+
+.contact-form input[type="submit"]:hover {
+  background-color: var(--color-brand-cta);
+}
+
+.contact-form .wpcf7-not-valid-tip {
+  font-size: 0.75rem;
+  color: #ef4444;
+  margin-top: 0.25rem;
+}
+
+.contact-form .wpcf7-response-output {
+  margin: 1rem 0 0 0;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.contact-form .wpcf7-response-output.wpcf7-mail-sent-ok {
+  background-color: #d1fae5;
+  border: 1px solid #10b981;
+  color: #065f46;
+}
+
+.contact-form .wpcf7-response-output.wpcf7-validation-errors,
+.contact-form .wpcf7-response-output.wpcf7-spam-blocked {
+  background-color: #fee2e2;
+  border: 1px solid #ef4444;
+  color: #991b1b;
+}
+
+/* ===== Experts Carousel ===== */
+.experts-carousel .slick-track {
+  display: flex !important;
+}
+
+.experts-carousel .slick-slide {
+  height: inherit !important;
+}
+
+.experts-carousel .slick-slide > div {
+  height: 100%;
 }
