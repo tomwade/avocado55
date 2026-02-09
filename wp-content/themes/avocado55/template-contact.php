@@ -13,7 +13,23 @@ $form_text = get_field('form_text') ?: "Whether it's improving team performance,
 $form_shortcode = get_field('contact_form_shortcode');
 $experts_title = get_field('experts_title') ?: 'Talk to an expert';
 $experts_subtitle = get_field('experts_subtitle') ?: 'Select a specialist';
-$experts = get_field('experts'); // Array of team member IDs
+
+// Query all team members who have a booking link set
+$experts_query = new WP_Query([
+  'post_type' => 'team_member',
+  'posts_per_page' => -1,
+  'orderby' => 'menu_order',
+  'order' => 'ASC',
+  'post_status' => 'publish',
+  'meta_query' => [
+    [
+      'key' => 'booking_link',
+      'value' => '',
+      'compare' => '!='
+    ]
+  ]
+]);
+$experts = $experts_query->posts;
 
 // Get contact details from options
 $address = get_field('contact_address', 'option');
@@ -65,14 +81,16 @@ $email = get_field('contact_email', 'option');
           <?php echo esc_html($experts_subtitle); ?>
         </p>
 
-        <?php if ($experts && is_array($experts) && count($experts) > 0) : ?>
+        <?php if ($experts && count($experts) > 0) : ?>
           <!-- Experts Carousel -->
           <div class="experts-carousel-wrapper">
             <div class="experts-carousel">
-              <?php foreach ($experts as $expert_id) : 
+              <?php foreach ($experts as $expert) : 
+                $expert_id = $expert->ID;
                 $name = get_field('name', $expert_id) ?: get_the_title($expert_id);
                 $role = get_field('role', $expert_id);
                 $avatar = get_the_post_thumbnail_url($expert_id, 'thumbnail');
+                $booking_link = get_field('booking_link', $expert_id);
               ?>
                 <div class="expert-slide px-2">
                   <div class="flex items-center gap-4 bg-white rounded-xl p-4 shadow-sm">
@@ -94,7 +112,7 @@ $email = get_field('contact_email', 'option');
                     </div>
                     
                     <!-- Book Button -->
-                    <a href="#" class="flex-shrink-0 inline-flex items-center justify-center px-4 py-2 bg-brand-green text-white text-sm font-medium rounded hover:bg-brand-cta transition-colors">
+                    <a href="<?php echo esc_url($booking_link); ?>" target="_blank" rel="noopener" class="flex-shrink-0 inline-flex items-center justify-center px-4 py-2 bg-brand-green text-white text-sm font-medium rounded hover:bg-brand-cta transition-colors">
                       Book
                     </a>
                   </div>
@@ -119,8 +137,9 @@ $email = get_field('contact_email', 'option');
             <?php endif; ?>
           </div>
         <?php else : ?>
-          <p class="text-gray-500">No experts selected.</p>
+          <p class="text-gray-500">No experts available for booking.</p>
         <?php endif; ?>
+        <?php wp_reset_postdata(); ?>
       </div>
 
       <!-- Right Column: Our Details -->

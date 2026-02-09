@@ -10,20 +10,20 @@ $contact_form_7_shortcode = get_sub_field('contact_form_7_shortcode'); // Contac
     <!-- Left Section: Text Content -->
     <div class="flex flex-col justify-center">
       <?php if ($headline): ?>
-        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight text-gray-900 mb-6">
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight text-gray-900 mb-6 <?php echo esc_attr(avocado55_animation_class(1)); ?>">
           <?php echo esc_html($headline); ?>
         </h2>
       <?php endif; ?>
 
       <?php if ($text): ?>
-        <div class="text-gray-600 text-lg leading-relaxed">
+        <div class="text-gray-600 text-lg leading-relaxed <?php echo esc_attr(avocado55_animation_class(2)); ?>">
           <?php echo wp_kses_post($text); ?>
         </div>
       <?php endif; ?>
     </div>
 
     <!-- Right Section: Form -->
-    <div>
+    <div class="<?php echo esc_attr(avocado55_animation_class(3)); ?>">
       <?php if ($contact_form_7_shortcode): ?>
         <!-- Contact Form 7 -->
         <div class="bg-gray-50 rounded-lg p-6 lg:p-8">

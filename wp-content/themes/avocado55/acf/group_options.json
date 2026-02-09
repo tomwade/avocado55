@@ -140,6 +140,44 @@
             "allow_in_bindings": 0
         },
         {
+            "key": "field_options_settings_tab",
+            "label": "Settings",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_options_enable_animation",
+            "label": "Enable Animation",
+            "name": "enable_animation",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Enable scroll-triggered fade-in animations for content blocks",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 0,
+            "ui": 1,
+            "ui_on_text": "Enabled",
+            "ui_off_text": "Disabled",
+            "allow_in_bindings": 0
+        },
+        {
             "key": "field_options_contact_tab",
             "label": "Contact Details",
             "name": "",

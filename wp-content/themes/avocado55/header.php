@@ -18,7 +18,7 @@
 	<?php wp_body_open(); ?>
 
   <header class="bg-white relative z-10" style="box-shadow: 0px 6px 24.3px 0px #00000050;">
-    <nav aria-label="Global" class="mx-auto flex max-w-7xl items-center justify-between py-4">
+    <nav aria-label="Global" class="mx-auto flex max-w-7xl items-center justify-between py-4 px-6 lg:px-8">
       <div class="flex lg:flex-1">
         <a href="<?php echo home_url(); ?>" class="-m-1.5 p-1.5">
           <span class="sr-only">Avocado 55</span>

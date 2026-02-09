@@ -18,6 +18,36 @@ if ( have_posts() ) {
     // Get primary category
     $categories = get_the_category();
     $category = !empty($categories) ? $categories[0] : null;
+    
+    // Check if this author has a linked team member
+    $author_team_member = null;
+    $team_member_query = new WP_Query([
+      'post_type' => 'team_member',
+      'posts_per_page' => 1,
+      'post_status' => 'publish',
+      'meta_query' => [
+        [
+          'key' => 'wordpress_user',
+          'value' => $author_id,
+          'compare' => '='
+        ]
+      ]
+    ]);
+    
+    if ($team_member_query->have_posts()) {
+      $author_team_member = $team_member_query->posts[0];
+      $tm_id = $author_team_member->ID;
+      $tm_name = get_field('name', $tm_id) ?: get_the_title($tm_id);
+      $tm_role = get_field('role', $tm_id);
+      $tm_featured_image = get_the_post_thumbnail_url($tm_id, 'large');
+      $tm_modal_image = get_field('modal_image', $tm_id);
+      $tm_phone = get_field('phone', $tm_id);
+      $tm_email = get_field('email', $tm_id);
+      $tm_linkedin = get_field('linkedin', $tm_id);
+      $tm_modal_content = get_field('modal_content', $tm_id);
+      $tm_modal_img_url = $tm_modal_image ? $tm_modal_image['url'] : $tm_featured_image;
+    }
+    wp_reset_postdata();
 ?>
 
 <!-- Hero Section -->
@@ -88,9 +118,27 @@ if ( have_posts() ) {
         </div>
       </div>
 
-      <a href="<?php echo get_author_posts_url($author_id); ?>" class="button button--brand-cta">
-        Read bio
-      </a>
+      <?php if ($author_team_member) : ?>
+        <!-- Team modal trigger -->
+        <button 
+          type="button"
+          class="team-card button button--brand-cta cursor-pointer"
+          data-member-id="<?php echo esc_attr($tm_id); ?>"
+          data-name="<?php echo esc_attr($tm_name); ?>"
+          data-role="<?php echo esc_attr($tm_role); ?>"
+          data-image="<?php echo esc_attr($tm_modal_img_url); ?>"
+          data-phone="<?php echo esc_attr($tm_phone); ?>"
+          data-email="<?php echo esc_attr($tm_email); ?>"
+          data-linkedin="<?php echo esc_attr($tm_linkedin); ?>"
+          data-content="<?php echo esc_attr($tm_modal_content); ?>"
+        >
+          Read bio
+        </button>
+      <?php else : ?>
+        <a href="<?php echo get_author_posts_url($author_id); ?>" class="button button--brand-cta">
+          Read bio
+        </a>
+      <?php endif; ?>
       
     </div>
   </div>
@@ -198,6 +246,13 @@ if ( have_posts() ) {
 
   </div>
 </section>
+
+<?php 
+  // Include team modal if author has linked team member
+  if ($author_team_member) {
+    get_template_part('partials/team-modal');
+  }
+?>
 
 <?php
   }

@@ -13,12 +13,12 @@ $block_id = 'stories-' . uniqid();
 ?>
 
 <section class="bg-brand-light py-16 lg:py-24">
-  <div class="mx-auto max-w-7xl">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8">
     
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
       <?php if ($title) : ?>
-        <h2 class="text-3xl lg:text-4xl max-w-2xl font-semibold text-brand-green leading-tight">
+        <h2 class="text-3xl lg:text-4xl max-w-2xl font-semibold text-brand-green leading-tight <?php echo esc_attr(avocado55_animation_class(1)); ?>">
           <?php echo esc_html($title); ?>
         </h2>
       <?php endif; ?>
@@ -27,7 +27,7 @@ $block_id = 'stories-' . uniqid();
         <a 
           href="<?php echo esc_url($link['url']); ?>" 
           target="<?php echo esc_attr($link['target'] ?: '_self'); ?>" 
-          class="button button--brand-green shrink-0"
+          class="button button--brand-green shrink-0 <?php echo esc_attr(avocado55_animation_class(2)); ?>"
         >
           <?php echo esc_html($link['title']); ?>
         </a>
@@ -36,7 +36,7 @@ $block_id = 'stories-' . uniqid();
 
     <!-- Carousel -->
     <?php if ($stories) : ?>
-      <div class="relative" id="<?php echo esc_attr($block_id); ?>">
+      <div class="relative <?php echo esc_attr(avocado55_animation_class(3)); ?>" id="<?php echo esc_attr($block_id); ?>">
         
         <!-- Slides Container -->
         <div class="overflow-hidden">

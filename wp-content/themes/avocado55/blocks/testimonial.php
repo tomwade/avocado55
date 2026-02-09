@@ -13,7 +13,7 @@ $attribution = get_sub_field('attribution');
   <div class="mx-auto max-w-4xl px-6 lg:px-8 text-center">
     
     <!-- Logo Mark -->
-    <div class="mb-8">
+    <div class="mb-8 <?php echo esc_attr(avocado55_animation_class(1)); ?>">
       <img 
         src="<?php echo get_template_directory_uri(); ?>/assets/images/avacado-mark.png" 
         alt="" 
@@ -24,14 +24,14 @@ $attribution = get_sub_field('attribution');
 
     <!-- Quote -->
     <?php if ($quote) : ?>
-      <blockquote class="text-2xl lg:text-4xl font-light text-white leading-relaxed mb-8">
+      <blockquote class="text-2xl lg:text-4xl font-light text-white leading-relaxed mb-8 <?php echo esc_attr(avocado55_animation_class(2)); ?>">
         "<?php echo esc_html($quote); ?>"
       </blockquote>
     <?php endif; ?>
 
     <!-- Attribution -->
     <?php if ($attribution) : ?>
-      <p class="text-sm text-white/80">
+      <p class="text-sm text-white/80 <?php echo esc_attr(avocado55_animation_class(3)); ?>">
         <?php echo esc_html($attribution); ?>
       </p>
     <?php endif; ?>

@@ -18,14 +18,14 @@ $grid_class = isset($grid_classes[$grid_columns]) ? $grid_classes[$grid_columns]
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
     <div class="grid <?php echo esc_attr($grid_class); ?> gap-6 lg:gap-8">
       
-      <?php while (have_rows('cards')): the_row(); ?>
+      <?php $card_index = 1; while (have_rows('cards')): the_row(); ?>
         <?php
         $image = get_sub_field('image');
         $title = get_sub_field('title');
         $subtitle = get_sub_field('subtitle');
         ?>
         
-        <div class="bg-white rounded-lg shadow-sm p-6 lg:p-8">
+        <div class="bg-white rounded-lg shadow-sm p-6 lg:p-8 <?php echo esc_attr(avocado55_animation_class($card_index)); ?>"><?php $card_index++; ?>
           
           <?php if ($image): ?>
             <div class="mb-4">

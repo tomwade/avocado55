@@ -55,7 +55,7 @@ if ($feature_type == 'solid' && $background_color == 'light_green') {
   <div class="relative z-2 mx-auto max-w-7xl px-6 lg:px-8">
     <!-- Chevron Image -->
     <?php if ($show_chevron) : ?>
-      <div class="absolute -top-4 bottom-0 right-0 pointer-events-none">
+      <div class="hidden lg:block absolute -top-4 bottom-0 right-0 pointer-events-none">
         <img 
           src="<?php echo get_template_directory_uri(); ?>/assets/images/<?php echo esc_attr($chevron_image); ?>" 
           alt="" 
@@ -66,11 +66,11 @@ if ($feature_type == 'solid' && $background_color == 'light_green') {
     <?php endif; ?>
 
     <div class="max-w-2xl <?php echo esc_attr($text_class); ?> space-y-6 py-24 sm:py-32">
-      <h1 class="text-5xl <?php echo is_front_page() ? 'lg:text-7xl' : 'lg:text-6xl'; ?> font-medium"><?php echo get_sub_field('title'); ?></h1>
-      <p class="text-lg <?php echo esc_attr($text_muted_class); ?>"><?php echo get_sub_field('text'); ?></p>
+      <h1 class="text-5xl <?php echo is_front_page() ? 'lg:text-7xl' : 'lg:text-6xl'; ?> font-medium <?php echo esc_attr(avocado55_animation_class(1)); ?>"><?php echo get_sub_field('title'); ?></h1>
+      <p class="text-lg <?php echo esc_attr($text_muted_class); ?> <?php echo esc_attr(avocado55_animation_class(2)); ?>"><?php echo get_sub_field('text'); ?></p>
 
       <?php if ($link = get_sub_field('link')) { ?>
-        <a href="<?php echo $link['url']; ?>" target="<?php echo $link['target']; ?>" class="button button--brand-cta"><?php echo $link['title']; ?></a>
+        <a href="<?php echo $link['url']; ?>" target="<?php echo $link['target']; ?>" class="button button--brand-cta <?php echo esc_attr(avocado55_animation_class(3)); ?>"><?php echo $link['title']; ?></a>
       <?php } ?>
     </div>
   </div>

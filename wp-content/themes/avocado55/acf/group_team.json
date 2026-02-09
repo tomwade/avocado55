@@ -45,6 +45,26 @@
             "append": ""
         },
         {
+            "key": "field_team_wordpress_user",
+            "label": "WordPress User",
+            "name": "wordpress_user",
+            "aria-label": "",
+            "type": "user",
+            "instructions": "Link this team member to a WordPress user account. Used to display the team modal when viewing blog posts by this author.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "role": "",
+            "return_format": "id",
+            "multiple": 0,
+            "allow_null": 1,
+            "allow_in_bindings": 0
+        },
+        {
             "key": "field_team_modal_image",
             "label": "Modal Image",
             "name": "modal_image",
@@ -128,6 +148,24 @@
             "default_value": "",
             "allow_in_bindings": 0,
             "placeholder": "https://linkedin.com/in/..."
+        },
+        {
+            "key": "field_team_booking_link",
+            "label": "Calendar Booking Link",
+            "name": "booking_link",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "Optional calendar booking URL (e.g., Calendly, Cal.com). Team members with this field set will appear in the Contact page booking carousel.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "allow_in_bindings": 0,
+            "placeholder": "https://calendly.com/..."
         },
         {
             "key": "field_team_modal_content",

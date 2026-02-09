@@ -173,6 +173,31 @@ class Avocado55 {
 new Avocado55;
 
 /**
+ * Get animation class if animations are enabled
+ * 
+ * @param int $delay Optional delay index for staggered animations (1-6)
+ * @return string Animation class string or empty string
+ */
+function avocado55_animation_class($delay = 0) {
+  static $animations_enabled = null;
+  
+  if ($animations_enabled === null) {
+    $animations_enabled = get_field('enable_animation', 'option');
+  }
+  
+  if (!$animations_enabled) {
+    return '';
+  }
+  
+  $class = 'animate-on-scroll';
+  if ($delay > 0 && $delay <= 10) {
+    $class .= ' animate-delay-' . intval($delay);
+  }
+  
+  return $class;
+}
+
+/**
  * Custom Walker for Header Navigation
  * Outputs menu items with Tailwind CSS classes and active states
  */

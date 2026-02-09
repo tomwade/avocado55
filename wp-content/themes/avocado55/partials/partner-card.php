@@ -18,15 +18,17 @@ $title = $args['title'] ?? '';
 $excerpt = $args['excerpt'] ?? '';
 $link = $args['link'] ?? null;
 $background_image = $args['background_image'] ?? null;
+$animation_delay = $args['animation_delay'] ?? 0;
 
 // Determine if we have a background image
 $has_bg_image = !empty($background_image['url']);
 $bg_class = $has_bg_image ? 'bg-brand-green' : 'bg-brand-light';
 $text_class = $has_bg_image ? 'text-white' : 'text-brand-green';
 $excerpt_class = $has_bg_image ? 'text-white/80' : 'text-gray-600';
+$animation_class = avocado55_animation_class($animation_delay);
 ?>
 
-<div class="relative <?php echo esc_attr($bg_class); ?> rounded-2xl overflow-hidden min-h-[300px] flex flex-col justify-between p-6 lg:p-8">
+<div class="relative <?php echo esc_attr($bg_class); ?> rounded-2xl overflow-hidden min-h-[300px] flex flex-col justify-between p-6 lg:p-8 <?php echo esc_attr($animation_class); ?>">
   
   <?php if ($has_bg_image) : ?>
     <!-- Background Image with Overlay -->

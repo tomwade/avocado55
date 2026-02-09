@@ -29,19 +29,19 @@ $align_class = $alignment_classes[$text_alignment] ?? 'text-left';
     <div class="max-w-5xl space-y-6 <?php echo esc_attr($align_class); ?>">
       
       <?php if ($title) : ?>
-        <h2 class="text-3xl <?php if ($excerpt) : ?>lg:text-5xl<?php else : ?>lg:text-4xl<?php endif; ?> font-semibold text-brand-green leading-tight">
+        <h2 class="text-3xl <?php if ($excerpt) : ?>lg:text-5xl<?php else : ?>lg:text-4xl<?php endif; ?> font-semibold text-brand-green leading-tight <?php echo esc_attr(avocado55_animation_class(1)); ?>">
           <?php echo esc_html($title); ?>
         </h2>
       <?php endif; ?>
 
       <?php if ($excerpt) : ?>
-        <p class="max-w-xl <?php echo $text_alignment == 'center' ? 'mx-auto' : ''; ?> text-gray-600 leading-relaxed">
+        <p class="max-w-xl <?php echo $text_alignment == 'center' ? 'mx-auto' : ''; ?> text-gray-600 leading-relaxed <?php echo esc_attr(avocado55_animation_class(2)); ?>">
           <?php echo $excerpt; ?>
         </p>
       <?php endif; ?>
 
       <?php if ($link) : ?>
-        <div class="pt-2">
+        <div class="pt-2 <?php echo esc_attr(avocado55_animation_class(3)); ?>">
           <a 
             href="<?php echo esc_url($link['url']); ?>" 
             target="<?php echo esc_attr($link['target'] ?: '_self'); ?>" 

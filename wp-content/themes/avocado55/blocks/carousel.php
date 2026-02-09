@@ -4,7 +4,7 @@ $carousel_id = 'carousel-' . uniqid(); // Unique ID for this carousel instance
 ?>
 
 <?php if ($images && have_rows('images')): ?>
-  <div class="carousel-block w-full overflow-hidden py-12 lg:py-16">
+  <div class="carousel-block w-full overflow-hidden py-12 lg:py-16 <?php echo esc_attr(avocado55_animation_class(1)); ?>">
     <div class="swiper carousel-images relative w-full" id="<?php echo esc_attr($carousel_id); ?>">
       <div class="swiper-wrapper">
         

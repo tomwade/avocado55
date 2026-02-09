@@ -11,7 +11,7 @@ $email = get_sub_field('email'); // Email address
   <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
     
     <!-- Left Section: Contact Details -->
-    <div>
+    <div class="<?php echo esc_attr(avocado55_animation_class(1)); ?>">
       <?php if ($title): ?>
         <h2 class="text-3xl sm:text-4xl font-medium tracking-tight text-gray-900 mb-6">
           <?php echo esc_html($title); ?>
@@ -50,7 +50,7 @@ $email = get_sub_field('email'); // Email address
     </div>
 
     <!-- Right Section: Google Maps -->
-    <div>
+    <div class="<?php echo esc_attr(avocado55_animation_class(2)); ?>">
       <?php if ($map_embed_url): ?>
         <div class="relative w-full h-full min-h-[400px] rounded-2xl overflow-hidden">
           <iframe 

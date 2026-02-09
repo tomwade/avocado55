@@ -35,19 +35,19 @@ if ($item_count === 3) {
     <!-- Header -->
     <div class="max-w-3xl mx-auto text-center mb-12">
       <?php if ($title) : ?>
-        <h2 class="text-3xl lg:text-4xl font-semibold text-brand-green leading-tight mb-6">
+        <h2 class="text-3xl lg:text-4xl font-semibold text-brand-green leading-tight mb-6 <?php echo esc_attr(avocado55_animation_class(1)); ?>">
           <?php echo esc_html($title); ?>
         </h2>
       <?php endif; ?>
 
       <?php if ($text) : ?>
-        <p class="text-gray-600 leading-relaxed">
+        <p class="text-gray-600 leading-relaxed <?php echo esc_attr(avocado55_animation_class(2)); ?>">
           <?php echo $text; ?>
         </p>
       <?php endif; ?>
 
       <?php if ($link) : ?>
-        <div class="mt-6">
+        <div class="mt-6 <?php echo esc_attr(avocado55_animation_class(3)); ?>">
           <a 
             href="<?php echo esc_url($link['url']); ?>" 
             target="<?php echo esc_attr($link['target'] ?: '_self'); ?>" 
@@ -62,11 +62,11 @@ if ($item_count === 3) {
     <!-- Grid -->
     <?php if ($grid_items) : ?>
       <div class="grid grid-cols-1 sm:grid-cols-2 <?php echo esc_attr($grid_cols); ?> gap-6">
-        <?php foreach ($grid_items as $item) : 
+        <?php $grid_index = 4; foreach ($grid_items as $item) : 
           $icon = $item['icon'];
           $item_text = $item['text'];
         ?>
-          <div class="<?php echo esc_attr($card_bg_class); ?> rounded-xl p-6 lg:p-8">
+          <div class="<?php echo esc_attr($card_bg_class); ?> rounded-xl p-6 lg:p-8 <?php echo esc_attr(avocado55_animation_class($grid_index)); ?>"><?php $grid_index++; ?>
             <!-- Icon -->
             <?php if ($icon) : ?>
               <div class="w-14 h-14 bg-brand-green rounded-xl flex items-center justify-center mb-6">

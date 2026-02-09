@@ -19,7 +19,7 @@ if ($text_alignment === 'center') {
     <div class="<?php echo esc_attr($text_align_classes); ?> max-w-4xl mx-auto">
       
       <?php if ($text): ?>
-        <div class="text-gray-700 text-lg leading-relaxed mb-6">
+        <div class="text-gray-700 text-lg leading-relaxed mb-6 <?php echo esc_attr(avocado55_animation_class(1)); ?>">
           <?php echo wp_kses_post($text); ?>
         </div>
       <?php endif; ?>
@@ -28,7 +28,7 @@ if ($text_alignment === 'center') {
         <a 
           href="<?php echo esc_url($button['url']); ?>" 
           <?php if ($button['target']): ?>target="<?php echo esc_attr($button['target']); ?>"<?php endif; ?>
-          class="inline-block px-6 py-3 border border-gray-300 rounded-lg bg-white text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+          class="inline-block px-6 py-3 border border-gray-300 rounded-lg bg-white text-gray-700 font-medium hover:bg-gray-50 transition-colors <?php echo esc_attr(avocado55_animation_class(2)); ?>"
         >
           <?php echo esc_html($button['title']); ?>
         </a>

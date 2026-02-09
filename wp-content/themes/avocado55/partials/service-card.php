@@ -9,6 +9,7 @@
  */
 
 $service_id = $args['service_id'] ?? get_the_ID();
+$animation_delay = $args['animation_delay'] ?? 0;
 
 if (!$service_id) return;
 
@@ -17,9 +18,10 @@ $service_title = get_the_title($service_id);
 $icon = get_field('icon', $service_id);
 $description = get_field('description', $service_id);
 $url = get_permalink($service_id);
+$animation_class = avocado55_animation_class($animation_delay);
 ?>
 
-<div class="bg-brand-light rounded-2xl p-6 lg:p-8">
+<div class="bg-brand-light rounded-2xl p-6 lg:p-8 <?php echo esc_attr($animation_class); ?>">
   <!-- Header: Icon + Title -->
   <div class="flex items-center gap-4 mb-4">
     <!-- Icon -->

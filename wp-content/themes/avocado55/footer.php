@@ -2,7 +2,7 @@
 
   <footer class="bg-white border-t border-gray-200">
     <!-- Main Footer -->
-    <div class="mx-auto max-w-7xl py-12 lg:py-16">
+    <div class="mx-auto max-w-7xl py-12 lg:py-16 px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
         
         <!-- Logo & Social Column -->
@@ -132,6 +132,35 @@
   </footer>
 
   <?php wp_footer(); ?>
+
+  <?php if (get_field('enable_animation', 'option')) : ?>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const animatedElements = document.querySelectorAll('.animate-on-scroll');
+    
+    if (animatedElements.length === 0) return;
+    
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px 0px -50px 0px',
+      threshold: 0.1
+    };
+    
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+    
+    animatedElements.forEach(function(el) {
+      observer.observe(el);
+    });
+  });
+  </script>
+  <?php endif; ?>
 
 </body>
 </html>

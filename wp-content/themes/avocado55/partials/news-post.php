@@ -10,6 +10,7 @@
  */
 
 $post_id = $args['post_id'] ?? get_the_ID();
+$animation_delay = $args['animation_delay'] ?? 0;
 $post = get_post($post_id);
 
 if (!$post) return;
@@ -26,9 +27,10 @@ $author_avatar = get_avatar_url($author_id, ['size' => 32]);
 // Get primary category
 $categories = get_the_category($post_id);
 $category = !empty($categories) ? $categories[0] : null;
+$animation_class = avocado55_animation_class($animation_delay);
 ?>
 
-<article class="group">
+<article class="group <?php echo esc_attr($animation_class); ?>">
   <!-- Image Container -->
   <a href="<?php echo esc_url($permalink); ?>" class="block relative aspect-[4/3] rounded-xl overflow-hidden mb-4">
     <?php if ($featured_image) : ?>
