@@ -29,7 +29,7 @@ $align_class = $alignment_classes[$text_alignment] ?? 'text-left';
     <div class="max-w-5xl space-y-6 <?php echo esc_attr($align_class); ?>">
       
       <?php if ($title) : ?>
-        <h2 class="text-3xl <?php if ($excerpt) : ?>lg:text-5xl<?php else : ?>lg:text-4xl<?php endif; ?> font-semibold text-brand-green leading-tight <?php echo esc_attr(avocado55_animation_class(1)); ?>">
+        <h2 class="text-2xl <?php if ($excerpt) : ?>lg:text-5xl<?php else : ?>lg:text-4xl<?php endif; ?> font-semibold text-brand-green leading-tight <?php echo esc_attr(avocado55_animation_class(1)); ?>">
           <?php echo esc_html($title); ?>
         </h2>
       <?php endif; ?>

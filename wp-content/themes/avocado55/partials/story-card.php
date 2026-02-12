@@ -41,13 +41,13 @@ $story_url = get_permalink($story_id);
     <!-- Content Column -->
     <div class="p-6 lg:p-10 flex flex-col justify-center">
       <?php if ($client) : ?>
-        <p class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4 <?php echo esc_attr(avocado55_animation_class(2)); ?>">
+        <p class="text-base font-semibold text-gray-500 uppercase tracking-wide mb-4 <?php echo esc_attr(avocado55_animation_class(2)); ?>">
           <?php echo esc_html($client); ?>
         </p>
       <?php endif; ?>
 
       <?php if ($quote_text) : ?>
-        <blockquote class="font-raleway text-xl lg:text-3xl font-medium text-brand-green leading-tight mb-4 <?php echo esc_attr(avocado55_animation_class(3)); ?>">
+        <blockquote class="font-raleway text-2xl lg:text-3xl font-medium text-brand-green leading-tight mb-4 <?php echo esc_attr(avocado55_animation_class(3)); ?>">
           "<?php echo esc_html($quote_text); ?>"
         </blockquote>
       <?php endif; ?>

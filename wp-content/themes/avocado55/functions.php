@@ -254,3 +254,47 @@ class Avocado55_Header_Nav_Walker extends Walker_Nav_Menu {
     // No closing tag needed
   }
 }
+
+/**
+ * Custom Walker for Mobile Navigation
+ * Outputs menu items with large text styling for mobile overlay
+ */
+class Avocado55_Mobile_Nav_Walker extends Walker_Nav_Menu {
+  
+  public function start_lvl( &$output, $depth = 0, $args = null ) {
+    $output .= '<ul class="pl-4 mt-2 space-y-2">';
+  }
+
+  public function end_lvl( &$output, $depth = 0, $args = null ) {
+    $output .= '</ul>';
+  }
+  
+  public function start_el( &$output, $item, $depth = 0, $args = null, $id = 0 ) {
+    $is_active = in_array('current-menu-item', $item->classes) || 
+                 in_array('current-menu-ancestor', $item->classes);
+    
+    $text_size = $depth === 0 ? 'text-2xl' : 'text-lg';
+    $text_color = $is_active ? 'text-brand-cta' : 'text-brand-green';
+    
+    $link_classes = "$text_size font-medium $text_color hover:text-brand-cta transition-colors";
+    
+    // Check if item has children
+    $has_children = in_array('menu-item-has-children', $item->classes);
+    
+    $output .= '<li>';
+    $output .= sprintf(
+      '<a href="%s" class="%s">%s</a>',
+      esc_url( $item->url ),
+      esc_attr( $link_classes ),
+      esc_html( $item->title )
+    );
+    
+    if ($has_children && $depth === 0) {
+      $output .= '<span class="ml-1 text-brand-green text-sm">›</span>';
+    }
+  }
+
+  public function end_el( &$output, $item, $depth = 0, $args = null ) {
+    $output .= '</li>';
+  }
+}

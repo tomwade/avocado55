@@ -55,17 +55,17 @@ if ($feature_type == 'solid' && $background_color == 'light_green') {
   <div class="relative z-2 mx-auto max-w-7xl px-6 lg:px-8">
     <!-- Chevron Image -->
     <?php if ($show_chevron) : ?>
-      <div class="hidden lg:block absolute -top-4 bottom-0 right-0 pointer-events-none">
+      <div class="block absolute lg:-top-4 bottom-0 right-0 pointer-events-none">
         <img 
           src="<?php echo get_template_directory_uri(); ?>/assets/images/<?php echo esc_attr($chevron_image); ?>" 
           alt="" 
-          class="w-auto h-full"
+          class="w-[50%] h-auto lg:w-auto lg:h-full float-right lg:float-none"
           aria-hidden="true"
         />
       </div>
     <?php endif; ?>
 
-    <div class="max-w-2xl <?php echo esc_attr($text_class); ?> space-y-6 py-24 sm:py-32">
+    <div class="max-w-2xl <?php echo esc_attr($text_class); ?> space-y-6 pt-12 <?php if ($show_chevron) : ?>pb-42<?php endif; ?> sm:pt-32 sm:pb-32">
       <h1 class="text-5xl <?php echo is_front_page() ? 'lg:text-7xl' : 'lg:text-6xl'; ?> font-medium <?php echo esc_attr(avocado55_animation_class(1)); ?>"><?php echo get_sub_field('title'); ?></h1>
       <p class="text-lg <?php echo esc_attr($text_muted_class); ?> <?php echo esc_attr(avocado55_animation_class(2)); ?>"><?php echo get_sub_field('text'); ?></p>
 

@@ -15,7 +15,7 @@ $services = get_sub_field('services'); // Returns array of post objects
   <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
     <?php if ($title) : ?>
       <!-- Background watermark -->
-      <div class="absolute left-0 -translate-x-1/4 -top-16 opacity-100 pointer-events-none z-1">
+      <div class="hidden lg:block absolute left-0 -translate-x-1/4 -top-16 opacity-100 pointer-events-none z-1">
         <img 
           src="<?php echo get_template_directory_uri(); ?>/assets/images/avacado-mark-grayscale.png" 
           alt="" 

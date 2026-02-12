@@ -28,16 +28,16 @@ $link_text = $args['link_text'] ?? 'Read story';
     <img 
       src="<?php echo esc_url($background_image); ?>" 
       alt="" 
-      class="absolute inset-0 -z-10 h-full w-full object-cover object-center"
+      class="absolute inset-0 h-full w-full object-cover object-center"
     >
-    <div class="absolute inset-0 -z-10 bg-black/50"></div>
+    <div class="absolute inset-0 bg-[#416257]/60"></div>
   <?php endif; ?>
 
-  <div class="relative z-2 mx-auto max-w-7xl px-6 lg:px-8">
-    <div class="max-w-2xl text-white space-y-6 py-24 sm:py-32">
+  <div class="z-2 mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="max-w-2xl mx-auto text-white text-center space-y-4 py-24 sm:py-32">
       
       <?php if ($badge) : ?>
-        <span class="inline-block bg-brand-cta text-white text-xs font-medium px-3 py-1.5 rounded <?php echo esc_attr(avocado55_animation_class(1)); ?>">
+        <span class="absolute top-8 left-8 inline-block bg-[#CCFC80] text-brand-green text-xs font-medium px-3 py-1.5 rounded <?php echo esc_attr(avocado55_animation_class(1)); ?>">
           <?php echo esc_html($badge); ?>
         </span>
       <?php endif; ?>
@@ -49,18 +49,20 @@ $link_text = $args['link_text'] ?? 'Read story';
       <?php endif; ?>
 
       <?php if ($title) : ?>
-        <h1 class="text-4xl lg:text-6xl font-medium leading-tight <?php echo esc_attr(avocado55_animation_class(3)); ?>">
+        <h1 class="text-3xl lg:text-4xl font-medium leading-tight <?php echo esc_attr(avocado55_animation_class(3)); ?>">
           <?php echo esc_html($title); ?>
         </h1>
       <?php endif; ?>
 
       <?php if ($link_url) : ?>
-        <a 
-          href="<?php echo esc_url($link_url); ?>" 
-          class="inline-flex items-center justify-center px-6 py-3 border border-white text-white font-medium rounded hover:bg-white hover:text-brand-green transition-colors <?php echo esc_attr(avocado55_animation_class(4)); ?>"
-        >
-          <?php echo esc_html($link_text); ?>
-        </a>
+        <div class="pt-2">
+          <a 
+            href="<?php echo esc_url($link_url); ?>" 
+            class="inline-flex items-center justify-center text-sm px-4 py-2 border border-white text-white font-medium rounded hover:bg-white hover:text-brand-green transition-colors <?php echo esc_attr(avocado55_animation_class(4)); ?>"
+          >
+            <?php echo esc_html($link_text); ?>
+          </a>
+        </div>
       <?php endif; ?>
 
     </div>

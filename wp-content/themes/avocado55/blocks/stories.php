@@ -27,7 +27,7 @@ $block_id = 'stories-' . uniqid();
         <a 
           href="<?php echo esc_url($link['url']); ?>" 
           target="<?php echo esc_attr($link['target'] ?: '_self'); ?>" 
-          class="button button--brand-green shrink-0 <?php echo esc_attr(avocado55_animation_class(2)); ?>"
+          class="button button--brand-green shrink-0 self-start <?php echo esc_attr(avocado55_animation_class(2)); ?>"
         >
           <?php echo esc_html($link['title']); ?>
         </a>

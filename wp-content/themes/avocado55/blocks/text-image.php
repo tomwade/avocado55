@@ -27,10 +27,10 @@ switch ($background_color) {
     break;
 }
 
-// On mobile: text always first (order-1), image always second (order-2)
+// On mobile: image always first (order-1), text always second (order-2)
 // On desktop: respect the image_position setting
-$image_order = $image_position === 'left' ? 'order-2 lg:order-1' : 'order-2 lg:order-2';
-$text_order = $image_position === 'left' ? 'order-1 lg:order-2' : 'order-1 lg:order-1';
+$image_order = $image_position === 'left' ? 'order-1 lg:order-1' : 'order-1 lg:order-2';
+$text_order = $image_position === 'left' ? 'order-2 lg:order-2' : 'order-2 lg:order-1';
 ?>
 
 <section class="<?php echo esc_attr($bg_class); ?> py-16 lg:py-24">

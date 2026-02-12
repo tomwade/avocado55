@@ -122,7 +122,7 @@ if ( have_posts() ) {
         <!-- Team modal trigger -->
         <button 
           type="button"
-          class="team-card button button--brand-cta cursor-pointer"
+          class="team-card button button--brand-cta cursor-pointer self-start"
           data-member-id="<?php echo esc_attr($tm_id); ?>"
           data-name="<?php echo esc_attr($tm_name); ?>"
           data-role="<?php echo esc_attr($tm_role); ?>"
@@ -135,7 +135,7 @@ if ( have_posts() ) {
           Read bio
         </button>
       <?php else : ?>
-        <a href="<?php echo get_author_posts_url($author_id); ?>" class="button button--brand-cta">
+        <a href="<?php echo get_author_posts_url($author_id); ?>" class="button button--brand-cta self-start">
           Read bio
         </a>
       <?php endif; ?>
@@ -177,7 +177,7 @@ if ( have_posts() ) {
         You might also be interested in...
       </h2>
 
-      <a href="<?php echo esc_url(get_permalink(get_option('page_for_posts')) ?: home_url()); ?>" class="button button--brand-green shrink-0">
+      <a href="<?php echo esc_url(get_permalink(get_option('page_for_posts')) ?: home_url()); ?>" class="button button--brand-green shrink-0 self-start">
         View all
       </a>
     </div>
