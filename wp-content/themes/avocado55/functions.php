@@ -72,7 +72,12 @@ class Avocado55 {
     register_nav_menus(
       array(
         'header_menu' => esc_html__( 'Header Menu', 'avocado55' ),
-        'footer_menu' => __( 'Footer Menu', 'avocado55' ),
+        'footer_menu_1' => esc_html__( 'Footer Menu 1', 'avocado55' ),
+        'footer_menu_2' => esc_html__( 'Footer Menu 2', 'avocado55' ),
+        'footer_menu_3' => esc_html__( 'Footer Menu 3', 'avocado55' ),
+        'footer_menu_4' => esc_html__( 'Footer Menu 4', 'avocado55' ),
+        'footer_menu_5' => esc_html__( 'Footer Menu 5', 'avocado55' ),
+        'footer_menu_6' => esc_html__( 'Footer Menu 6', 'avocado55' ),
       )
     );
 
@@ -292,6 +297,26 @@ class Avocado55_Mobile_Nav_Walker extends Walker_Nav_Menu {
     if ($has_children && $depth === 0) {
       $output .= '<span class="ml-1 text-brand-green text-sm">›</span>';
     }
+  }
+
+  public function end_el( &$output, $item, $depth = 0, $args = null ) {
+    $output .= '</li>';
+  }
+}
+
+/**
+ * Custom Walker for Footer Navigation
+ * Outputs simple menu items with footer styling
+ */
+class Avocado55_Footer_Nav_Walker extends Walker_Nav_Menu {
+  
+  public function start_el( &$output, $item, $depth = 0, $args = null, $id = 0 ) {
+    $output .= '<li>';
+    $output .= sprintf(
+      '<a href="%s" class="text-sm text-gray-600 hover:text-brand-green">%s</a>',
+      esc_url( $item->url ),
+      esc_html( $item->title )
+    );
   }
 
   public function end_el( &$output, $item, $depth = 0, $args = null ) {

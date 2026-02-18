@@ -50,64 +50,40 @@
         <div class="lg:col-span-9">
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8">
             
-            <!-- Services Column -->
-            <div>
-              <h3 class="text-sm font-semibold text-gray-900 mb-4">Services</h3>
-              <ul class="space-y-3">
-                <li><a href="/services/consulting/" class="text-sm text-gray-600 hover:text-brand-green">Service goes here</a></li>
-                <li><a href="/services/training/" class="text-sm text-gray-600 hover:text-brand-green">Service goes here</a></li>
-                <li><a href="/services/support/" class="text-sm text-gray-600 hover:text-brand-green">Service goes here</a></li>
-                <li><a href="/services/analytics/" class="text-sm text-gray-600 hover:text-brand-green">Service goes here</a></li>
-              </ul>
-            </div>
-
-            <!-- Partnerships Column -->
-            <div>
-              <h3 class="text-sm font-semibold text-gray-900 mb-4">Partnerships</h3>
-              <ul class="space-y-3">
-                <li><a href="/partnerships/" class="text-sm text-gray-600 hover:text-brand-green">Our Partners</a></li>
-                <li><a href="/partnerships/become-a-partner/" class="text-sm text-gray-600 hover:text-brand-green">Become a Partner</a></li>
-              </ul>
-            </div>
-
-            <!-- Sectors Column -->
-            <div>
-              <h3 class="text-sm font-semibold text-gray-900 mb-4">Sectors</h3>
-              <ul class="space-y-3">
-                <li><a href="/sectors/financial-services/" class="text-sm text-gray-600 hover:text-brand-green">Financial Services</a></li>
-                <li><a href="/sectors/healthcare/" class="text-sm text-gray-600 hover:text-brand-green">Healthcare</a></li>
-                <li><a href="/sectors/retail/" class="text-sm text-gray-600 hover:text-brand-green">Retail</a></li>
-              </ul>
-            </div>
-
-            <!-- Client Stories Column -->
-            <div>
-              <h3 class="text-sm font-semibold text-gray-900 mb-4">Client Stories</h3>
-              <ul class="space-y-3">
-                <li><a href="/stories/" class="text-sm text-gray-600 hover:text-brand-green">All Stories</a></li>
-                <li><a href="/stories/case-studies/" class="text-sm text-gray-600 hover:text-brand-green">Case Studies</a></li>
-              </ul>
-            </div>
-
-            <!-- About Us Column -->
-            <div>
-              <h3 class="text-sm font-semibold text-gray-900 mb-4">About Us</h3>
-              <ul class="space-y-3">
-                <li><a href="/about/" class="text-sm text-gray-600 hover:text-brand-green">Our Story</a></li>
-                <li><a href="/about/team/" class="text-sm text-gray-600 hover:text-brand-green">Our Team</a></li>
-                <li><a href="/about/careers/" class="text-sm text-gray-600 hover:text-brand-green">Careers</a></li>
-              </ul>
-            </div>
-
-            <!-- Insights Column -->
-            <div>
-              <h3 class="text-sm font-semibold text-gray-900 mb-4">Insights</h3>
-              <ul class="space-y-3">
-                <li><a href="/insights/" class="text-sm text-gray-600 hover:text-brand-green">All Insights</a></li>
-                <li><a href="/insights/blog/" class="text-sm text-gray-600 hover:text-brand-green">Blog</a></li>
-                <li><a href="/insights/resources/" class="text-sm text-gray-600 hover:text-brand-green">Resources</a></li>
-              </ul>
-            </div>
+            <?php 
+            // Footer menu columns
+            $footer_menus = [
+              ['location' => 'footer_menu_1', 'heading_field' => 'footer_menu_1_heading'],
+              ['location' => 'footer_menu_2', 'heading_field' => 'footer_menu_2_heading'],
+              ['location' => 'footer_menu_3', 'heading_field' => 'footer_menu_3_heading'],
+              ['location' => 'footer_menu_4', 'heading_field' => 'footer_menu_4_heading'],
+              ['location' => 'footer_menu_5', 'heading_field' => 'footer_menu_5_heading'],
+              ['location' => 'footer_menu_6', 'heading_field' => 'footer_menu_6_heading'],
+            ];
+            
+            foreach ($footer_menus as $menu) :
+              $heading = get_field($menu['heading_field'], 'option');
+              if (has_nav_menu($menu['location']) || $heading) :
+            ?>
+              <div>
+                <?php if ($heading) : ?>
+                  <h3 class="text-sm font-semibold text-gray-900 mb-4"><?php echo esc_html($heading); ?></h3>
+                <?php endif; ?>
+                <?php
+                  wp_nav_menu([
+                    'theme_location' => $menu['location'],
+                    'container'      => false,
+                    'menu_class'     => 'space-y-3',
+                    'fallback_cb'    => false,
+                    'items_wrap'     => '<ul class="%2$s">%3$s</ul>',
+                    'walker'         => new Avocado55_Footer_Nav_Walker(),
+                  ]);
+                ?>
+              </div>
+            <?php 
+              endif;
+            endforeach; 
+            ?>
 
           </div>
         </div>

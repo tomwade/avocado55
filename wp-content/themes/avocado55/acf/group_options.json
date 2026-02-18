@@ -250,6 +250,132 @@
             "default_value": "",
             "placeholder": "hello@avocado55.com",
             "allow_in_bindings": 0
+        },
+        {
+            "key": "field_options_footer_tab",
+            "label": "Footer Menus",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_options_footer_menu_1_heading",
+            "label": "Footer Menu 1 Heading",
+            "name": "footer_menu_1_heading",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Heading for the first footer menu column",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Services",
+            "placeholder": "",
+            "allow_in_bindings": 0
+        },
+        {
+            "key": "field_options_footer_menu_2_heading",
+            "label": "Footer Menu 2 Heading",
+            "name": "footer_menu_2_heading",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Heading for the second footer menu column",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Partnerships",
+            "placeholder": "",
+            "allow_in_bindings": 0
+        },
+        {
+            "key": "field_options_footer_menu_3_heading",
+            "label": "Footer Menu 3 Heading",
+            "name": "footer_menu_3_heading",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Heading for the third footer menu column",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Sectors",
+            "placeholder": "",
+            "allow_in_bindings": 0
+        },
+        {
+            "key": "field_options_footer_menu_4_heading",
+            "label": "Footer Menu 4 Heading",
+            "name": "footer_menu_4_heading",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Heading for the fourth footer menu column",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Client Stories",
+            "placeholder": "",
+            "allow_in_bindings": 0
+        },
+        {
+            "key": "field_options_footer_menu_5_heading",
+            "label": "Footer Menu 5 Heading",
+            "name": "footer_menu_5_heading",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Heading for the fifth footer menu column",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "About Us",
+            "placeholder": "",
+            "allow_in_bindings": 0
+        },
+        {
+            "key": "field_options_footer_menu_6_heading",
+            "label": "Footer Menu 6 Heading",
+            "name": "footer_menu_6_heading",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Heading for the sixth footer menu column",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Insights",
+            "placeholder": "",
+            "allow_in_bindings": 0
         }
     ],
     "location": [

@@ -4,6 +4,13 @@
   <meta charset="<?php bloginfo( 'charset' ); ?>" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+  <link rel="icon" type="image/png" href="/wp-content/themes/avocado55/assets/images/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="/wp-content/themes/avocado55/assets/images/favicon.svg" />
+  <link rel="shortcut icon" href="/wp-content/themes/avocado55/assets/images/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/wp-content/themes/avocado55/assets/images/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-title" content="Avocado55" />
+  <link rel="manifest" href="/wp-content/themes/avocado55/assets/images/site.webmanifest" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
