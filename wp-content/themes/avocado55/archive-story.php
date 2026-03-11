@@ -31,16 +31,21 @@ if ($featured_story) :
 endif;
 ?>
 
+<?php
+$stories_intro = get_field('stories_archive_intro', 'option');
+if ($stories_intro) :
+?>
 <!-- Intro Text Section -->
 <section class="bg-brand-light py-16 lg:py-24">
   <div class="mx-auto max-w-7xl px-6 lg:px-8">
     <div class="max-w-5xl space-y-6">
       <h2 class="text-3xl lg:text-4xl font-semibold text-brand-green leading-tight <?php echo esc_attr(avocado55_animation_class(1)); ?>">
-        Trusted by leading contact centres across finance, retail, and telecoms. Lorem ipsum dolor sit amet consecteur.
+        <?php echo esc_html($stories_intro); ?>
       </h2>
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- Stories List -->
 <section class="bg-brand-light pb-16 lg:pb-24">

@@ -14,9 +14,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-  
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
 
   <?php wp_head(); ?>
 </head>
@@ -24,7 +21,7 @@
 <body <?php body_class(); ?>>
 	<?php wp_body_open(); ?>
 
-  <header class="bg-white relative z-10" style="box-shadow: 0px 6px 24.3px 0px #00000050;">
+  <header id="site-header" class="sticky top-0 bg-white relative z-10" style="box-shadow: 0px 6px 24.3px 0px #00000050;">
     <nav aria-label="Global" class="mx-auto flex max-w-7xl items-center justify-between py-4 px-6 lg:px-8">
       <div class="flex lg:flex-1">
         <a href="<?php echo home_url(); ?>" class="-m-1.5 p-1.5">
@@ -137,5 +134,53 @@
         closeMenu();
       }
     });
+
+    // Services dropdown: toggle on click, close on outside click or Escape
+    const servicesTrigger = document.querySelector('.services-dropdown-trigger');
+    const servicesPanel = document.getElementById('services-dropdown-panel');
+    const servicesWrapper = document.querySelector('.services-dropdown-wrapper');
+    const siteHeader = document.getElementById('site-header');
+    const servicesChevron = servicesTrigger && servicesTrigger.querySelector('.services-dropdown-chevron');
+    if (servicesTrigger && servicesPanel && servicesWrapper) {
+      function isServicesOpen() {
+        return servicesPanel.classList.contains('opacity-100') && servicesPanel.classList.contains('visible');
+      }
+      function openServices() {
+        if (siteHeader) {
+          var rect = siteHeader.getBoundingClientRect();
+          servicesPanel.style.top = rect.bottom + 'px';
+        }
+        servicesPanel.classList.remove('opacity-0', 'invisible');
+        servicesPanel.classList.add('opacity-100', 'visible');
+        servicesTrigger.setAttribute('aria-expanded', 'true');
+        servicesTrigger.classList.add('is-open');
+        if (servicesChevron) servicesChevron.style.transform = 'rotate(180deg)';
+      }
+      function closeServices() {
+        servicesPanel.classList.add('opacity-0', 'invisible');
+        servicesPanel.classList.remove('opacity-100', 'visible');
+        servicesTrigger.setAttribute('aria-expanded', 'false');
+        servicesTrigger.classList.remove('is-open');
+        if (servicesChevron) servicesChevron.style.transform = '';
+      }
+      function toggleServices() {
+        isServicesOpen() ? closeServices() : openServices();
+      }
+      servicesTrigger.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleServices();
+      });
+      document.addEventListener('click', function(e) {
+        if (isServicesOpen() && !servicesWrapper.contains(e.target)) {
+          closeServices();
+        }
+      });
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && isServicesOpen()) {
+          closeServices();
+        }
+      });
+    }
   });
   </script>

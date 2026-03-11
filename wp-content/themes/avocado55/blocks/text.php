@@ -11,6 +11,7 @@ $excerpt = get_sub_field('excerpt');
 $link = get_sub_field('link');
 $background_color = get_sub_field('background_color') ?: 'white';
 $text_alignment = get_sub_field('text_alignment') ?: 'left';
+$content_width = get_sub_field('content_width') ?: 'regular';
 
 // Background color class
 $bg_class = $background_color === 'brand-light' ? 'bg-brand-light' : 'bg-white';
@@ -22,6 +23,15 @@ $alignment_classes = [
   'right' => 'text-right ml-auto',
 ];
 $align_class = $alignment_classes[$text_alignment] ?? 'text-left';
+
+// Content width: Full (no class), Wide (max-w-4xl), Regular (max-w-2xl), Small (max-w-xl)
+$width_classes = [
+  'full' => '',
+  'wide' => 'max-w-4xl',
+  'regular' => 'max-w-2xl',
+  'small' => 'max-w-xl',
+];
+$width_class = $width_classes[$content_width] ?? 'max-w-2xl';
 ?>
 
 <section class="<?php echo esc_attr($bg_class); ?> py-16 lg:py-24">
@@ -35,9 +45,9 @@ $align_class = $alignment_classes[$text_alignment] ?? 'text-left';
       <?php endif; ?>
 
       <?php if ($excerpt) : ?>
-        <p class="max-w-xl <?php echo $text_alignment == 'center' ? 'mx-auto' : ''; ?> text-gray-600 leading-relaxed <?php echo esc_attr(avocado55_animation_class(2)); ?>">
-          <?php echo $excerpt; ?>
-        </p>
+        <div class="page-content <?php echo $width_class ? esc_attr($width_class) . ' ' : ''; ?><?php echo $text_alignment == 'center' ? 'mx-auto ' : ''; ?>text-gray-600 leading-relaxed <?php echo esc_attr(avocado55_animation_class(2)); ?>">
+          <?php echo avocado55_render_content( $excerpt ); ?>
+        </div>
       <?php endif; ?>
 
       <?php if ($link) : ?>

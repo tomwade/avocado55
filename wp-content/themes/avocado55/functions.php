@@ -12,7 +12,6 @@ require_once get_template_directory() . '/acf/config.php';
 
 // Load our custom post types
 require_once get_template_directory() . '/post-types/client.php';
-require_once get_template_directory() . '/post-types/partner.php';
 require_once get_template_directory() . '/post-types/sector.php';
 require_once get_template_directory() . '/post-types/service.php';
 require_once get_template_directory() . '/post-types/story.php';
@@ -72,12 +71,7 @@ class Avocado55 {
     register_nav_menus(
       array(
         'header_menu' => esc_html__( 'Header Menu', 'avocado55' ),
-        'footer_menu_1' => esc_html__( 'Footer Menu 1', 'avocado55' ),
-        'footer_menu_2' => esc_html__( 'Footer Menu 2', 'avocado55' ),
-        'footer_menu_3' => esc_html__( 'Footer Menu 3', 'avocado55' ),
-        'footer_menu_4' => esc_html__( 'Footer Menu 4', 'avocado55' ),
-        'footer_menu_5' => esc_html__( 'Footer Menu 5', 'avocado55' ),
-        'footer_menu_6' => esc_html__( 'Footer Menu 6', 'avocado55' ),
+        'footer_menu' => esc_html__( 'Footer Menu', 'avocado55' ),
       )
     );
 
@@ -204,48 +198,50 @@ function avocado55_animation_class($delay = 0) {
 
 /**
  * Custom Walker for Header Navigation
- * Outputs menu items with Tailwind CSS classes and active states
+ * Outputs menu items with Tailwind CSS classes and active states.
+ * Renders the Services dropdown (desktop only) when enabled in ACF Options.
  */
 class Avocado55_Header_Nav_Walker extends Walker_Nav_Menu {
-  
+
   public function start_el( &$output, $item, $depth = 0, $args = null, $id = 0 ) {
+    $is_services = ( stripos( $item->title, 'Services' ) !== false || strpos( $item->url, '/services' ) !== false );
+    $show_dropdown = $is_services && $depth === 0 && get_field( 'show_services_dropdown', 'option' );
+    $services = $show_dropdown ? get_field( 'services_dropdown_services', 'option' ) : array();
+    $heading = $show_dropdown ? get_field( 'services_dropdown_heading', 'option' ) : '';
+    $link_arr = $show_dropdown ? get_field( 'services_dropdown_link', 'option' ) : null;
+
+    if ( $show_dropdown && ( ! empty( $services ) || $heading || $link_arr ) ) {
+      $output .= $this->render_services_dropdown( $item, $heading, $link_arr, $services );
+      return;
+    }
+
     $is_active = false;
-    
-    // Check WordPress's built-in current classes
-    if (in_array('current-menu-item', $item->classes) || 
-        in_array('current-menu-ancestor', $item->classes) ||
-        in_array('current-menu-parent', $item->classes)) {
+    if ( in_array( 'current-menu-item', $item->classes ) ||
+         in_array( 'current-menu-ancestor', $item->classes ) ||
+         in_array( 'current-menu-parent', $item->classes ) ) {
       $is_active = true;
     }
-    
-    // Check for blog/insights - active when on blog archive or single post
-    $blog_page_id = get_option('page_for_posts');
-    if ($item->object_id == $blog_page_id && (is_home() || is_singular('post') || is_category() || is_tag())) {
+    $blog_page_id = get_option( 'page_for_posts' );
+    if ( $item->object_id == $blog_page_id && ( is_home() || is_singular( 'post' ) || is_category() || is_tag() ) ) {
       $is_active = true;
     }
-    
-    // Check for Client Stories - active when on stories archive or single story
     $item_url = $item->url;
-    if (strpos($item_url, '/stories') !== false && (is_post_type_archive('story') || is_singular('story'))) {
+    if ( strpos( $item_url, '/stories' ) !== false && ( is_post_type_archive( 'story' ) || is_singular( 'story' ) ) ) {
       $is_active = true;
     }
-    
-    // Check for current page ancestors (child pages)
-    if ($item->object === 'page' && is_page()) {
+    if ( $item->object === 'page' && is_page() ) {
       $current_page_id = get_queried_object_id();
-      $ancestors = get_post_ancestors($current_page_id);
-      if (in_array($item->object_id, $ancestors)) {
+      $ancestors = get_post_ancestors( $current_page_id );
+      if ( in_array( $item->object_id, $ancestors ) ) {
         $is_active = true;
       }
     }
-    
-    $link_classes = 'text-sm/6 font-medium text-gray-900 p-3';
-    $container_classes = 'nav-item relative';
-    
-    if ($is_active) {
+
+    $link_classes = 'text-sm/6 font-medium text-gray-900 px-3 py-3 inline-flex items-center h-10';
+    $container_classes = 'nav-item relative flex items-center';
+    if ( $is_active ) {
       $container_classes .= ' nav-item--active';
     }
-    
     $output .= sprintf(
       '<div class="%s"><a href="%s" class="%s">%s</a></div>',
       esc_attr( $container_classes ),
@@ -253,6 +249,47 @@ class Avocado55_Header_Nav_Walker extends Walker_Nav_Menu {
       esc_attr( $link_classes ),
       esc_html( $item->title )
     );
+  }
+
+  private function render_services_dropdown( $item, $heading, $link_arr, $services ) {
+    $link_url = is_array( $link_arr ) && ! empty( $link_arr['url'] ) ? $link_arr['url'] : '/services/';
+    $link_title = is_array( $link_arr ) && ! empty( $link_arr['title'] ) ? $link_arr['title'] : 'All services';
+    $link_target = is_array( $link_arr ) && ! empty( $link_arr['target'] ) ? $link_arr['target'] : '_self';
+
+    ob_start();
+    ?>
+    <div class="nav-item relative services-dropdown-wrapper flex items-center">
+      <button type="button" class="services-dropdown-trigger text-sm/6 font-medium text-gray-900 px-3 py-3 inline-flex items-center h-10 bg-transparent border-0 cursor-pointer" aria-expanded="false" aria-haspopup="true" aria-controls="services-dropdown-panel">
+        <?php echo esc_html( $item->title ); ?>
+        <svg class="services-dropdown-chevron w-4 h-4 ml-0.5 opacity-70 transition-transform duration-150" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </button>
+      <div id="services-dropdown-panel" class="services-dropdown-panel fixed left-0 right-0 w-full opacity-0 invisible transition-all duration-150 z-50 bg-white shadow-xl border-t border-gray-100" role="menu">
+        <div class="max-w-6xl mx-auto py-8">
+          <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12">
+            <div class="flex flex-col justify-center lg:col-span-2">
+              <?php if ( $heading ) : ?>
+                <p class="text-brand-green font-medium text-[28px] leading-snug mb-6"><?php echo esc_html( $heading ); ?></p>
+              <?php endif; ?>
+              <a href="<?php echo esc_url( $link_url ); ?>" target="<?php echo esc_attr( $link_target ); ?>" rel="noopener" class="button button--brand-green self-start">
+                <?php echo esc_html( $link_title ); ?>
+              </a>
+            </div>
+            <?php if ( ! empty( $services ) ) : ?>
+              <div class="grid grid-cols-2 gap-4 lg:col-span-3">
+                <?php foreach ( $services as $service ) :
+                  if ( ! is_object( $service ) || empty( $service->ID ) ) continue;
+                  get_template_part( 'partials/service-link', null, array( 'service_id' => $service->ID ) );
+                endforeach; ?>
+              </div>
+            <?php endif; ?>
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php
+    return ob_get_clean();
   }
 
   public function end_el( &$output, $item, $depth = 0, $args = null ) {
@@ -323,3 +360,195 @@ class Avocado55_Footer_Nav_Walker extends Walker_Nav_Menu {
     $output .= '</li>';
   }
 }
+
+/**
+ * Use linked team member's featured image as user avatar when available.
+ * Hook: get_avatar_url — overwrites the avatar URL for users who have a team member
+ * connected via the wordpress_user ACF field and that team member has a featured image.
+ *
+ * @param string $url         Default avatar URL.
+ * @param mixed  $id_or_email  User ID, email, or WP_User object.
+ * @param array  $args         Avatar args (e.g. 'size').
+ * @return string Avatar URL (team member featured image or original $url).
+ */
+function avocado55_avatar_url_from_team_member( $url, $id_or_email, $args ) {
+  $user_id = null;
+  if ( is_numeric( $id_or_email ) ) {
+    $user_id = (int) $id_or_email;
+  } elseif ( is_string( $id_or_email ) && is_email( $id_or_email ) ) {
+    $user = get_user_by( 'email', $id_or_email );
+    $user_id = $user ? $user->ID : 0;
+  } elseif ( $id_or_email instanceof WP_User ) {
+    $user_id = $id_or_email->ID;
+  }
+  if ( ! $user_id ) {
+    return $url;
+  }
+
+  $team = new WP_Query( array(
+    'post_type'      => 'team_member',
+    'posts_per_page' => 1,
+    'post_status'    => 'publish',
+    'fields'         => 'ids',
+    'meta_query'     => array(
+      array(
+        'key'   => 'wordpress_user',
+        'value' => $user_id,
+        'compare' => '=',
+      ),
+    ),
+  ) );
+
+  if ( empty( $team->posts ) ) {
+    return $url;
+  }
+
+  $member_id = $team->posts[0];
+  $size = isset( $args['size'] ) ? (int) $args['size'] : 96;
+  $thumb = get_the_post_thumbnail_url( $member_id, array( $size, $size ) );
+
+  wp_reset_postdata();
+
+  return $thumb ? $thumb : $url;
+}
+add_filter( 'get_avatar_url', 'avocado55_avatar_url_from_team_member', 10, 3 );
+
+/**
+ * Run content through the_content filters (wpautop, shortcodes, Calendly → booking card, etc.).
+ * Use this when outputting ACF or other stored HTML so it gets the same processing as post content.
+ *
+ * @param string $content Raw content (e.g. from get_field).
+ * @return string Filtered content.
+ */
+function avocado55_render_content( $content ) {
+  if ( ! is_string( $content ) || $content === '' ) {
+    return '';
+  }
+  return apply_filters( 'the_content', $content );
+}
+
+/**
+ * Get the Calendly "base" URL (scheme + host + first path segment) for matching.
+ * e.g. https://calendly.com/twade-slab/30min?x=1 -> https://calendly.com/twade-slab
+ *
+ * @param string $url Full Calendly URL (with or without query string).
+ * @return string Base URL or empty string if not parseable.
+ */
+function avocado55_calendly_base_url( $url ) {
+  $parsed = parse_url( $url );
+  if ( empty( $parsed['host'] ) || strpos( $parsed['host'], 'calendly.com' ) === false ) {
+    return '';
+  }
+  $base = ( isset( $parsed['scheme'] ) ? $parsed['scheme'] . '://' : '' ) . $parsed['host'];
+  $path = isset( $parsed['path'] ) ? trim( $parsed['path'], '/' ) : '';
+  if ( $path !== '' ) {
+    $first_segment = strpos( $path, '/' ) !== false ? substr( $path, 0, strpos( $path, '/' ) ) : $path;
+    $base .= '/' . $first_segment;
+  }
+  return $base;
+}
+
+/**
+ * Build booking card HTML for a Calendly URL (looks up team member by base URL).
+ *
+ * @param string $url       Full Calendly URL.
+ * @param string $link_text Button label (optional).
+ * @return string Card HTML or empty string if URL invalid.
+ */
+function avocado55_calendly_booking_card_html( $url, $link_text = 'Book' ) {
+  $content_base = avocado55_calendly_base_url( $url );
+  if ( $content_base === '' ) {
+    return '';
+  }
+  $name = '';
+  $role = '';
+  $avatar_url = null;
+  $team = new WP_Query( array(
+    'post_type'      => 'team_member',
+    'posts_per_page' => -1,
+    'post_status'    => 'publish',
+    'meta_query'     => array(
+      array(
+        'key'     => 'booking_link',
+        'value'   => 'calendly.com',
+        'compare' => 'LIKE',
+      ),
+    ),
+  ) );
+  foreach ( $team->posts as $member ) {
+    $stored_url = get_field( 'booking_link', $member->ID );
+    if ( empty( $stored_url ) ) {
+      continue;
+    }
+    $stored_base = avocado55_calendly_base_url( $stored_url );
+    if ( $stored_base !== '' && $stored_base === $content_base ) {
+      $name = get_field( 'name', $member->ID ) ?: get_the_title( $member->ID );
+      $role = get_field( 'role', $member->ID ) ?: '';
+      $avatar_url = get_the_post_thumbnail_url( $member->ID, 'thumbnail' );
+      break;
+    }
+  }
+  wp_reset_postdata();
+  ob_start();
+  get_template_part( 'partials/booking-card', null, array(
+    'name'          => $name,
+    'role'          => $role,
+    'avatar_url'    => $avatar_url,
+    'booking_url'   => $url,
+    'booking_label' => $link_text ?: 'Book',
+  ) );
+  return '<div class="avocado55-booking-card my-4">' . ob_get_clean() . '</div>';
+}
+
+/**
+ * Replace Calendly links and plain pasted Calendly URLs in post content with a stylised booking card.
+ * Uses placeholders so the card HTML (which contains a Calendly link) is never re-processed.
+ *
+ * @param string $content Post content.
+ * @return string Filtered content.
+ */
+function avocado55_content_calendly_to_booking_card( $content ) {
+  if ( ! is_string( $content ) || strpos( $content, 'calendly' ) === false ) {
+    return $content;
+  }
+
+  $placeholders = array();
+  $placeholder_prefix = '{{AVOCADO55_CALENDLY_';
+
+  // Pass 1: plain pasted URLs — replace with placeholder
+  $plain_pattern = '/(^|[\s\n.,;:!?)]|>)(https?:\/\/[^\s<>"\']*calendly\.com[^\s<>"\']*)([\s\n.,;:!?(<]|$)/i';
+  $content = preg_replace_callback( $plain_pattern, function ( $m ) use ( &$placeholders, $placeholder_prefix ) {
+    $prefix = $m[1];
+    $url = $m[2];
+    $suffix = $m[3];
+    $card = avocado55_calendly_booking_card_html( $url, 'Book' );
+    if ( $card === '' ) {
+      return $m[0];
+    }
+    $key = count( $placeholders );
+    $placeholders[ $key ] = $card;
+    return $prefix . $placeholder_prefix . $key . '}}' . $suffix;
+  }, $content );
+
+  // Pass 2: anchor tags with Calendly href — replace with placeholder
+  $anchor_pattern = '/<a\s[^>]*href=["\'](https?:\/\/[^"\']*calendly\.com[^"\']*)["\'][^>]*>([^<]*)<\/a>/i';
+  $content = preg_replace_callback( $anchor_pattern, function ( $m ) use ( &$placeholders, $placeholder_prefix ) {
+    $url = $m[1];
+    $link_text = trim( $m[2] );
+    $card = avocado55_calendly_booking_card_html( $url, $link_text ?: 'Book' );
+    if ( $card === '' ) {
+      return $m[0];
+    }
+    $key = count( $placeholders );
+    $placeholders[ $key ] = $card;
+    return $placeholder_prefix . $key . '}}';
+  }, $content );
+
+  // Pass 3: substitute placeholders with card HTML (card links are never seen by the patterns above)
+  foreach ( $placeholders as $key => $card ) {
+    $content = str_replace( $placeholder_prefix . $key . '}}', $card, $content );
+  }
+
+  return $content;
+}
+add_filter( 'the_content', 'avocado55_content_calendly_to_booking_card', 15 );

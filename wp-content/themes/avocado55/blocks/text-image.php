@@ -46,9 +46,9 @@ $text_order = $image_position === 'left' ? 'order-2 lg:order-2' : 'order-2 lg:or
         <?php endif; ?>
 
         <?php if ($excerpt) : ?>
-          <p class="text-gray-600 leading-relaxed <?php echo esc_attr(avocado55_animation_class(2)); ?>">
-            <?php echo $excerpt; ?>
-          </p>
+          <div class="text-gray-600 leading-relaxed <?php echo esc_attr(avocado55_animation_class(2)); ?>">
+            <?php echo avocado55_render_content( $excerpt ); ?>
+          </div>
         <?php endif; ?>
 
         <?php if ($link) : ?>

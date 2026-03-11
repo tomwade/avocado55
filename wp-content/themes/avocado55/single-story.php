@@ -21,7 +21,7 @@ if ( have_posts() ) {
     $result = get_field('result');
     
     // Get expert name from post author
-    $expert_name = get_the_author();
+    $expert_name = get_field('expert') ? get_the_title(get_field('expert')) : get_the_author();
     ?>
 
 <!-- Story Header -->

@@ -7,7 +7,7 @@
  */
 ?>
 
-<div class="relative overflow-hidden bg-[#416257] text-white">
+<div class="relative overflow-hidden bg-brand-green text-white">
   <div class="relative z-2 mx-auto max-w-7xl px-6 lg:px-8">
     <!-- Chevron Image -->
     <div class="block absolute lg:-top-4 bottom-0 right-0 pointer-events-none">

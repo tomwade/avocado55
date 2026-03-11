@@ -19,6 +19,15 @@ $icon = get_field('icon', $service_id);
 $description = get_field('description', $service_id);
 $url = get_permalink($service_id);
 $animation_class = avocado55_animation_class($animation_delay);
+
+$has_link = false;
+if ($url) {
+  while (have_rows('page_content', $service_id)) { 
+    the_row();
+    $has_link = true;
+  }
+}
+   
 ?>
 
 <div class="bg-brand-light rounded-2xl p-6 lg:p-8 <?php echo esc_attr($animation_class); ?>">
@@ -56,5 +65,19 @@ $animation_class = avocado55_animation_class($animation_delay);
     <div class="text-gray-700 leading-relaxed">
       <?php echo $description; ?>
     </div>
+  <?php endif; ?>
+
+  <?php if ($has_link) : ?>
+    <a
+      href="<?php echo esc_url($url); ?>"
+      class="mt-6 inline-flex items-center gap-2 text-sm font-medium text-gray-900 group <?php echo esc_attr(avocado55_animation_class($animation_delay + 1)); ?>"
+    >
+      Learn more
+      <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-brand-cta text-white transition-transform group-hover:translate-x-1">
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </span>
+    </a>
   <?php endif; ?>
 </div>

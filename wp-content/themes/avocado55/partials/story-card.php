@@ -47,9 +47,9 @@ $story_url = get_permalink($story_id);
       <?php endif; ?>
 
       <?php if ($quote_text) : ?>
-        <blockquote class="font-raleway text-2xl lg:text-3xl font-medium text-brand-green leading-tight mb-4 <?php echo esc_attr(avocado55_animation_class(3)); ?>">
-          "<?php echo esc_html($quote_text); ?>"
-        </blockquote>
+        <p class="font-raleway text-2xl lg:text-3xl font-medium text-brand-green leading-tight mb-4 <?php echo esc_attr(avocado55_animation_class(3)); ?>">
+          <?php echo esc_html($quote_text); ?>
+        </p>
       <?php endif; ?>
 
       <?php if ($quote_person) : ?>

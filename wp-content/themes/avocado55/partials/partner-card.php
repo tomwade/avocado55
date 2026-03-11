@@ -11,6 +11,7 @@
  * - excerpt (string): Short description
  * - link (array): Optional link array with url, title, target
  * - background_image (array): Optional background image array
+ * - icon_size (string): 'default' (h-8 w-auto) or 'large' (h-12 w-auto)
  */
 
 $logo = $args['logo'] ?? null;
@@ -18,7 +19,10 @@ $title = $args['title'] ?? '';
 $excerpt = $args['excerpt'] ?? '';
 $link = $args['link'] ?? null;
 $background_image = $args['background_image'] ?? null;
+$icon_size = $args['icon_size'] ?? 'default';
 $animation_delay = $args['animation_delay'] ?? 0;
+
+$icon_size_class = ($icon_size === 'large') ? 'h-10 w-auto' : 'h-8 w-auto';
 
 // Determine if we have a background image
 $has_bg_image = !empty($background_image['url']);
@@ -28,7 +32,7 @@ $excerpt_class = $has_bg_image ? 'text-white/80' : 'text-gray-600';
 $animation_class = avocado55_animation_class($animation_delay);
 ?>
 
-<div class="relative <?php echo esc_attr($bg_class); ?> rounded-2xl overflow-hidden min-h-[300px] flex flex-col justify-between p-6 lg:p-8 <?php echo esc_attr($animation_class); ?>">
+<div class="relative <?php echo esc_attr($bg_class); ?> rounded-2xl overflow-hidden lg:min-h-[300px] flex flex-col justify-between p-6 lg:p-8 <?php echo esc_attr($animation_class); ?>">
   
   <?php if ($has_bg_image) : ?>
     <!-- Background Image with Overlay -->
@@ -42,10 +46,10 @@ $animation_class = avocado55_animation_class($animation_delay);
   <?php endif; ?>
 
   <div class="relative z-10 flex flex-col h-full justify-between">
-    <!-- Top Section: Logo -->
+    <!-- Top Section: Logo / Icon -->
     <?php if ($logo && !empty($logo['url'])) : ?>
       <div class="mb-8">
-        <div class="h-8 w-auto flex overflow-hidden">
+        <div class="<?php echo esc_attr($icon_size_class); ?> flex overflow-hidden">
           <img 
             src="<?php echo esc_url($logo['url']); ?>" 
             alt="<?php echo esc_attr($logo['alt'] ?: $title); ?>" 
@@ -56,7 +60,7 @@ $animation_class = avocado55_animation_class($animation_delay);
     <?php endif; ?>
 
     <!-- Middle Section: Title & Excerpt -->
-    <div class="flex-grow mb-8">
+    <div class="flex-grow mb-2">
       <?php if ($title) : ?>
         <h3 class="text-xl lg:text-2xl font-semibold <?php echo esc_attr($text_class); ?> mb-4">
           <?php echo esc_html($title); ?>

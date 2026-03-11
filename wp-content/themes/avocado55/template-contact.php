@@ -85,7 +85,7 @@ $email = get_field('contact_email', 'option');
           <!-- Experts Carousel -->
           <div class="experts-carousel-wrapper">
             <div class="experts-carousel">
-              <?php foreach ($experts as $expert) : 
+              <?php foreach ($experts as $expert) :
                 $expert_id = $expert->ID;
                 $name = get_field('name', $expert_id) ?: get_the_title($expert_id);
                 $role = get_field('role', $expert_id);
@@ -93,29 +93,13 @@ $email = get_field('contact_email', 'option');
                 $booking_link = get_field('booking_link', $expert_id);
               ?>
                 <div class="expert-slide px-2">
-                  <div class="flex items-center gap-4 bg-white rounded-xl p-4 shadow-sm">
-                    <!-- Avatar -->
-                    <?php if ($avatar) : ?>
-                      <img src="<?php echo esc_url($avatar); ?>" alt="<?php echo esc_attr($name); ?>" class="w-14 h-14 rounded-full object-cover flex-shrink-0" />
-                    <?php else : ?>
-                      <div class="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
-                        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                        </svg>
-                      </div>
-                    <?php endif; ?>
-                    
-                    <!-- Info -->
-                    <div class="flex-grow min-w-0">
-                      <h3 class="font-semibold text-gray-900 truncate"><?php echo esc_html($name); ?></h3>
-                      <p class="text-sm text-gray-600 truncate"><?php echo esc_html($role); ?></p>
-                    </div>
-                    
-                    <!-- Book Button -->
-                    <a href="<?php echo esc_url($booking_link); ?>" target="_blank" rel="noopener" class="flex-shrink-0 inline-flex items-center justify-center px-4 py-2 bg-brand-green text-white text-sm font-medium rounded hover:bg-brand-cta transition-colors">
-                      Book
-                    </a>
-                  </div>
+                  <?php get_template_part('partials/booking-card', null, [
+                    'name' => $name,
+                    'role' => $role,
+                    'avatar_url' => $avatar,
+                    'booking_url' => $booking_link,
+                    'booking_label' => 'Book',
+                  ]); ?>
                 </div>
               <?php endforeach; ?>
             </div>

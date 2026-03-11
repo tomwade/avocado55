@@ -140,6 +140,27 @@
             "allow_in_bindings": 0
         },
         {
+            "key": "field_options_stories_archive_intro",
+            "label": "Stories Archive Intro",
+            "name": "stories_archive_intro",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "Intro text displayed on the Client Stories archive page below the featured story.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Trusted by leading contact centres across finance, retail, and telecoms. Lorem ipsum dolor sit amet consecteur.",
+            "placeholder": "",
+            "rows": 3,
+            "new_lines": "br",
+            "maxlength": "",
+            "allow_in_bindings": 0
+        },
+        {
             "key": "field_options_settings_tab",
             "label": "Settings",
             "name": "",
@@ -252,8 +273,8 @@
             "allow_in_bindings": 0
         },
         {
-            "key": "field_options_footer_tab",
-            "label": "Footer Menus",
+            "key": "field_options_services_dropdown_tab",
+            "label": "Services Dropdown",
             "name": "",
             "aria-label": "",
             "type": "tab",
@@ -270,30 +291,50 @@
             "selected": 0
         },
         {
-            "key": "field_options_footer_menu_1_heading",
-            "label": "Footer Menu 1 Heading",
-            "name": "footer_menu_1_heading",
+            "key": "field_options_show_services_dropdown",
+            "label": "Show Services dropdown in header",
+            "name": "show_services_dropdown",
             "aria-label": "",
-            "type": "text",
-            "instructions": "Heading for the first footer menu column",
+            "type": "true_false",
+            "instructions": "When enabled, the Services menu item on desktop shows a dropdown with intro text and service cards.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
-                "width": "50",
+                "width": "",
                 "class": "",
                 "id": ""
             },
-            "default_value": "Services",
+            "default_value": 0,
+            "ui": 1,
+            "ui_on_text": "Yes",
+            "ui_off_text": "No",
+            "allow_in_bindings": 0
+        },
+        {
+            "key": "field_options_services_dropdown_heading",
+            "label": "Dropdown heading",
+            "name": "services_dropdown_heading",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Text shown on the left of the dropdown (e.g. \"We combine deep operational experience with smart data and technology\")",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
             "placeholder": "",
             "allow_in_bindings": 0
         },
         {
-            "key": "field_options_footer_menu_2_heading",
-            "label": "Footer Menu 2 Heading",
-            "name": "footer_menu_2_heading",
+            "key": "field_options_services_dropdown_link",
+            "label": "All services link",
+            "name": "services_dropdown_link",
             "aria-label": "",
-            "type": "text",
-            "instructions": "Heading for the second footer menu column",
+            "type": "link",
+            "instructions": "Link shown below the heading (e.g. \"All services\")",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -301,17 +342,16 @@
                 "class": "",
                 "id": ""
             },
-            "default_value": "Partnerships",
-            "placeholder": "",
+            "return_format": "array",
             "allow_in_bindings": 0
         },
         {
-            "key": "field_options_footer_menu_3_heading",
-            "label": "Footer Menu 3 Heading",
-            "name": "footer_menu_3_heading",
+            "key": "field_options_services_dropdown_services",
+            "label": "Services",
+            "name": "services_dropdown_services",
             "aria-label": "",
-            "type": "text",
-            "instructions": "Heading for the third footer menu column",
+            "type": "relationship",
+            "instructions": "Select services to show as cards in the dropdown.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -319,62 +359,15 @@
                 "class": "",
                 "id": ""
             },
-            "default_value": "Sectors",
-            "placeholder": "",
-            "allow_in_bindings": 0
-        },
-        {
-            "key": "field_options_footer_menu_4_heading",
-            "label": "Footer Menu 4 Heading",
-            "name": "footer_menu_4_heading",
-            "aria-label": "",
-            "type": "text",
-            "instructions": "Heading for the fourth footer menu column",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "50",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "Client Stories",
-            "placeholder": "",
-            "allow_in_bindings": 0
-        },
-        {
-            "key": "field_options_footer_menu_5_heading",
-            "label": "Footer Menu 5 Heading",
-            "name": "footer_menu_5_heading",
-            "aria-label": "",
-            "type": "text",
-            "instructions": "Heading for the fifth footer menu column",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "50",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "About Us",
-            "placeholder": "",
-            "allow_in_bindings": 0
-        },
-        {
-            "key": "field_options_footer_menu_6_heading",
-            "label": "Footer Menu 6 Heading",
-            "name": "footer_menu_6_heading",
-            "aria-label": "",
-            "type": "text",
-            "instructions": "Heading for the sixth footer menu column",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "50",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "Insights",
-            "placeholder": "",
+            "post_type": ["service"],
+            "post_status": ["publish"],
+            "taxonomy": "",
+            "return_format": "object",
+            "min": 0,
+            "max": 0,
+            "filters": ["search"],
+            "bidirectional": 0,
+            "ui": 1,
             "allow_in_bindings": 0
         }
     ],

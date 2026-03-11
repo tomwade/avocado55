@@ -9,7 +9,8 @@
         <div class="lg:col-span-3">
           <!-- Logo -->
           <a href="<?php echo home_url(); ?>" class="inline-block mb-8">
-            <span class="text-2xl font-bold text-brand-green">Avocado55</span>
+            <span class="sr-only">Avocado 55</span>
+            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="Avocado 55" class="h-8 w-auto" />
           </a>
 
           <!-- Social Icons -->
@@ -46,46 +47,20 @@
           <?php endif; ?>
         </div>
 
-        <!-- Navigation Columns -->
-        <div class="lg:col-span-9">
-          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8">
-            
-            <?php 
-            // Footer menu columns
-            $footer_menus = [
-              ['location' => 'footer_menu_1', 'heading_field' => 'footer_menu_1_heading'],
-              ['location' => 'footer_menu_2', 'heading_field' => 'footer_menu_2_heading'],
-              ['location' => 'footer_menu_3', 'heading_field' => 'footer_menu_3_heading'],
-              ['location' => 'footer_menu_4', 'heading_field' => 'footer_menu_4_heading'],
-              ['location' => 'footer_menu_5', 'heading_field' => 'footer_menu_5_heading'],
-              ['location' => 'footer_menu_6', 'heading_field' => 'footer_menu_6_heading'],
-            ];
-            
-            foreach ($footer_menus as $menu) :
-              $heading = get_field($menu['heading_field'], 'option');
-              if (has_nav_menu($menu['location']) || $heading) :
+        <!-- Footer Menu (horizontal on desktop, 2 columns on mobile) -->
+        <div class="lg:col-span-9 flex justify-end">
+          <?php if ( has_nav_menu( 'footer_menu' ) ) : ?>
+            <?php
+              wp_nav_menu( [
+                'theme_location' => 'footer_menu',
+                'container'      => false,
+                'menu_class'     => 'grid grid-cols-2 lg:flex lg:flex-wrap gap-x-8 gap-y-4 lg:gap-x-6 leading-loose lg:justify-end',
+                'fallback_cb'    => false,
+                'items_wrap'     => '<ul class="%2$s">%3$s</ul>',
+                'walker'         => new Avocado55_Footer_Nav_Walker(),
+              ] );
             ?>
-              <div>
-                <?php if ($heading) : ?>
-                  <h3 class="text-sm font-semibold text-gray-900 mb-4"><?php echo esc_html($heading); ?></h3>
-                <?php endif; ?>
-                <?php
-                  wp_nav_menu([
-                    'theme_location' => $menu['location'],
-                    'container'      => false,
-                    'menu_class'     => 'space-y-3',
-                    'fallback_cb'    => false,
-                    'items_wrap'     => '<ul class="%2$s">%3$s</ul>',
-                    'walker'         => new Avocado55_Footer_Nav_Walker(),
-                  ]);
-                ?>
-              </div>
-            <?php 
-              endif;
-            endforeach; 
-            ?>
-
-          </div>
+          <?php endif; ?>
         </div>
 
       </div>
@@ -96,11 +71,12 @@
       <div class="mx-auto max-w-7xl px-6 lg:px-8 py-6">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <p class="text-xs text-gray-500 uppercase tracking-wide">
-            AVOCADO55 &copy; <?php echo date('Y'); ?> ALL RIGHTS RESERVED
+            &copy; Avocado55 <?php echo date('Y'); ?>, All rights reserved. Company number: SC632673
           </p>
           <div class="flex items-center gap-6">
             <a href="/privacy-policy/" class="text-xs text-gray-500 hover:text-brand-green">Privacy Policy</a>
-            <a href="/terms-and-conditions/" class="text-xs text-gray-500 hover:text-brand-green">Terms and conditions</a>
+            <a href="/environmental-policy/" class="text-xs text-gray-500 hover:text-brand-green">Environmental Policy</a>
+            <a href="/modern-slavery-statement/" class="text-xs text-gray-500 hover:text-brand-green">Modern Slavery</a>
           </div>
         </div>
       </div>

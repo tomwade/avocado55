@@ -11,7 +11,7 @@ $title = get_sub_field('title');
 $services = get_sub_field('services'); // Returns array of post objects
 ?>
 
-<section class="relative py-16 lg:py-24 overflow-hidden">
+<section class="bg-white relative py-16 lg:py-24">
   <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
     <?php if ($title) : ?>
       <!-- Background watermark -->

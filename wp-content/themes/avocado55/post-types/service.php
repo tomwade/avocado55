@@ -37,7 +37,7 @@ function avocado55_service() {
 		'supports'              => array( 'title', 'editor', 'thumbnail', 'page-attributes' ),
 		'taxonomies'            => array( ),
 		'hierarchical'          => false,
-		'public'                => false,
+		'public'                => true,
 		'show_ui'               => true,
 		'show_in_menu'          => true,
 		'menu_position'         => 5,
@@ -47,7 +47,7 @@ function avocado55_service() {
 		'can_export'            => true,
 		'has_archive'           => false,
 		'exclude_from_search'   => false,
-		'publicly_queryable'    => false,
+		'publicly_queryable'    => true,
 		'rewrite'               => ['slug' => 'services'],
 		'capability_type'       => 'page',
 	);

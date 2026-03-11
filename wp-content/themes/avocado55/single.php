@@ -145,6 +145,13 @@ if ( have_posts() ) {
 </section>
 
 <!-- Share Section -->
+<?php
+    $share_url = urlencode( get_permalink( $post_id ) );
+    $share_title = urlencode( $title );
+    $share_linkedin = 'https://www.linkedin.com/sharing/share-offsite/?url=' . $share_url;
+    $share_twitter = 'https://twitter.com/intent/tweet?url=' . $share_url . '&text=' . $share_title;
+    $share_facebook = 'https://www.facebook.com/sharer/sharer.php?u=' . $share_url;
+?>
 <section class="bg-white py-8 border-b border-gray-200">
   <div class="mx-auto max-w-3xl px-6 lg:px-8">
     <div class="flex items-center justify-between">
@@ -152,15 +159,15 @@ if ( have_posts() ) {
       <p class="text-sm font-medium text-gray-900">SHARE THIS ARTICLE</p>
 
       <div class="flex items-center gap-3">
-        <span class="w-9 h-9 border border-gray-300 rounded flex items-center justify-center hover:border-brand-green transition-colors cursor-pointer">
-          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/social-linkedin.png" alt="LinkedIn" class="w-4 h-4" />
-        </span>
-        <span class="w-9 h-9 border border-gray-300 rounded flex items-center justify-center hover:border-brand-green transition-colors cursor-pointer">
-          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/social-x.png" alt="X" class="w-4 h-4" />
-        </span>
-        <span class="w-9 h-9 border border-gray-300 rounded flex items-center justify-center hover:border-brand-green transition-colors cursor-pointer">
-          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/social-facebook.png" alt="Facebook" class="w-4 h-4" />
-        </span>
+        <a href="<?php echo esc_url( $share_linkedin ); ?>" target="_blank" rel="noopener noreferrer" class="w-9 h-9 border border-gray-300 rounded flex items-center justify-center hover:border-brand-green transition-colors" aria-label="Share on LinkedIn">
+          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/social-linkedin.png" alt="" class="w-4 h-4" />
+        </a>
+        <a href="<?php echo esc_url( $share_twitter ); ?>" target="_blank" rel="noopener noreferrer" class="w-9 h-9 border border-gray-300 rounded flex items-center justify-center hover:border-brand-green transition-colors" aria-label="Share on X">
+          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/social-x.png" alt="" class="w-4 h-4" />
+        </a>
+        <a href="<?php echo esc_url( $share_facebook ); ?>" target="_blank" rel="noopener noreferrer" class="w-9 h-9 border border-gray-300 rounded flex items-center justify-center hover:border-brand-green transition-colors" aria-label="Share on Facebook">
+          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/social-facebook.png" alt="" class="w-4 h-4" />
+        </a>
       </div>
       
     </div>
@@ -168,7 +175,7 @@ if ( have_posts() ) {
 </section>
 
 <!-- Related Posts -->
-<section class="bg-white py-16 lg:py-24">
+<section class="py-16 lg:py-24">
   <div class="mx-auto max-w-7xl px-6 lg:px-8">
     
     <!-- Header -->

@@ -7,17 +7,21 @@
  */
 
 $title = get_sub_field('title');
+$selected_members = get_sub_field('members');
 
-// Query all team members ordered by menu_order
-$team_query = new WP_Query([
-  'post_type' => 'team_member',
-  'posts_per_page' => -1,
-  'orderby' => 'menu_order',
-  'order' => 'ASC',
-  'post_status' => 'publish'
-]);
-
-$members = $team_query->posts;
+// Use relationship order when set, otherwise all team members by menu_order
+if (!empty($selected_members) && is_array($selected_members)) {
+  $members = $selected_members;
+} else {
+  $team_query = new WP_Query([
+    'post_type' => 'team_member',
+    'posts_per_page' => -1,
+    'orderby' => 'menu_order',
+    'order' => 'ASC',
+    'post_status' => 'publish'
+  ]);
+  $members = $team_query->posts;
+}
 ?>
 
 <?php if (!empty($members)): ?>

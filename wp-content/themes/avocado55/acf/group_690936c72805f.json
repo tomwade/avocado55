@@ -50,7 +50,9 @@
                             "ui": 0,
                             "ajax": 0,
                             "placeholder": "",
-                            "allow_in_bindings": 0
+                            "allow_in_bindings": 0,
+                            "create_options": 0,
+                            "save_options": 0
                         },
                         {
                             "key": "field_feature_bg_color",
@@ -86,7 +88,9 @@
                             "ui": 0,
                             "ajax": 0,
                             "placeholder": "",
-                            "allow_in_bindings": 0
+                            "allow_in_bindings": 0,
+                            "create_options": 0,
+                            "save_options": 0
                         },
                         {
                             "key": "field_feature_bg_image",
@@ -146,7 +150,7 @@
                             },
                             "default_value": "",
                             "allow_in_bindings": 0,
-                            "placeholder": "https://vimeo.com/..."
+                            "placeholder": "https:\/\/vimeo.com\/..."
                         },
                         {
                             "key": "field_697160f95b91f",
@@ -225,7 +229,8 @@
                             "ui": 1,
                             "ui_on_text": "",
                             "ui_off_text": "",
-                            "allow_in_bindings": 0
+                            "allow_in_bindings": 0,
+                            "message": ""
                         }
                     ],
                     "min": "",
@@ -289,15 +294,24 @@
                                 "class": "",
                                 "id": ""
                             },
-                            "post_type": ["story"],
-                            "post_status": ["publish"],
+                            "post_type": [
+                                "story"
+                            ],
+                            "post_status": [
+                                "publish"
+                            ],
                             "taxonomy": "",
-                            "filters": ["search"],
+                            "filters": [
+                                "search"
+                            ],
                             "return_format": "object",
                             "min": 0,
                             "max": 0,
-                            "elements": ["featured_image"],
-                            "allow_in_bindings": 0
+                            "elements": [
+                                "featured_image"
+                            ],
+                            "allow_in_bindings": 0,
+                            "bidirectional_target": []
                         }
                     ],
                     "min": "",
@@ -332,10 +346,10 @@
                         },
                         {
                             "key": "field_697160995b919",
-                            "label": "Excerpt",
+                            "label": "Content",
                             "name": "excerpt",
                             "aria-label": "",
-                            "type": "textarea",
+                            "type": "wysiwyg",
                             "instructions": "",
                             "required": 0,
                             "conditional_logic": 0,
@@ -345,11 +359,11 @@
                                 "id": ""
                             },
                             "default_value": "",
-                            "maxlength": "",
                             "allow_in_bindings": 0,
-                            "placeholder": "",
-                            "rows": 4,
-                            "new_lines": "br"
+                            "tabs": "all",
+                            "toolbar": "basic",
+                            "media_upload": 1,
+                            "delay": 0
                         },
                         {
                             "key": "field_697160995b91a",
@@ -393,7 +407,9 @@
                             "ui": 0,
                             "ajax": 0,
                             "placeholder": "",
-                            "allow_in_bindings": 0
+                            "allow_in_bindings": 0,
+                            "create_options": 0,
+                            "save_options": 0
                         },
                         {
                             "key": "field_697160995b91c",
@@ -421,7 +437,40 @@
                             "ui": 0,
                             "ajax": 0,
                             "placeholder": "",
-                            "allow_in_bindings": 0
+                            "allow_in_bindings": 0,
+                            "create_options": 0,
+                            "save_options": 0
+                        },
+                        {
+                            "key": "field_697160995b91d",
+                            "label": "Content Width",
+                            "name": "content_width",
+                            "aria-label": "",
+                            "type": "select",
+                            "instructions": "Width of the text content area.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "full": "Full (no constraint)",
+                                "wide": "Wide (max-w-4xl)",
+                                "regular": "Regular (max-w-2xl)",
+                                "small": "Small (max-w-xl)"
+                            },
+                            "default_value": "regular",
+                            "return_format": "value",
+                            "multiple": 0,
+                            "allow_null": 0,
+                            "ui": 0,
+                            "ajax": 0,
+                            "placeholder": "",
+                            "allow_in_bindings": 0,
+                            "create_options": 0,
+                            "save_options": 0
                         }
                     ],
                     "min": "",
@@ -543,7 +592,9 @@
                             "ui": 0,
                             "ajax": 0,
                             "placeholder": "",
-                            "allow_in_bindings": 0
+                            "allow_in_bindings": 0,
+                            "create_options": 0,
+                            "save_options": 0
                         },
                         {
                             "key": "field_697160d85b921",
@@ -571,7 +622,9 @@
                             "ui": 0,
                             "ajax": 0,
                             "placeholder": "",
-                            "allow_in_bindings": 0
+                            "allow_in_bindings": 0,
+                            "create_options": 0,
+                            "save_options": 0
                         }
                     ],
                     "min": "",
@@ -603,6 +656,39 @@
                             "placeholder": "",
                             "prepend": "",
                             "append": ""
+                        },
+                        {
+                            "key": "field_team_block_members",
+                            "label": "Team Members",
+                            "name": "members",
+                            "aria-label": "",
+                            "type": "relationship",
+                            "instructions": "Select team members and drag to set the display order. Leave empty to show all team members by menu order.",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "post_type": [
+                                "team_member"
+                            ],
+                            "post_status": [
+                                "publish"
+                            ],
+                            "taxonomy": "",
+                            "filters": [
+                                "search"
+                            ],
+                            "return_format": "object",
+                            "min": 0,
+                            "max": 0,
+                            "elements": [
+                                "featured_image"
+                            ],
+                            "allow_in_bindings": 0,
+                            "bidirectional_target": []
                         }
                     ],
                     "min": "",
@@ -649,15 +735,22 @@
                                 "class": "",
                                 "id": ""
                             },
-                            "post_type": ["service"],
-                            "post_status": ["publish"],
+                            "post_type": [
+                                "service"
+                            ],
+                            "post_status": [
+                                "publish"
+                            ],
                             "taxonomy": "",
-                            "filters": ["search"],
+                            "filters": [
+                                "search"
+                            ],
                             "return_format": "object",
                             "min": 0,
                             "max": 0,
                             "elements": [],
-                            "allow_in_bindings": 0
+                            "allow_in_bindings": 0,
+                            "bidirectional_target": []
                         }
                     ],
                     "min": "",
@@ -753,7 +846,9 @@
                             "ui": 0,
                             "ajax": 0,
                             "placeholder": "",
-                            "allow_in_bindings": 0
+                            "allow_in_bindings": 0,
+                            "create_options": 0,
+                            "save_options": 0
                         },
                         {
                             "key": "field_697161305b965",
@@ -774,6 +869,7 @@
                             "max": 0,
                             "collapsed": "field_697161305b967",
                             "button_label": "Add Item",
+                            "rows_per_page": 20,
                             "sub_fields": [
                                 {
                                     "key": "field_697161305b966",
@@ -799,7 +895,8 @@
                                     "max_size": "",
                                     "mime_types": "",
                                     "allow_in_bindings": 0,
-                                    "preview_size": "thumbnail"
+                                    "preview_size": "thumbnail",
+                                    "parent_repeater": "field_697161305b965"
                                 },
                                 {
                                     "key": "field_697161305b967",
@@ -820,7 +917,8 @@
                                     "allow_in_bindings": 0,
                                     "placeholder": "",
                                     "rows": 2,
-                                    "new_lines": "br"
+                                    "new_lines": "br",
+                                    "parent_repeater": "field_697161305b965"
                                 }
                             ]
                         }
@@ -913,7 +1011,7 @@
                             "name": "link",
                             "aria-label": "",
                             "type": "link",
-                            "instructions": "Link to all posts/insights page",
+                            "instructions": "Link to all posts\/insights page",
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
@@ -943,7 +1041,9 @@
                             "max": 12,
                             "step": 1,
                             "allow_in_bindings": 0,
-                            "placeholder": ""
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": ""
                         }
                     ],
                     "min": "",
@@ -998,6 +1098,34 @@
                             "new_lines": "br"
                         },
                         {
+                            "key": "field_cta_icon_size",
+                            "label": "Icon size",
+                            "name": "icon_size",
+                            "aria-label": "",
+                            "type": "select",
+                            "instructions": "Size of the logo/icon on each card",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "default": "Default (h-8)",
+                                "large": "Large (h-12)"
+                            },
+                            "default_value": "default",
+                            "return_format": "value",
+                            "multiple": 0,
+                            "allow_null": 0,
+                            "ui": 0,
+                            "ajax": 0,
+                            "placeholder": "",
+                            "allow_in_bindings": 0,
+                            "parent_repeater": ""
+                        },
+                        {
                             "key": "field_cta_partners",
                             "label": "Partners",
                             "name": "partners",
@@ -1042,7 +1170,8 @@
                                     "max_size": "",
                                     "mime_types": "",
                                     "allow_in_bindings": 0,
-                                    "preview_size": "thumbnail"
+                                    "preview_size": "thumbnail",
+                                    "parent_repeater": "field_cta_partners"
                                 },
                                 {
                                     "key": "field_cta_partner_title",
@@ -1063,7 +1192,8 @@
                                     "allow_in_bindings": 0,
                                     "placeholder": "",
                                     "prepend": "",
-                                    "append": ""
+                                    "append": "",
+                                    "parent_repeater": "field_cta_partners"
                                 },
                                 {
                                     "key": "field_cta_partner_excerpt",
@@ -1084,7 +1214,8 @@
                                     "allow_in_bindings": 0,
                                     "placeholder": "",
                                     "rows": 3,
-                                    "new_lines": "br"
+                                    "new_lines": "br",
+                                    "parent_repeater": "field_cta_partners"
                                 },
                                 {
                                     "key": "field_cta_partner_link",
@@ -1101,7 +1232,8 @@
                                         "id": ""
                                     },
                                     "return_format": "array",
-                                    "allow_in_bindings": 0
+                                    "allow_in_bindings": 0,
+                                    "parent_repeater": "field_cta_partners"
                                 },
                                 {
                                     "key": "field_cta_partner_bg_image",
@@ -1127,7 +1259,8 @@
                                     "max_size": "",
                                     "mime_types": "",
                                     "allow_in_bindings": 0,
-                                    "preview_size": "medium"
+                                    "preview_size": "medium",
+                                    "parent_repeater": "field_cta_partners"
                                 }
                             ]
                         }
@@ -1161,5 +1294,6 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1769900700
+    "display_title": "",
+    "modified": 1772716057
 }

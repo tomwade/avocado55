@@ -8,10 +8,11 @@
 
 $title = get_sub_field('title');
 $excerpt = get_sub_field('excerpt');
+$icon_size = get_sub_field('icon_size') ?: 'default';
 $partners = get_sub_field('partners');
 ?>
 
-<section class="py-16 lg:py-24">
+<section class="bg-white py-16 lg:py-24">
   <div class="mx-auto max-w-7xl px-6 lg:px-8">
     
     <?php if ($title || $excerpt) : ?>
@@ -40,6 +41,7 @@ $partners = get_sub_field('partners');
             'excerpt' => $partner['excerpt'],
             'link' => $partner['link'],
             'background_image' => $partner['background_image'],
+            'icon_size' => $icon_size,
             'animation_delay' => $partner_index
           ]); 
           $partner_index++;

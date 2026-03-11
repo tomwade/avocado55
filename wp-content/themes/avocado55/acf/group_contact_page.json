@@ -40,7 +40,9 @@
             "default_value": "Whether it's improving team performance, streamlining processes, or just talking through options, we're here to help.",
             "rows": 3,
             "new_lines": "br",
-            "allow_in_bindings": 0
+            "allow_in_bindings": 0,
+            "maxlength": "",
+            "placeholder": ""
         },
         {
             "key": "field_contact_form_shortcode",
@@ -145,6 +147,13 @@
             {
                 "param": "page_template",
                 "operator": "==",
+                "value": "templates\/contact.php"
+            }
+        ],
+        [
+            {
+                "param": "page_template",
+                "operator": "==",
                 "value": "template-contact.php"
             }
         ]
@@ -158,6 +167,8 @@
         "the_content"
     ],
     "active": true,
-    "description": "Fields for the Contact page template",
-    "show_in_rest": 0
+    "description": "Fields for the Contact page. Location is by page template (template-contact.php), not by page ID, so any page using the Contact template gets these fields.",
+    "show_in_rest": 0,
+    "display_title": "",
+    "modified": 1772556269
 }
