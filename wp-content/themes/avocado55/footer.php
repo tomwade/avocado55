@@ -116,7 +116,8 @@
             &copy; Avocado55 <?php echo date('Y'); ?>, All rights reserved. Company number:
             <a
               href="https://find-and-update.company-information.service.gov.uk/company/SC632673"
-              rel="nofollow"
+              rel="nofollow noopener noreferrer"
+              target="_blank"
               class="hover:text-brand-green"
             >
               SC632673
