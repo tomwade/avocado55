@@ -40,6 +40,12 @@ class Avocado55 {
 
     // Disable emojis for load speed
     add_action('init', [$this, 'disable_emojis']);
+
+    // Add core security headers at the app layer.
+    add_filter('wp_headers', [$this, 'add_security_headers']);
+
+    // Ensure all public URLs output a self-referencing canonical tag.
+    add_action('init', [$this, 'register_seo_hooks']);
   }
 
   /**
@@ -167,9 +173,93 @@ class Avocado55 {
     remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
   }
 
+  /**
+   * Add common security headers if not already set upstream.
+   *
+   * @param array $headers Existing HTTP headers.
+   * @return array
+   */
+  public function add_security_headers( $headers ) {
+    if ( ! isset( $headers['Strict-Transport-Security'] ) ) {
+      $headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains';
+    }
+    if ( ! isset( $headers['X-Frame-Options'] ) ) {
+      $headers['X-Frame-Options'] = 'SAMEORIGIN';
+    }
+    if ( ! isset( $headers['X-Content-Type-Options'] ) ) {
+      $headers['X-Content-Type-Options'] = 'nosniff';
+    }
+    if ( ! isset( $headers['Referrer-Policy'] ) ) {
+      $headers['Referrer-Policy'] = 'strict-origin-when-cross-origin';
+    }
+    if ( ! isset( $headers['Permissions-Policy'] ) ) {
+      $headers['Permissions-Policy'] = 'camera=(), microphone=(), geolocation=()';
+    }
+
+    return $headers;
+  }
+
+  /**
+   * Replace partial core canonical behavior with a full-site implementation.
+   */
+  public function register_seo_hooks() {
+    remove_action( 'wp_head', 'rel_canonical' );
+    add_action( 'wp_head', array( $this, 'output_self_canonical_tag' ), 1 );
+  }
+
+  /**
+   * Print self-canonical link tag.
+   */
+  public function output_self_canonical_tag() {
+    if ( is_admin() || is_feed() || is_trackback() || is_robots() ) {
+      return;
+    }
+
+    $canonical_url = avocado55_current_canonical_url();
+    if ( ! $canonical_url ) {
+      return;
+    }
+
+    echo '<link rel="canonical" href="' . esc_url( $canonical_url ) . '" />' . "\n";
+  }
+
 }
 
 new Avocado55;
+
+/**
+ * Build canonical URL from the current request while dropping tracking params.
+ *
+ * @return string Canonical URL for current request.
+ */
+function avocado55_current_canonical_url() {
+  if ( is_front_page() ) {
+    return home_url( '/' );
+  }
+
+  if ( is_home() ) {
+    $posts_page_id = (int) get_option( 'page_for_posts' );
+    return $posts_page_id ? get_permalink( $posts_page_id ) : home_url( '/' );
+  }
+
+  if ( is_singular() ) {
+    return get_permalink( get_queried_object_id() );
+  }
+
+  if ( is_search() ) {
+    $search_query = get_search_query( false );
+    return add_query_arg( 's', $search_query, home_url( '/' ) );
+  }
+
+  global $wp;
+  $request_path = isset( $wp->request ) ? trim( $wp->request, '/' ) : '';
+  if ( $request_path === '' ) {
+    return home_url( '/' );
+  }
+
+  // Build from request path so canonical remains stable without query params.
+  return home_url( user_trailingslashit( $request_path ) );
+}
 
 /**
  * Get animation class if animations are enabled
@@ -412,6 +502,73 @@ function avocado55_avatar_url_from_team_member( $url, $id_or_email, $args ) {
   return $thumb ? $thumb : $url;
 }
 add_filter( 'get_avatar_url', 'avocado55_avatar_url_from_team_member', 10, 3 );
+
+/**
+ * Get linked team member ID for a WordPress user.
+ *
+ * @param int $user_id WordPress user ID.
+ * @return int Team member post ID or 0.
+ */
+function avocado55_get_team_member_id_by_user( $user_id ) {
+  static $cache = array();
+
+  $user_id = (int) $user_id;
+  if ( $user_id <= 0 ) {
+    return 0;
+  }
+
+  if ( isset( $cache[ $user_id ] ) ) {
+    return $cache[ $user_id ];
+  }
+
+  $team = new WP_Query( array(
+    'post_type'      => 'team_member',
+    'posts_per_page' => 1,
+    'post_status'    => 'publish',
+    'fields'         => 'ids',
+    'meta_query'     => array(
+      array(
+        'key'     => 'wordpress_user',
+        'value'   => $user_id,
+        'compare' => '=',
+      ),
+    ),
+  ) );
+
+  $cache[ $user_id ] = ! empty( $team->posts ) ? (int) $team->posts[0] : 0;
+  wp_reset_postdata();
+
+  return $cache[ $user_id ];
+}
+
+/**
+ * Build profile data for a WordPress author.
+ *
+ * @param int $user_id WordPress user ID.
+ * @return array{name:string,role:string,avatar:string,url:string,team_member_id:int}
+ */
+function avocado55_get_author_profile_data( $user_id ) {
+  $user_id = (int) $user_id;
+
+  $data = array(
+    'name'           => get_the_author_meta( 'display_name', $user_id ),
+    'role'           => get_the_author_meta( 'job_title', $user_id ) ?: 'Author',
+    'avatar'         => get_avatar_url( $user_id, array( 'size' => 64 ) ),
+    'url'            => '',
+    'team_member_id' => 0,
+  );
+
+  $team_member_id = avocado55_get_team_member_id_by_user( $user_id );
+  if ( $team_member_id > 0 ) {
+    $data['team_member_id'] = $team_member_id;
+    $data['name'] = get_field( 'name', $team_member_id ) ?: get_the_title( $team_member_id );
+    $data['role'] = get_field( 'role', $team_member_id ) ?: $data['role'];
+    $data['avatar'] = get_the_post_thumbnail_url( $team_member_id, 'thumbnail' ) ?: $data['avatar'];
+    $data['url'] = get_permalink( $team_member_id );
+  }
+
+  return $data;
+}
 
 /**
  * Run content through the_content filters (wpautop, shortcodes, Calendly → booking card, etc.).

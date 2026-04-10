@@ -23,7 +23,7 @@
       <h2 class="text-5xl lg:text-6xl font-medium <?php echo esc_attr(avocado55_animation_class(1)); ?>">Ready to find your best way forward? Let's start with a conversation.</h2>
       <p class="text-lg <?php echo esc_attr(avocado55_animation_class(2)); ?>">Tell us where you are today, we'll help you map the next step.</p>
 
-      <a href="/contact/" target="_blank" class="button button--brand-cta <?php echo esc_attr(avocado55_animation_class(3)); ?>">Contact us</a>
+      <a href="/contact-us/" class="button button--brand-cta <?php echo esc_attr(avocado55_animation_class(3)); ?>">Contact us</a>
     </div>
   </div>
 </div>

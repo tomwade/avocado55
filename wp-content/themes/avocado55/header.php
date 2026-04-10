@@ -15,18 +15,23 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
+  <script>
+    // Mark JS support early so animation CSS can progressively enhance safely.
+    document.documentElement.classList.add('js');
+  </script>
+
   <?php wp_head(); ?>
 </head>
 
 <body <?php body_class(); ?>>
 	<?php wp_body_open(); ?>
 
-  <header id="site-header" class="sticky top-0 bg-white relative z-10" style="box-shadow: 0px 6px 24.3px 0px #00000050;">
-    <nav aria-label="Global" class="mx-auto flex max-w-7xl items-center justify-between py-4 px-6 lg:px-8">
+  <header id="site-header" role="banner" class="sticky top-0 bg-white relative z-10" style="box-shadow: 0px 6px 24.3px 0px #00000050;">
+    <nav aria-label="Global" role="navigation" class="mx-auto flex max-w-7xl items-center justify-between py-4 px-6 lg:px-8">
       <div class="flex lg:flex-1">
         <a href="<?php echo home_url(); ?>" class="-m-1.5 p-1.5">
-          <span class="sr-only">Avocado 55</span>
-          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="Avocado 55" class="h-8 w-auto" />
+          <span class="sr-only">Avocado55</span>
+          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="Avocado55" class="h-8 w-auto" />
         </a>
       </div>
 
@@ -63,8 +68,8 @@
       <!-- Header -->
       <div class="flex items-center justify-between py-4 px-6">
         <a href="<?php echo home_url(); ?>" class="-m-1.5 p-1.5">
-          <span class="sr-only">Avocado 55</span>
-          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="Avocado 55" class="h-8 w-auto" />
+          <span class="sr-only">Avocado55</span>
+          <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="Avocado55" class="h-8 w-auto" />
         </a>
         <button type="button" id="mobile-menu-close" class="inline-flex items-center justify-center rounded-lg p-2.5 bg-brand-cta text-white">
           <span class="sr-only">Close menu</span>
@@ -75,7 +80,7 @@
       </div>
 
       <!-- Menu Items -->
-      <nav class="flex-grow px-6 pt-6">
+      <nav class="flex-grow px-6 pt-6" aria-label="Mobile" role="navigation">
         <?php
           wp_nav_menu([
             'theme_location' => 'header_menu',
@@ -184,3 +189,5 @@
     }
   });
   </script>
+
+  <main id="main-content" role="main">

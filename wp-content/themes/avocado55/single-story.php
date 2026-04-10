@@ -20,8 +20,23 @@ if ( have_posts() ) {
     $sector = get_field('sector');
     $result = get_field('result');
     
-    // Get expert name from post author
-    $expert_name = get_field('expert') ? get_the_title(get_field('expert')) : get_the_author();
+    // Use explicit story expert when set, otherwise fall back to linked post author profile.
+    $expert = get_field('expert');
+    $expert_name = '';
+    $expert_url = '';
+
+    if ($expert instanceof WP_Post) {
+      $expert_name = get_field('name', $expert->ID) ?: get_the_title($expert->ID);
+      $expert_url = get_permalink($expert->ID);
+    } elseif (!empty($expert)) {
+      $expert_id = intval($expert);
+      $expert_name = get_field('name', $expert_id) ?: get_the_title($expert_id);
+      $expert_url = get_permalink($expert_id);
+    } else {
+      $author_profile = avocado55_get_author_profile_data(get_the_author_meta('ID'));
+      $expert_name = $author_profile['name'];
+      $expert_url = $author_profile['url'];
+    }
     ?>
 
 <!-- Story Header -->
@@ -56,7 +71,11 @@ if ( have_posts() ) {
             <div class="<?php echo esc_attr(avocado55_animation_class(4)); ?>">
               <p class="text-xs uppercase tracking-wider text-white/60 mb-1">Expert: SME</p>
               <p class="text-white text-sm flex items-center gap-2">
-                <?php echo esc_html($expert_name); ?>
+                <?php if ($expert_url) : ?>
+                  <a href="<?php echo esc_url($expert_url); ?>" class="underline decoration-white/40 hover:decoration-white"><?php echo esc_html($expert_name); ?></a>
+                <?php else : ?>
+                  <?php echo esc_html($expert_name); ?>
+                <?php endif; ?>
               </p>
             </div>
           <?php endif; ?>

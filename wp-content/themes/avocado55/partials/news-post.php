@@ -21,8 +21,10 @@ $permalink = get_permalink($post_id);
 $featured_image = get_the_post_thumbnail_url($post_id, 'large');
 $date = get_the_date('d M Y', $post_id);
 $author_id = $post->post_author;
-$author_name = get_the_author_meta('display_name', $author_id);
-$author_avatar = get_avatar_url($author_id, ['size' => 32]);
+$author_profile = avocado55_get_author_profile_data($author_id);
+$author_name = $author_profile['name'];
+$author_avatar = $author_profile['avatar'];
+$author_url = !empty($author_profile['url']) ? $author_profile['url'] : get_author_posts_url($author_id);
 
 // Get primary category
 $categories = get_the_category($post_id);
@@ -65,7 +67,7 @@ $animation_class = avocado55_animation_class($animation_delay);
           class="w-6 h-6 rounded-full object-cover"
         />
       <?php endif; ?>
-      <span class="text-xs text-gray-600"><?php echo esc_html($author_name); ?></span>
+      <a href="<?php echo esc_url($author_url); ?>" class="text-xs text-gray-600 hover:text-brand-green hover:underline"><?php echo esc_html($author_name); ?></a>
     </div>
   </div>
 

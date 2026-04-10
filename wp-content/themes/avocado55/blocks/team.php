@@ -2,7 +2,7 @@
 /**
  * Team Block
  * 
- * Displays team members in a carousel format with modal popups.
+ * Displays team members in a carousel format linking to profile pages.
  * Uses Slick Carousel for the slider functionality.
  */
 
@@ -63,25 +63,10 @@ if (!empty($selected_members) && is_array($selected_members)) {
         $featured_image = get_the_post_thumbnail_url($member_id, 'large');
         $name = get_field('name', $member_id) ?: get_the_title($member_id);
         $role = get_field('role', $member_id);
-        $modal_image = get_field('modal_image', $member_id);
-        $phone = get_field('phone', $member_id);
-        $email = get_field('email', $member_id);
-        $linkedin = get_field('linkedin', $member_id);
-        $modal_content = get_field('modal_content', $member_id);
-        
-        // Use modal image if available, otherwise featured image
-        $modal_img_url = $modal_image ? $modal_image['url'] : $featured_image;
+        $profile_url = get_permalink($member_id);
       ?>
         <div class="team-slide px-2">
-          <div class="team-card cursor-pointer" 
-               data-member-id="<?php echo esc_attr($member_id); ?>"
-               data-name="<?php echo esc_attr($name); ?>"
-               data-role="<?php echo esc_attr($role); ?>"
-               data-image="<?php echo esc_attr($modal_img_url); ?>"
-               data-phone="<?php echo esc_attr($phone); ?>"
-               data-email="<?php echo esc_attr($email); ?>"
-               data-linkedin="<?php echo esc_attr($linkedin); ?>"
-               data-content="<?php echo esc_attr($modal_content); ?>">
+          <a href="<?php echo esc_url($profile_url); ?>" class="block group">
             
             <!-- Image -->
             <?php if ($featured_image): ?>
@@ -109,19 +94,17 @@ if (!empty($selected_members) && is_array($selected_members)) {
             </p>
             
             <!-- Arrow Link -->
-            <button type="button" class="team-card-trigger inline-flex items-center justify-center w-5 h-5 rounded-full bg-brand-cta text-white transition-transform hover:translate-x-1">
+            <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-brand-cta text-white transition-transform group-hover:translate-x-1">
               <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
               </svg>
-            </button>
-          </div>
+            </span>
+          </a>
         </div>
       <?php endforeach; ?>
     </div>
   </div>
 </section>
-
-<?php get_template_part('partials/team-modal'); ?>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

@@ -1,16 +1,19 @@
+  </main>
+
   <?php get_template_part('partials/footer-callout'); ?>
 
-  <footer class="bg-white border-t border-gray-200">
+  <footer class="bg-white border-t border-gray-200" role="contentinfo">
     <!-- Main Footer -->
     <div class="mx-auto max-w-7xl py-12 lg:py-16 px-6 lg:px-8">
+      <?php $qualifications_badges = get_field('qualifications_badges', 'option'); ?>
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
         
         <!-- Logo & Social Column -->
         <div class="lg:col-span-3">
           <!-- Logo -->
           <a href="<?php echo home_url(); ?>" class="inline-block mb-8">
-            <span class="sr-only">Avocado 55</span>
-            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="Avocado 55" class="h-8 w-auto" />
+            <span class="sr-only">Avocado55</span>
+            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="Avocado55" class="h-8 w-auto" />
           </a>
 
           <!-- Social Icons -->
@@ -45,10 +48,11 @@
             <?php endif; ?>
           </div>
           <?php endif; ?>
+
         </div>
 
         <!-- Footer Menu (horizontal on desktop, 2 columns on mobile) -->
-        <div class="lg:col-span-9 flex justify-end">
+        <div class="lg:col-span-9 flex flex-col gap-8 lg:items-end">
           <?php if ( has_nav_menu( 'footer_menu' ) ) : ?>
             <?php
               wp_nav_menu( [
@@ -61,6 +65,44 @@
               ] );
             ?>
           <?php endif; ?>
+
+          <?php if ($qualifications_badges) : ?>
+            <div class="flex flex-wrap items-center gap-3 lg:justify-end">
+              <?php foreach ($qualifications_badges as $badge) :
+                $badge_title = isset($badge['title']) ? $badge['title'] : '';
+                $badge_image = isset($badge['image']) ? $badge['image'] : null;
+                $badge_link = isset($badge['external_link']) ? $badge['external_link'] : '';
+
+                if (empty($badge_image['url'])) {
+                  continue;
+                }
+                ?>
+                <?php if (!empty($badge_link)) : ?>
+                  <a
+                    href="<?php echo esc_url($badge_link); ?>"
+                    target="_blank"
+                    rel="noopener noreferrer nofollow"
+                    class="inline-flex items-center"
+                    aria-label="<?php echo esc_attr($badge_title ?: 'Qualification badge'); ?>"
+                  >
+                    <img
+                      src="<?php echo esc_url($badge_image['url']); ?>"
+                      alt="<?php echo esc_attr($badge_image['alt'] ?: $badge_title); ?>"
+                      class="h-10 w-auto"
+                      loading="lazy"
+                    />
+                  </a>
+                <?php else : ?>
+                  <img
+                    src="<?php echo esc_url($badge_image['url']); ?>"
+                    alt="<?php echo esc_attr($badge_image['alt'] ?: $badge_title); ?>"
+                    class="h-10 w-auto"
+                    loading="lazy"
+                  />
+                <?php endif; ?>
+              <?php endforeach; ?>
+            </div>
+          <?php endif; ?>
         </div>
 
       </div>
@@ -71,7 +113,14 @@
       <div class="mx-auto max-w-7xl px-6 lg:px-8 py-6">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <p class="text-xs text-gray-500 uppercase tracking-wide">
-            &copy; Avocado55 <?php echo date('Y'); ?>, All rights reserved. Company number: SC632673
+            &copy; Avocado55 <?php echo date('Y'); ?>, All rights reserved. Company number:
+            <a
+              href="https://find-and-update.company-information.service.gov.uk/company/SC632673"
+              rel="nofollow"
+              class="hover:text-brand-green"
+            >
+              SC632673
+            </a>
           </p>
           <div class="flex items-center gap-6">
             <a href="/privacy-policy/" class="text-xs text-gray-500 hover:text-brand-green">Privacy Policy</a>
@@ -91,6 +140,14 @@
     const animatedElements = document.querySelectorAll('.animate-on-scroll');
     
     if (animatedElements.length === 0) return;
+
+    // Keep content accessible if the browser cannot run intersection observers.
+    if (!('IntersectionObserver' in window)) {
+      animatedElements.forEach(function(el) {
+        el.classList.add('is-visible');
+      });
+      return;
+    }
     
     const observerOptions = {
       root: null,

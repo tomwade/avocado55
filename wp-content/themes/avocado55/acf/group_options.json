@@ -273,6 +273,115 @@
             "allow_in_bindings": 0
         },
         {
+            "key": "field_options_badges_tab",
+            "label": "Qualifications & Badges",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_options_qualifications_badges",
+            "label": "Qualifications and Badges",
+            "name": "qualifications_badges",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "Add accreditation logos to display inline in the footer.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "row",
+            "min": 0,
+            "max": 0,
+            "collapsed": "field_options_badge_title",
+            "button_label": "Add Badge",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_options_badge_title",
+                    "label": "Title",
+                    "name": "title",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_options_qualifications_badges"
+                },
+                {
+                    "key": "field_options_badge_image",
+                    "label": "Image",
+                    "name": "image",
+                    "aria-label": "",
+                    "type": "image",
+                    "instructions": "",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "array",
+                    "library": "all",
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": "",
+                    "allow_in_bindings": 0,
+                    "preview_size": "thumbnail",
+                    "parent_repeater": "field_options_qualifications_badges"
+                },
+                {
+                    "key": "field_options_badge_external_link",
+                    "label": "External Link (Optional)",
+                    "name": "external_link",
+                    "aria-label": "",
+                    "type": "url",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "https://example.com",
+                    "allow_in_bindings": 0,
+                    "parent_repeater": "field_options_qualifications_badges"
+                }
+            ]
+        },
+        {
             "key": "field_options_services_dropdown_tab",
             "label": "Services Dropdown",
             "name": "",

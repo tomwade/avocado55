@@ -50,7 +50,7 @@
             "name": "wordpress_user",
             "aria-label": "",
             "type": "user",
-            "instructions": "Link this team member to a WordPress user account. Used to display the team modal when viewing blog posts by this author.",
+            "instructions": "Link this team member to a WordPress user account so blog author names can link to this bio page.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -70,7 +70,7 @@
             "name": "modal_image",
             "aria-label": "",
             "type": "image",
-            "instructions": "A larger image to display in the modal popup",
+            "instructions": "Optional larger portrait used on the team member bio page.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -173,7 +173,7 @@
             "name": "modal_content",
             "aria-label": "",
             "type": "textarea",
-            "instructions": "Content to display in the team member modal popup",
+            "instructions": "Biography content for the team member profile page.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {

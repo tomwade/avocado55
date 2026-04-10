@@ -37,7 +37,7 @@ function avocado55_team() {
 		'supports'              => array( 'title', 'editor', 'thumbnail', 'page-attributes' ),
 		'taxonomies'            => array( ),
 		'hierarchical'          => false,
-		'public'                => false,
+		'public'                => true,
 		'show_ui'               => true,
 		'show_in_menu'          => true,
 		'menu_position'         => 5,
@@ -45,10 +45,13 @@ function avocado55_team() {
 		'show_in_admin_bar'     => true,
 		'show_in_nav_menus'     => true,
 		'can_export'            => true,
-		'has_archive'           => false,
+		'has_archive'           => 'about-us/our-team',
 		'exclude_from_search'   => false,
-		'publicly_queryable'    => false,
-		'rewrite'               => ['slug' => 'team'],
+		'publicly_queryable'    => true,
+		'rewrite'               => array(
+			'slug'       => 'about-us/our-team',
+			'with_front' => false,
+		),
 		'capability_type'       => 'page',
 	);
 	register_post_type( 'team_member', $args );

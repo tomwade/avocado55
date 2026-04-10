@@ -10,44 +10,17 @@ if ( have_posts() ) {
     $featured_image = get_the_post_thumbnail_url($post_id, 'large');
     $date = get_the_date('d M Y');
     $author_id = get_the_author_meta('ID');
-    $author_name = get_the_author();
-    $author_avatar = get_avatar_url($author_id, ['size' => 64]);
+    $author_profile = avocado55_get_author_profile_data($author_id);
+    $author_name = $author_profile['name'];
+    $author_avatar = $author_profile['avatar'];
+    $author_bio_url = !empty($author_profile['url']) ? $author_profile['url'] : get_author_posts_url($author_id);
     $author_bio = get_the_author_meta('description');
-    $author_role = get_the_author_meta('job_title') ?: 'Author';
+    $author_role = $author_profile['role'];
     
     // Get primary category
     $categories = get_the_category();
     $category = !empty($categories) ? $categories[0] : null;
     
-    // Check if this author has a linked team member
-    $author_team_member = null;
-    $team_member_query = new WP_Query([
-      'post_type' => 'team_member',
-      'posts_per_page' => 1,
-      'post_status' => 'publish',
-      'meta_query' => [
-        [
-          'key' => 'wordpress_user',
-          'value' => $author_id,
-          'compare' => '='
-        ]
-      ]
-    ]);
-    
-    if ($team_member_query->have_posts()) {
-      $author_team_member = $team_member_query->posts[0];
-      $tm_id = $author_team_member->ID;
-      $tm_name = get_field('name', $tm_id) ?: get_the_title($tm_id);
-      $tm_role = get_field('role', $tm_id);
-      $tm_featured_image = get_the_post_thumbnail_url($tm_id, 'large');
-      $tm_modal_image = get_field('modal_image', $tm_id);
-      $tm_phone = get_field('phone', $tm_id);
-      $tm_email = get_field('email', $tm_id);
-      $tm_linkedin = get_field('linkedin', $tm_id);
-      $tm_modal_content = get_field('modal_content', $tm_id);
-      $tm_modal_img_url = $tm_modal_image ? $tm_modal_image['url'] : $tm_featured_image;
-    }
-    wp_reset_postdata();
 ?>
 
 <!-- Hero Section -->
@@ -67,7 +40,11 @@ if ( have_posts() ) {
             <?php if ($author_avatar) : ?>
               <img src="<?php echo esc_url($author_avatar); ?>" alt="<?php echo esc_attr($author_name); ?>" class="w-6 h-6 rounded-full object-cover" />
             <?php endif; ?>
-            <span class="text-sm font-medium text-brand-green"><?php echo esc_html($author_name); ?></span>
+            <?php if (!empty($author_bio_url)) : ?>
+              <a href="<?php echo esc_url($author_bio_url); ?>" class="text-sm font-medium text-brand-green hover:underline"><?php echo esc_html($author_name); ?></a>
+            <?php else : ?>
+              <span class="text-sm font-medium text-brand-green"><?php echo esc_html($author_name); ?></span>
+            <?php endif; ?>
           </div>
         </div>
 
@@ -118,24 +95,8 @@ if ( have_posts() ) {
         </div>
       </div>
 
-      <?php if ($author_team_member) : ?>
-        <!-- Team modal trigger -->
-        <button 
-          type="button"
-          class="team-card button button--brand-cta cursor-pointer self-start"
-          data-member-id="<?php echo esc_attr($tm_id); ?>"
-          data-name="<?php echo esc_attr($tm_name); ?>"
-          data-role="<?php echo esc_attr($tm_role); ?>"
-          data-image="<?php echo esc_attr($tm_modal_img_url); ?>"
-          data-phone="<?php echo esc_attr($tm_phone); ?>"
-          data-email="<?php echo esc_attr($tm_email); ?>"
-          data-linkedin="<?php echo esc_attr($tm_linkedin); ?>"
-          data-content="<?php echo esc_attr($tm_modal_content); ?>"
-        >
-          Read bio
-        </button>
-      <?php else : ?>
-        <a href="<?php echo get_author_posts_url($author_id); ?>" class="button button--brand-cta self-start">
+      <?php if (!empty($author_bio_url)) : ?>
+        <a href="<?php echo esc_url($author_bio_url); ?>" class="button button--brand-cta self-start">
           Read bio
         </a>
       <?php endif; ?>
@@ -253,13 +214,6 @@ if ( have_posts() ) {
 
   </div>
 </section>
-
-<?php 
-  // Include team modal if author has linked team member
-  if ($author_team_member) {
-    get_template_part('partials/team-modal');
-  }
-?>
 
 <?php
   }
