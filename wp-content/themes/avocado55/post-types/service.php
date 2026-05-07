@@ -48,7 +48,7 @@ function avocado55_service() {
 		'has_archive'           => false,
 		'exclude_from_search'   => false,
 		'publicly_queryable'    => true,
-		'rewrite'               => ['slug' => 'services'],
+		'rewrite'               => ['slug' => 'services', 'with_front' => false],
 		'capability_type'       => 'page',
 	);
 	register_post_type( 'service', $args );

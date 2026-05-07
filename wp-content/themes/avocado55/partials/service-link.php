@@ -19,9 +19,11 @@ $url = get_permalink( $service_id );
 ?>
 
 <a href="<?php echo esc_url( $url ); ?>" class="flex items-center gap-4 bg-brand-light rounded-2xl p-4 hover:bg-brand-light/90 transition-colors group">
-  <?php if ( $icon && ! empty( $icon['url'] ) ) : ?>
+  <?php if ( $icon && ! empty( $icon['url'] ) ) :
+    $service_link_icon_url = avocado55_acf_image_url( $icon, 'thumbnail', $icon['url'] );
+  ?>
     <div class="w-12 h-12 bg-brand-green rounded-xl flex items-center justify-center shrink-0">
-      <img src="<?php echo esc_url( $icon['url'] ); ?>" alt="" class="w-6 h-6 object-contain" aria-hidden="true" />
+      <img src="<?php echo esc_url( $service_link_icon_url ); ?>" alt="" class="w-6 h-6 object-contain" aria-hidden="true" />
     </div>
   <?php else : ?>
     <div class="w-12 h-12 bg-brand-green rounded-xl flex items-center justify-center shrink-0">

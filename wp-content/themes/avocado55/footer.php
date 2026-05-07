@@ -52,7 +52,7 @@
         </div>
 
         <!-- Footer Menu (horizontal on desktop, 2 columns on mobile) -->
-        <div class="lg:col-span-9 flex flex-col gap-8 lg:items-end">
+        <div class="lg:col-span-9 flex flex-col gap-4 lg:items-end">
           <?php if ( has_nav_menu( 'footer_menu' ) ) : ?>
             <?php
               wp_nav_menu( [
@@ -67,7 +67,7 @@
           <?php endif; ?>
 
           <?php if ($qualifications_badges) : ?>
-            <div class="flex flex-wrap items-center gap-3 lg:justify-end">
+            <div class="flex flex-wrap items-center gap-6 lg:justify-end">
               <?php foreach ($qualifications_badges as $badge) :
                 $badge_title = isset($badge['title']) ? $badge['title'] : '';
                 $badge_image = isset($badge['image']) ? $badge['image'] : null;
@@ -79,16 +79,14 @@
                 ?>
                 <?php if (!empty($badge_link)) : ?>
                   <a
-                    href="<?php echo esc_url($badge_link); ?>"
-                    target="_blank"
-                    rel="noopener noreferrer nofollow"
+                    href="<?php echo esc_url($badge_link); ?>"<?php echo avocado55_link_attrs($badge_link); ?>
                     class="inline-flex items-center"
                     aria-label="<?php echo esc_attr($badge_title ?: 'Qualification badge'); ?>"
                   >
                     <img
                       src="<?php echo esc_url($badge_image['url']); ?>"
                       alt="<?php echo esc_attr($badge_image['alt'] ?: $badge_title); ?>"
-                      class="h-10 w-auto"
+                      class="h-16 w-auto"
                       loading="lazy"
                     />
                   </a>
@@ -96,7 +94,7 @@
                   <img
                     src="<?php echo esc_url($badge_image['url']); ?>"
                     alt="<?php echo esc_attr($badge_image['alt'] ?: $badge_title); ?>"
-                    class="h-10 w-auto"
+                    class="h-16 w-auto"
                     loading="lazy"
                   />
                 <?php endif; ?>
@@ -124,6 +122,7 @@
             </a>
           </p>
           <div class="flex items-center gap-6">
+            <a href="/terms-and-conditions/" class="text-xs text-gray-500 hover:text-brand-green">Terms and Conditions</a>
             <a href="/privacy-policy/" class="text-xs text-gray-500 hover:text-brand-green">Privacy Policy</a>
             <a href="/environmental-policy/" class="text-xs text-gray-500 hover:text-brand-green">Environmental Policy</a>
             <a href="/modern-slavery-statement/" class="text-xs text-gray-500 hover:text-brand-green">Modern Slavery</a>

@@ -46,6 +46,9 @@ class Avocado55 {
 
     // Ensure all public URLs output a self-referencing canonical tag.
     add_action('init', [$this, 'register_seo_hooks']);
+
+    // Print per-page custom head scripts/schema late so they sit beneath core <head> output.
+    add_action('wp_head', [$this, 'output_custom_head_scripts'], 99);
   }
 
   /**
@@ -136,9 +139,20 @@ class Avocado55 {
    * @since 0.0.1
    */
   public function register_image_sizes() {
+      // Hero / featured wide imagery (post & story headers).
       add_image_size( 'featured_image', 1200, 600, true );
+      // Portrait crop for team carousels and team profile cards.
       add_image_size( 'team_member', 540, 632, true );
+      // Square crop kept for any social/instagram blocks.
       add_image_size( 'instagram', 600, 600, true );
+      // 4:3 landscape thumbs used by news-post cards / latest insights grid.
+      add_image_size( 'news_card', 640, 480, true );
+      // Story-card landscape thumb (2-up grid → ~640px wide on desktop).
+      add_image_size( 'story_card', 800, 600, true );
+      // Free-aspect logo size for the featured-clients marquee (h-24 ≈ 96px tall).
+      add_image_size( 'client_logo', 320, 200, false );
+      // Wide hero background for full-bleed sections (feature blocks, archive header).
+      add_image_size( 'hero_background', 2400, 1350, true );
   }
 
   public function my_login_stylesheet() {
@@ -223,6 +237,34 @@ class Avocado55 {
     echo '<link rel="canonical" href="' . esc_url( $canonical_url ) . '" />' . "\n";
   }
 
+  /**
+   * Print per-page custom head scripts (e.g. JSON-LD schema, analytics snippets).
+   *
+   * Output is intentionally raw so editors can drop in <script type="application/ld+json">…</script>;
+   * the field is admin-only via the standard ACF capability model.
+   */
+  public function output_custom_head_scripts() {
+    if ( ! is_singular() ) {
+      return;
+    }
+
+    if ( ! function_exists( 'get_field' ) ) {
+      return;
+    }
+
+    $post_id = get_queried_object_id();
+    if ( ! $post_id ) {
+      return;
+    }
+
+    $custom = get_field( 'custom_head_scripts', $post_id );
+    if ( ! is_string( $custom ) || trim( $custom ) === '' ) {
+      return;
+    }
+
+    echo "\n" . $custom . "\n";
+  }
+
 }
 
 new Avocado55;
@@ -259,6 +301,112 @@ function avocado55_current_canonical_url() {
 
   // Build from request path so canonical remains stable without query params.
   return home_url( user_trailingslashit( $request_path ) );
+}
+
+/**
+ * Determine whether a URL points to an external host.
+ *
+ * Empty, anchor-only, mailto:, tel:, javascript:, and same-host URLs are
+ * treated as internal so they don't get target="_blank" or noopener.
+ *
+ * @param string $url URL to inspect.
+ * @return bool True when host differs from the site's home_url() host.
+ */
+function avocado55_is_external_url( $url ) {
+  if ( ! is_string( $url ) ) {
+    return false;
+  }
+
+  $url = trim( $url );
+  if ( $url === '' || $url[0] === '#' || $url[0] === '/' ) {
+    return false;
+  }
+
+  $lower = strtolower( $url );
+  if ( strpos( $lower, 'mailto:' ) === 0 || strpos( $lower, 'tel:' ) === 0 || strpos( $lower, 'javascript:' ) === 0 ) {
+    return false;
+  }
+
+  $host = parse_url( $url, PHP_URL_HOST );
+  if ( empty( $host ) ) {
+    return false;
+  }
+
+  $site_host = parse_url( home_url(), PHP_URL_HOST );
+  if ( empty( $site_host ) ) {
+    return false;
+  }
+
+  return strtolower( $host ) !== strtolower( $site_host );
+}
+
+/**
+ * Build target/rel attribute string for a link based on internal/external.
+ *
+ * @param string $url URL the anchor points to.
+ * @return string Ready-to-print attribute string (leading space included), or empty.
+ */
+function avocado55_link_attrs( $url ) {
+  if ( avocado55_is_external_url( $url ) ) {
+    return ' target="_blank" rel="noopener noreferrer nofollow"';
+  }
+  return '';
+}
+
+/**
+ * Resolve a sized image URL from an ACF image field value.
+ *
+ * Handles all three ACF image return formats — array, attachment ID, raw URL —
+ * and falls back gracefully when the requested size hasn't been generated yet
+ * (so newly added image sizes still render until thumbnails are regenerated).
+ *
+ * @param mixed  $image        ACF image value (array, attachment ID, or URL string).
+ * @param string $size         Registered image size to request.
+ * @param string $fallback_url URL to return when nothing else is available.
+ * @return string Resolved image URL, or empty string when no source can be found.
+ */
+function avocado55_acf_image_url( $image, $size = 'large', $fallback_url = '' ) {
+  if ( is_array( $image ) ) {
+    if ( ! empty( $image['ID'] ) ) {
+      $sized = wp_get_attachment_image_url( (int) $image['ID'], $size );
+      if ( $sized ) {
+        return $sized;
+      }
+    }
+    if ( ! empty( $image['sizes'][ $size ] ) ) {
+      return (string) $image['sizes'][ $size ];
+    }
+    if ( ! empty( $image['url'] ) ) {
+      return (string) $image['url'];
+    }
+  } elseif ( is_numeric( $image ) ) {
+    $sized = wp_get_attachment_image_url( (int) $image, $size );
+    if ( $sized ) {
+      return $sized;
+    }
+  } elseif ( is_string( $image ) && trim( $image ) !== '' ) {
+    return $image;
+  }
+
+  return (string) $fallback_url;
+}
+
+/**
+ * Resolve the alt text for an attachment, falling back to a sensible default.
+ *
+ * @param int    $attachment_id Attachment post ID.
+ * @param string $fallback      Fallback alt text used when the attachment has no alt.
+ * @return string Alt text suitable for direct use in alt="…" (still needs esc_attr).
+ */
+function avocado55_image_alt( $attachment_id, $fallback = '' ) {
+  $attachment_id = (int) $attachment_id;
+  if ( $attachment_id > 0 ) {
+    $alt = get_post_meta( $attachment_id, '_wp_attachment_image_alt', true );
+    if ( is_string( $alt ) && trim( $alt ) !== '' ) {
+      return $alt;
+    }
+  }
+  return is_string( $fallback ) ? $fallback : '';
 }
 
 /**

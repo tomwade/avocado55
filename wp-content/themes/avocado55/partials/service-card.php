@@ -34,10 +34,12 @@ if ($url) {
   <!-- Header: Icon + Title -->
   <div class="flex items-center gap-4 mb-4">
     <!-- Icon -->
-    <?php if ($icon) : ?>
+    <?php if ($icon) :
+      $service_card_icon_url = avocado55_acf_image_url($icon, 'thumbnail', $icon['url'] ?? '');
+    ?>
       <div class="w-14 h-14 bg-brand-green rounded-xl flex items-center justify-center shrink-0">
         <img 
-          src="<?php echo esc_url($icon['url']); ?>" 
+          src="<?php echo esc_url($service_card_icon_url); ?>" 
           alt="" 
           class="w-8 h-8 object-contain"
           aria-hidden="true"

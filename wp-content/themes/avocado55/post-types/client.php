@@ -48,7 +48,7 @@ function avocado55_client() {
 		'has_archive'           => true,
 		'exclude_from_search'   => false,
 		'publicly_queryable'    => true,
-		'rewrite'               => ['slug' => 'clients'],
+		'rewrite'               => ['slug' => 'clients', 'with_front' => false],
 		'capability_type'       => 'page',
 	);
 	register_post_type( 'client', $args );

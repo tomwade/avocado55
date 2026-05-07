@@ -48,7 +48,7 @@ function avocado55_story() {
 		'has_archive'           => true,
 		'exclude_from_search'   => false,
 		'publicly_queryable'    => true,
-		'rewrite'               => ['slug' => 'stories'],
+		'rewrite'               => ['slug' => 'stories', 'with_front' => false],
 		'capability_type'       => 'page',
 	);
 	register_post_type( 'story', $args );

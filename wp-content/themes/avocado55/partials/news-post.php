@@ -18,7 +18,8 @@ if (!$post) return;
 // Get post data
 $title = get_the_title($post_id);
 $permalink = get_permalink($post_id);
-$featured_image = get_the_post_thumbnail_url($post_id, 'large');
+$featured_image = get_the_post_thumbnail_url($post_id, 'news_card');
+$featured_image_alt = avocado55_image_alt(get_post_thumbnail_id($post_id), $title);
 $date = get_the_date('d M Y', $post_id);
 $author_id = $post->post_author;
 $author_profile = avocado55_get_author_profile_data($author_id);
@@ -26,9 +27,6 @@ $author_name = $author_profile['name'];
 $author_avatar = $author_profile['avatar'];
 $author_url = !empty($author_profile['url']) ? $author_profile['url'] : get_author_posts_url($author_id);
 
-// Get primary category
-$categories = get_the_category($post_id);
-$category = !empty($categories) ? $categories[0] : null;
 $animation_class = avocado55_animation_class($animation_delay);
 ?>
 
@@ -38,18 +36,11 @@ $animation_class = avocado55_animation_class($animation_delay);
     <?php if ($featured_image) : ?>
       <img 
         src="<?php echo esc_url($featured_image); ?>" 
-        alt="<?php echo esc_attr($title); ?>" 
+        alt="<?php echo esc_attr($featured_image_alt); ?>" 
         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
       />
     <?php else : ?>
       <div class="w-full h-full bg-gray-200"></div>
-    <?php endif; ?>
-
-    <!-- Category Badge -->
-    <?php if ($category) : ?>
-      <span class="absolute top-4 left-4 bg-brand-green text-white text-xs font-medium px-3 py-1.5 rounded">
-        <?php echo esc_html($category->name); ?>
-      </span>
     <?php endif; ?>
   </a>
 

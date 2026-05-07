@@ -14,9 +14,9 @@ $story_id = $args['story_id'] ?? get_the_ID();
 if (!$story_id) return;
 
 // Get story data
-$image = get_the_post_thumbnail_url($story_id, 'large');
-$image_alt = get_post_meta(get_post_thumbnail_id($story_id), '_wp_attachment_image_alt', true);
+$image = get_the_post_thumbnail_url($story_id, 'story_card');
 $client = get_field('client', $story_id);
+$image_alt = avocado55_image_alt(get_post_thumbnail_id($story_id), $client ?: get_the_title($story_id));
 $quote_text = get_field('quote_text', $story_id);
 $quote_person = get_field('quote_person', $story_id);
 $story_url = get_permalink($story_id);
@@ -29,11 +29,13 @@ $story_url = get_permalink($story_id);
     <div class="p-5 <?php echo esc_attr(avocado55_animation_class(1)); ?>">
       <div class="rounded-xl overflow-hidden">
         <?php if ($image) : ?>
-          <img 
-            src="<?php echo esc_url($image); ?>" 
-            alt="<?php echo esc_attr($image_alt ?: $client); ?>" 
-            class="w-full h-auto"
-          />
+          <a href="<?php echo esc_url($story_url); ?>" class="block" aria-label="<?php echo esc_attr(sprintf(__('Read story: %s', 'avocado55'), get_the_title($story_id))); ?>">
+            <img 
+              src="<?php echo esc_url($image); ?>" 
+              alt="<?php echo esc_attr($image_alt); ?>" 
+              class="w-full h-auto transition-transform duration-300 hover:scale-[1.02]"
+            />
+          </a>
         <?php endif; ?>
       </div>
     </div>

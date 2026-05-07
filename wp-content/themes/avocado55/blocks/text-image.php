@@ -66,11 +66,14 @@ $text_order = $image_position === 'left' ? 'order-2 lg:order-2' : 'order-2 lg:or
 
       <!-- Image Column -->
       <div class="<?php echo esc_attr($image_order); ?> <?php echo esc_attr(avocado55_animation_class(2)); ?>">
-        <?php if ($image) : ?>
+        <?php if ($image) :
+          $text_image_url = avocado55_acf_image_url($image, 'large', $image['url'] ?? '');
+        ?>
           <img 
-            src="<?php echo esc_url($image['url']); ?>" 
+            src="<?php echo esc_url($text_image_url); ?>" 
             alt="<?php echo esc_attr($image['alt'] ?: $title); ?>" 
             class="w-full h-auto rounded-lg object-cover"
+            loading="lazy"
           />
         <?php endif; ?>
       </div>

@@ -1,0 +1,81 @@
+{
+    "key": "group_avocado55_custom_scripts",
+    "title": "Custom Scripts / Schema",
+    "fields": [
+        {
+            "key": "field_avocado55_custom_head_scripts",
+            "label": "Custom Head Scripts / Schema",
+            "name": "custom_head_scripts",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "Paste any HTML, <script> tags, or JSON-LD schema you want injected inside the <head> on this page. Output is rendered as-is so only paste content you trust.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "rows": 8,
+            "placeholder": "",
+            "new_lines": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "post"
+            }
+        ],
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "page"
+            }
+        ],
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "service"
+            }
+        ],
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "story"
+            }
+        ],
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "team_member"
+            }
+        ],
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "client"
+            }
+        ]
+    ],
+    "menu_order": 100,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Optional per-page scripts (analytics, JSON-LD schema, etc.) that get printed inside the <head> tag.",
+    "show_in_rest": 0,
+    "modified": 1745851200
+}

@@ -15,13 +15,23 @@ $featured_story = $featured_story_id ? get_post($featured_story_id) : null;
 if ($featured_story) :
   // Use featured_story_image if set, otherwise fall back to featured image
   $featured_story_image = get_field('featured_story_image', $featured_story_id);
-  $background_image = $featured_story_image ? $featured_story_image['url'] : get_the_post_thumbnail_url($featured_story_id, 'full');
+  if (is_array($featured_story_image) && !empty($featured_story_image['url'])) {
+    $background_image = avocado55_acf_image_url($featured_story_image, 'hero_background', $featured_story_image['url']);
+    $background_alt = avocado55_image_alt(
+      isset($featured_story_image['ID']) ? (int) $featured_story_image['ID'] : 0,
+      $featured_story_image['alt'] ?? get_the_title($featured_story_id)
+    );
+  } else {
+    $background_image = get_the_post_thumbnail_url($featured_story_id, 'hero_background');
+    $background_alt = avocado55_image_alt(get_post_thumbnail_id($featured_story_id), get_the_title($featured_story_id));
+  }
   $client = get_field('client', $featured_story_id);
   $story_title = get_the_title($featured_story_id);
   $story_url = get_permalink($featured_story_id);
   
   get_template_part('partials/feature-header', null, [
     'background_image' => $background_image,
+    'background_alt'   => $background_alt,
     'badge' => 'Featured',
     'subtitle' => $client,
     'title' => $story_title,

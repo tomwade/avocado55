@@ -60,8 +60,9 @@ if (!empty($selected_members) && is_array($selected_members)) {
     <div class="team-carousel">
       <?php foreach ($members as $member): 
         $member_id = $member->ID;
-        $featured_image = get_the_post_thumbnail_url($member_id, 'large');
+        $featured_image = get_the_post_thumbnail_url($member_id, 'team_member');
         $name = get_field('name', $member_id) ?: get_the_title($member_id);
+        $featured_image_alt = avocado55_image_alt(get_post_thumbnail_id($member_id), $name);
         $role = get_field('role', $member_id);
         $profile_url = get_permalink($member_id);
       ?>
@@ -73,7 +74,7 @@ if (!empty($selected_members) && is_array($selected_members)) {
               <div class="aspect-[3/4] rounded-lg overflow-hidden mb-4">
                 <img 
                   src="<?php echo esc_url($featured_image); ?>" 
-                  alt="<?php echo esc_attr($name); ?>"
+                  alt="<?php echo esc_attr($featured_image_alt); ?>"
                   class="w-full h-full object-cover"
                 />
               </div>

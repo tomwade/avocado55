@@ -15,8 +15,16 @@ if ( have_posts() ) {
     $story_id = get_the_ID();
     $client = get_field('client');
     $title = get_the_title();
-    $featured_image = get_the_post_thumbnail_url($story_id, 'full');
+    $featured_image = get_the_post_thumbnail_url($story_id, 'featured_image');
+    $featured_image_alt = avocado55_image_alt(get_post_thumbnail_id($story_id), $title);
     $service = get_field('service');
+    $service_link = get_field('service_link');
+    $service_link_url = '';
+    if ($service_link instanceof WP_Post) {
+      $service_link_url = get_permalink($service_link->ID);
+    } elseif (!empty($service_link)) {
+      $service_link_url = get_permalink((int) $service_link);
+    }
     $sector = get_field('sector');
     $result = get_field('result');
     
@@ -63,7 +71,13 @@ if ( have_posts() ) {
           <?php if ($service) : ?>
             <div class="<?php echo esc_attr(avocado55_animation_class(3)); ?>">
               <p class="text-xs uppercase tracking-wider text-white/60 mb-1">Service Delivered</p>
-              <p class="text-white text-sm"><?php echo esc_html($service); ?></p>
+              <p class="text-white text-sm">
+                <?php if ($service_link_url) : ?>
+                  <a href="<?php echo esc_url($service_link_url); ?>" class="underline decoration-white/40 hover:decoration-white"><?php echo esc_html($service); ?></a>
+                <?php else : ?>
+                  <?php echo esc_html($service); ?>
+                <?php endif; ?>
+              </p>
             </div>
           <?php endif; ?>
 
@@ -104,7 +118,7 @@ if ( have_posts() ) {
       <div class="relative min-h-[300px] lg:min-h-[500px] <?php echo esc_attr(avocado55_animation_class(2)); ?>">
         <img 
           src="<?php echo esc_url($featured_image); ?>" 
-          alt="<?php echo esc_attr($title); ?>" 
+          alt="<?php echo esc_attr($featured_image_alt); ?>" 
           class="absolute inset-0 w-full h-full object-cover"
         />
       </div>

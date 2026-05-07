@@ -21,8 +21,16 @@ if ( have_posts() ) {
     $modal_content = get_field( 'modal_content', $member_id );
     $linked_user_id = (int) get_field( 'wordpress_user', $member_id );
     $profile_image = get_field( 'modal_image', $member_id );
-    $featured_image = get_the_post_thumbnail_url( $member_id, 'large' );
-    $profile_image_url = ! empty( $profile_image['url'] ) ? $profile_image['url'] : $featured_image;
+    $featured_image = get_the_post_thumbnail_url( $member_id, 'team_member' );
+    $profile_image_url = ! empty( $profile_image )
+      ? avocado55_acf_image_url( $profile_image, 'team_member', $featured_image )
+      : $featured_image;
+
+    if ( ! empty( $profile_image['ID'] ) ) {
+      $profile_image_alt = avocado55_image_alt( (int) $profile_image['ID'], $name );
+    } else {
+      $profile_image_alt = avocado55_image_alt( get_post_thumbnail_id( $member_id ), $name );
+    }
 
     // Pull latest blog posts for team members linked to a WP author account.
     $latest_posts_query = null;
@@ -46,7 +54,7 @@ if ( have_posts() ) {
           <aside class="lg:col-span-1">
             <?php if ( $profile_image_url ) : ?>
               <div class="rounded-2xl overflow-hidden mb-6">
-                <img src="<?php echo esc_url( $profile_image_url ); ?>" alt="<?php echo esc_attr( $name ); ?>" class="w-full h-auto object-cover" />
+                <img src="<?php echo esc_url( $profile_image_url ); ?>" alt="<?php echo esc_attr( $profile_image_alt ); ?>" class="w-full h-auto object-cover" />
               </div>
             <?php endif; ?>
 

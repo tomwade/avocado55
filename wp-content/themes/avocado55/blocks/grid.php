@@ -68,10 +68,12 @@ if ($item_count === 3) {
         ?>
           <div class="<?php echo esc_attr($card_bg_class); ?> rounded-xl p-6 lg:p-8 <?php echo esc_attr(avocado55_animation_class($grid_index)); ?>"><?php $grid_index++; ?>
             <!-- Icon -->
-            <?php if ($icon) : ?>
+            <?php if ($icon) :
+              $grid_icon_url = avocado55_acf_image_url($icon, 'thumbnail', $icon['url'] ?? '');
+            ?>
               <div class="w-14 h-14 bg-brand-green rounded-xl flex items-center justify-center mb-6">
                 <img 
-                  src="<?php echo esc_url($icon['url']); ?>" 
+                  src="<?php echo esc_url($grid_icon_url); ?>" 
                   alt="" 
                   class="w-8 h-8 object-contain"
                   aria-hidden="true"

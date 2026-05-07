@@ -7,7 +7,8 @@ if ( have_posts() ) {
     
     $post_id = get_the_ID();
     $title = get_the_title();
-    $featured_image = get_the_post_thumbnail_url($post_id, 'large');
+    $featured_image = get_the_post_thumbnail_url($post_id, 'featured_image');
+    $featured_image_alt = avocado55_image_alt(get_post_thumbnail_id($post_id), $title);
     $date = get_the_date('d M Y');
     $author_id = get_the_author_meta('ID');
     $author_profile = avocado55_get_author_profile_data($author_id);
@@ -16,11 +17,6 @@ if ( have_posts() ) {
     $author_bio_url = !empty($author_profile['url']) ? $author_profile['url'] : get_author_posts_url($author_id);
     $author_bio = get_the_author_meta('description');
     $author_role = $author_profile['role'];
-    
-    // Get primary category
-    $categories = get_the_category();
-    $category = !empty($categories) ? $categories[0] : null;
-    
 ?>
 
 <!-- Hero Section -->
@@ -59,7 +55,7 @@ if ( have_posts() ) {
         <div class="relative">
           <img 
             src="<?php echo esc_url($featured_image); ?>" 
-            alt="<?php echo esc_attr($title); ?>" 
+            alt="<?php echo esc_attr($featured_image_alt); ?>" 
             class="w-full h-auto rounded-2xl object-cover aspect-[4/3]"
           />
         </div>
@@ -150,64 +146,23 @@ if ( have_posts() ) {
       </a>
     </div>
 
-    <!-- Posts Grid - Same Category -->
+    <!-- Posts Grid - Latest Posts -->
     <?php
-    // Get category IDs for the current post
-    $category_ids = [];
-    if ($category) {
-      $category_ids[] = $category->term_id;
-    }
-    
-    $related_args = [
-      'post_type' => 'post',
-      'post_status' => 'publish',
+    $related_query = new WP_Query([
+      'post_type'      => 'post',
+      'post_status'    => 'publish',
       'posts_per_page' => 3,
-      'post__not_in' => [$post_id],
-      'orderby' => 'date',
-      'order' => 'DESC',
-    ];
-    
-    // Add category filter if we have a category
-    if (!empty($category_ids)) {
-      $related_args['category__in'] = $category_ids;
-    }
-    
-    $related_query = new WP_Query($related_args);
-    
-    // If not enough posts in same category, get any posts
-    if ($related_query->post_count < 3 && !empty($category_ids)) {
-      $exclude_ids = [$post_id];
-      foreach ($related_query->posts as $related_post) {
-        $exclude_ids[] = $related_post->ID;
-      }
-      
-      $fallback_args = [
-        'post_type' => 'post',
-        'post_status' => 'publish',
-        'posts_per_page' => 3 - $related_query->post_count,
-        'post__not_in' => $exclude_ids,
-        'orderby' => 'date',
-        'order' => 'DESC',
-      ];
-      $fallback_query = new WP_Query($fallback_args);
-    }
-    
-    if ($related_query->have_posts() || (isset($fallback_query) && $fallback_query->have_posts())) : ?>
+      'post__not_in'   => [$post_id],
+      'orderby'        => 'date',
+      'order'          => 'DESC',
+    ]);
+
+    if ($related_query->have_posts()) : ?>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <?php 
-        // Show category-matched posts first
-        while ($related_query->have_posts()) : $related_query->the_post(); ?>
+        <?php while ($related_query->have_posts()) : $related_query->the_post(); ?>
           <?php get_template_part('partials/news-post', null, ['post_id' => get_the_ID()]); ?>
-        <?php endwhile; 
+        <?php endwhile;
         wp_reset_postdata();
-        
-        // Show fallback posts if needed
-        if (isset($fallback_query) && $fallback_query->have_posts()) :
-          while ($fallback_query->have_posts()) : $fallback_query->the_post(); ?>
-            <?php get_template_part('partials/news-post', null, ['post_id' => get_the_ID()]); ?>
-          <?php endwhile;
-          wp_reset_postdata();
-        endif;
         ?>
       </div>
     <?php endif; ?>

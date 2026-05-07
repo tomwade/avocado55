@@ -34,26 +34,32 @@ $animation_class = avocado55_animation_class($animation_delay);
 
 <div class="relative <?php echo esc_attr($bg_class); ?> rounded-2xl overflow-hidden lg:min-h-[300px] flex flex-col justify-between p-6 lg:p-8 <?php echo esc_attr($animation_class); ?>">
   
-  <?php if ($has_bg_image) : ?>
+  <?php if ($has_bg_image) :
+    $partner_bg_url = avocado55_acf_image_url($background_image, 'large', $background_image['url']);
+  ?>
     <!-- Background Image with Overlay -->
     <img 
-      src="<?php echo esc_url($background_image['url']); ?>" 
+      src="<?php echo esc_url($partner_bg_url); ?>" 
       alt="" 
       class="absolute inset-0 w-full h-full object-cover"
       aria-hidden="true"
+      loading="lazy"
     />
     <div class="absolute inset-0 bg-brand-green/80"></div>
   <?php endif; ?>
 
   <div class="relative z-10 flex flex-col h-full justify-between">
     <!-- Top Section: Logo / Icon -->
-    <?php if ($logo && !empty($logo['url'])) : ?>
+    <?php if ($logo && !empty($logo['url'])) :
+      $partner_logo_url = avocado55_acf_image_url($logo, 'medium', $logo['url']);
+    ?>
       <div class="mb-8">
         <div class="<?php echo esc_attr($icon_size_class); ?> flex overflow-hidden">
           <img 
-            src="<?php echo esc_url($logo['url']); ?>" 
+            src="<?php echo esc_url($partner_logo_url); ?>" 
             alt="<?php echo esc_attr($logo['alt'] ?: $title); ?>" 
             class="max-w-full max-h-full object-contain"
+            loading="lazy"
           />
         </div>
       </div>

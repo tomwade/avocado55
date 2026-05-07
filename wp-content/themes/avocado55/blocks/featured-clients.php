@@ -16,21 +16,23 @@ if ( have_rows( 'clients' ) ) {
     // Pull values directly from each repeater row to avoid partial array payloads.
     $client_title = (string) get_sub_field( 'title' );
     $client_image = get_sub_field( 'image' );
+    $client_link = (string) get_sub_field( 'link' );
     $image_url = '';
     $image_alt = '';
 
     if ( is_array( $client_image ) ) {
-      $image_url = isset( $client_image['url'] ) ? (string) $client_image['url'] : '';
       $image_alt = isset( $client_image['alt'] ) ? (string) $client_image['alt'] : '';
 
-      if ( $image_url === '' && ! empty( $client_image['ID'] ) ) {
+      if ( ! empty( $client_image['ID'] ) ) {
         $image_id = (int) $client_image['ID'];
-        $image_url = wp_get_attachment_image_url( $image_id, 'large' ) ?: '';
+        $image_url = wp_get_attachment_image_url( $image_id, 'client_logo' ) ?: ( isset( $client_image['url'] ) ? (string) $client_image['url'] : '' );
         $image_alt = $image_alt ?: ( get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ?: '' );
+      } else {
+        $image_url = isset( $client_image['url'] ) ? (string) $client_image['url'] : '';
       }
     } elseif ( is_numeric( $client_image ) ) {
       $image_id = (int) $client_image;
-      $image_url = wp_get_attachment_image_url( $image_id, 'large' ) ?: '';
+      $image_url = wp_get_attachment_image_url( $image_id, 'client_logo' ) ?: '';
       $image_alt = get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ?: '';
     } elseif ( is_string( $client_image ) ) {
       $image_url = trim( $client_image );
@@ -44,6 +46,7 @@ if ( have_rows( 'clients' ) ) {
       'title' => $client_title,
       'image_url' => $image_url,
       'image_alt' => $image_alt,
+      'link' => $client_link,
     );
   }
 }
@@ -77,14 +80,31 @@ $block_id = 'featured-clients-' . wp_unique_id();
   </div>
 
   <div id="<?php echo esc_attr( $block_id ); ?>" class="featured-clients-slider <?php echo esc_attr( avocado55_animation_class(2) ); ?>">
-    <?php foreach ( $render_clients as $client ) : ?>
+    <?php foreach ( $render_clients as $client ) :
+      $client_link = isset( $client['link'] ) ? (string) $client['link'] : '';
+    ?>
       <article class="px-3 text-center mx-6">
-        <img
-          src="<?php echo esc_url( $client['image_url'] ); ?>"
-          alt="<?php echo esc_attr( $client['image_alt'] ?: $client['title'] ); ?>"
-          loading="lazy"
-          class="h-24 w-auto object-contain mx-auto"
-        />
+        <?php if ( $client_link !== '' ) : ?>
+          <a
+            href="<?php echo esc_url( $client_link ); ?>"<?php echo avocado55_link_attrs( $client_link ); ?>
+            class="block"
+            aria-label="<?php echo esc_attr( $client['image_alt'] ?: $client['title'] ); ?>"
+          >
+            <img
+              src="<?php echo esc_url( $client['image_url'] ); ?>"
+              alt="<?php echo esc_attr( $client['image_alt'] ?: $client['title'] ); ?>"
+              loading="lazy"
+              class="h-24 w-auto object-contain mx-auto"
+            />
+          </a>
+        <?php else : ?>
+          <img
+            src="<?php echo esc_url( $client['image_url'] ); ?>"
+            alt="<?php echo esc_attr( $client['image_alt'] ?: $client['title'] ); ?>"
+            loading="lazy"
+            class="h-24 w-auto object-contain mx-auto"
+          />
+        <?php endif; ?>
       </article>
     <?php endforeach; ?>
   </div>

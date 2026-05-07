@@ -48,8 +48,16 @@ if ($feature_type == 'solid' && $background_color == 'light_green') {
         <iframe src="https://www.youtube.com/embed/<?php echo $regs[0]; ?>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="absolute inset-0 -z-10 w-auto min-w-full min-h-full max-w-none object-cover object-right md:object-center"></iframe>
       <?php } ?>
     <?php } ?>
-  <?php } else if ($feature_type == 'image' && $image = get_sub_field('background_image')) { ?>
-    <img src="<?php echo $image['url']; ?>" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover object-right md:object-center">
+  <?php } else if ($feature_type == 'image' && $image = get_sub_field('background_image')) {
+    $bg_alt = is_array($image) && !empty($image['alt']) ? (string) $image['alt'] : '';
+    $bg_url = avocado55_acf_image_url($image, 'hero_background', is_array($image) ? ($image['url'] ?? '') : '');
+  ?>
+    <img
+      src="<?php echo esc_url($bg_url); ?>"
+      alt="<?php echo esc_attr($bg_alt); ?>"
+      <?php if ($bg_alt === '') : ?>aria-hidden="true"<?php endif; ?>
+      class="absolute inset-0 -z-10 h-full w-full object-cover object-right md:object-center"
+    >
   <?php } ?>
 
   <div class="relative z-2 mx-auto max-w-7xl px-6 lg:px-8">

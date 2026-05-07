@@ -7,6 +7,7 @@
  * 
  * Expected $args:
  * - background_image (string): URL of the background image
+ * - background_alt (string, optional): Alt text for the background image; empty = decorative
  * - badge (string, optional): Badge text (e.g., "Featured")
  * - subtitle (string, optional): Small text above the title
  * - title (string): Main heading
@@ -15,6 +16,7 @@
  */
 
 $background_image = $args['background_image'] ?? '';
+$background_alt = (string) ($args['background_alt'] ?? '');
 $badge = $args['badge'] ?? '';
 $subtitle = $args['subtitle'] ?? '';
 $title = $args['title'] ?? '';
@@ -25,9 +27,10 @@ $link_text = $args['link_text'] ?? 'Read story';
 <div class="relative overflow-hidden bg-brand-green">
   <?php if ($background_image) : ?>
     <!-- Background Image with Overlay -->
-    <img 
-      src="<?php echo esc_url($background_image); ?>" 
-      alt="" 
+    <img
+      src="<?php echo esc_url($background_image); ?>"
+      alt="<?php echo esc_attr($background_alt); ?>"
+      <?php if ($background_alt === '') : ?>aria-hidden="true"<?php endif; ?>
       class="absolute inset-0 h-full w-full object-cover object-center"
     >
     <div class="absolute inset-0 bg-[#416257]/60"></div>

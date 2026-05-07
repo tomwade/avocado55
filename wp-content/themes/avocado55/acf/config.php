@@ -97,15 +97,24 @@ class ACF_Config {
 							'preview_size' => 'medium',
 							'library' => 'all',
 						),
-						array(
-							'key' => 'field_avocado55_featured_client_title',
-							'label' => 'Title',
-							'name' => 'title',
-							'type' => 'text',
-							'required' => 1,
-						),
+					array(
+						'key' => 'field_avocado55_featured_client_title',
+						'label' => 'Title',
+						'name' => 'title',
+						'type' => 'text',
+						'required' => 1,
+					),
+					array(
+						'key' => 'field_avocado55_featured_client_link',
+						'label' => 'Link (Optional)',
+						'name' => 'link',
+						'type' => 'url',
+						'instructions' => 'Optional URL to wrap this client logo. Internal links open in the same tab; external links open in a new tab.',
+						'required' => 0,
+						'placeholder' => 'https://example.com',
 					),
 				),
+			),
 			),
 		);
 
