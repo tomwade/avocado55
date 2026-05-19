@@ -110,16 +110,33 @@
     <div class="border-t border-gray-200">
       <div class="mx-auto max-w-7xl px-6 lg:px-8 py-6">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <p class="text-xs text-gray-500 uppercase tracking-wide">
-            &copy; Avocado55 <?php echo date('Y'); ?>, All rights reserved. Company number:
+          <?php
+          // Get our footer message
+          $footer_copyright_message = get_field( 'footer_copyright_message', 'option' );
+
+          // Get our contact email (if we want to display it)
+          $footer_show_contact_email = (bool) get_field( 'footer_show_contact_email', 'option' );
+          $footer_contact_email = $footer_show_contact_email ? trim( (string) get_field( 'contact_email', 'option' ) ) : '';
+
+          // Get our company number
+          $footer_company_number = get_field( 'footer_company_number', 'option' );
+          $footer_company_url = 'https://find-and-update.company-information.service.gov.uk/company/' . $footer_company_number;
+          ?>
+          <p class="text-xs text-gray-500 tracking-wide">
+            <span><?php echo wp_kses_post( $footer_copyright_message ); ?></span>
+            <?php if ( $footer_contact_email !== '' && is_email( $footer_contact_email ) ) : ?>
+              <span class="whitespace-nowrap"> &middot; e: <a href="<?php echo esc_url( 'mailto:' . $footer_contact_email ); ?>" class="hover:text-brand-green"><?php echo esc_html( $footer_contact_email ); ?></a></span>
+            <?php endif; ?>
+            <br />Company number:
             <a
-              href="https://find-and-update.company-information.service.gov.uk/company/SC632673"
+              href="<?php echo esc_url( $footer_company_url ); ?>"
               rel="nofollow noopener noreferrer"
               target="_blank"
               class="hover:text-brand-green"
             >
-              SC632673
+              <?php echo esc_html( $footer_company_number ); ?>
             </a>
+            </span>
           </p>
           <div class="flex items-center gap-6">
             <a href="/terms-and-conditions/" class="text-xs text-gray-500 hover:text-brand-green">Terms and Conditions</a>

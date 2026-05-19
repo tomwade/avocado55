@@ -217,8 +217,9 @@ class Avocado55 {
    * Replace partial core canonical behavior with a full-site implementation.
    */
   public function register_seo_hooks() {
-    remove_action( 'wp_head', 'rel_canonical' );
-    add_action( 'wp_head', array( $this, 'output_self_canonical_tag' ), 1 );
+    // @dev Yoast now does this automatically
+    // remove_action( 'wp_head', 'rel_canonical' );
+    // add_action( 'wp_head', array( $this, 'output_self_canonical_tag' ), 1 );
   }
 
   /**
@@ -240,29 +241,53 @@ class Avocado55 {
   /**
    * Print per-page custom head scripts (e.g. JSON-LD schema, analytics snippets).
    *
+   * Singular views read the per-post `custom_head_scripts` field; CPT archive
+   * roots read the matching `archive_custom_head_scripts_<post_type>` option
+   * field configured under Theme Options → Archive Scripts.
+   *
    * Output is intentionally raw so editors can drop in <script type="application/ld+json">…</script>;
    * the field is admin-only via the standard ACF capability model.
    */
   public function output_custom_head_scripts() {
-    if ( ! is_singular() ) {
-      return;
-    }
-
     if ( ! function_exists( 'get_field' ) ) {
       return;
     }
 
-    $post_id = get_queried_object_id();
-    if ( ! $post_id ) {
+    if ( is_singular() ) {
+      $post_id = get_queried_object_id();
+      if ( ! $post_id ) {
+        return;
+      }
+
+      $custom = get_field( 'custom_head_scripts', $post_id );
+      if ( is_string( $custom ) && trim( $custom ) !== '' ) {
+        echo "\n" . $custom . "\n";
+      }
       return;
     }
 
-    $custom = get_field( 'custom_head_scripts', $post_id );
-    if ( ! is_string( $custom ) || trim( $custom ) === '' ) {
+    if ( is_post_type_archive() ) {
+      $queried_object = get_queried_object();
+      $post_type = '';
+      if ( $queried_object instanceof WP_Post_Type ) {
+        $post_type = $queried_object->name;
+      } else {
+        $post_type = get_query_var( 'post_type' );
+        if ( is_array( $post_type ) ) {
+          $post_type = reset( $post_type );
+        }
+      }
+
+      if ( ! is_string( $post_type ) || $post_type === '' ) {
+        return;
+      }
+
+      $custom = get_field( 'archive_custom_head_scripts_' . $post_type, 'option' );
+      if ( is_string( $custom ) && trim( $custom ) !== '' ) {
+        echo "\n" . $custom . "\n";
+      }
       return;
     }
-
-    echo "\n" . $custom . "\n";
   }
 
 }

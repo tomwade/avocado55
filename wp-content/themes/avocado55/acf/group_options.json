@@ -382,6 +382,82 @@
             ]
         },
         {
+            "key": "field_options_footer_tab",
+            "label": "Footer",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "top",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_options_footer_copyright_message",
+            "label": "Copyright message",
+            "name": "footer_copyright_message",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Shown at the start of the footer legal line. You may use HTML entities (e.g. &copy; for the copyright symbol).",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "&copy; Avocado55",
+            "placeholder": "",
+            "maxlength": "",
+            "allow_in_bindings": 0
+        },
+        {
+            "key": "field_options_footer_show_contact_email",
+            "label": "Show email in footer",
+            "name": "footer_show_contact_email",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "When enabled, displays the address from Contact Details → Email.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 0,
+            "ui": 1,
+            "ui_on_text": "Yes",
+            "ui_off_text": "No",
+            "allow_in_bindings": 0
+        },
+        {
+            "key": "field_options_footer_company_number",
+            "label": "Company number",
+            "name": "footer_company_number",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Used as the link label and in the Companies House URL (e.g. SC632673).",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "SC632673",
+            "placeholder": "SC632673",
+            "maxlength": "",
+            "allow_in_bindings": 0
+        },
+        {
             "key": "field_options_services_dropdown_tab",
             "label": "Services Dropdown",
             "name": "",
@@ -496,7 +572,7 @@
     "instruction_placement": "label",
     "hide_on_screen": "",
     "active": true,
-    "description": "Theme-wide settings for social networks and featured content",
+    "description": "Theme-wide settings for social networks, footer, featured content, and contact details",
     "show_in_rest": 0,
-    "modified": 1738882800
+    "modified": 1777833600
 }

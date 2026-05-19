@@ -16,6 +16,10 @@ class ACF_Config {
 
 		// Inject custom layouts into the main flexible content field.
 		add_filter( 'acf/load_field/name=page_content', array( $this, 'add_page_content_layouts' ) );
+
+		// Dynamically add a "Archive Scripts" tab + per-CPT textarea fields to the
+		// Theme Options field group for each public custom post type with an archive.
+		add_action( 'acf/init', array( $this, 'add_archive_scripts_fields' ) );
 	}
 
 	public function my_acf_json_load_point( $paths ) {
@@ -119,6 +123,77 @@ class ACF_Config {
 		);
 
 		return $field;
+	}
+
+	/**
+	 * Return the public custom post types that expose an archive.
+	 *
+	 * Built-in post types (e.g. `post`) are skipped because the blog index is
+	 * driven by the page selected in Settings → Reading and uses the per-page
+	 * `custom_head_scripts` field instead.
+	 *
+	 * @return WP_Post_Type[] Keyed by post type slug.
+	 */
+	public static function get_archive_post_types() {
+		$post_types = get_post_types( array(
+			'public'   => true,
+			'_builtin' => false,
+		), 'objects' );
+
+		$archives = array();
+		foreach ( $post_types as $post_type ) {
+			if ( empty( $post_type->has_archive ) ) {
+				continue;
+			}
+			$archives[ $post_type->name ] = $post_type;
+		}
+
+		return $archives;
+	}
+
+	/**
+	 * Inject the "Archive Scripts" tab + a textarea per archive CPT into the
+	 * Theme Options field group. Runs on `acf/init` so CPTs registered on the
+	 * `init` action at priority 0 are already available.
+	 */
+	public function add_archive_scripts_fields() {
+		if ( ! function_exists( 'acf_add_local_field' ) ) {
+			return;
+		}
+
+		$archive_post_types = self::get_archive_post_types();
+		if ( empty( $archive_post_types ) ) {
+			return;
+		}
+
+		acf_add_local_field( array(
+			'key'        => 'field_options_archive_scripts_tab',
+			'label'      => 'Archive Scripts',
+			'name'       => '',
+			'type'       => 'tab',
+			'parent'     => 'group_options',
+			'placement'  => 'top',
+			'endpoint'   => 0,
+		) );
+
+		foreach ( $archive_post_types as $post_type => $object ) {
+			$plural = isset( $object->labels->name ) ? $object->labels->name : ucfirst( $post_type );
+
+			acf_add_local_field( array(
+				'key'          => 'field_options_archive_custom_head_scripts_' . $post_type,
+				'label'        => $plural . ' archive — Custom Head Scripts / Schema',
+				'name'         => 'archive_custom_head_scripts_' . $post_type,
+				'type'         => 'textarea',
+				'parent'       => 'group_options',
+				'instructions' => sprintf(
+					'Paste any HTML, <script> tags, or JSON-LD schema you want injected inside the <head> on the %s archive. Output is rendered as-is so only paste content you trust.',
+					esc_html( $plural )
+				),
+				'required'     => 0,
+				'rows'         => 8,
+				'new_lines'    => '',
+			) );
+		}
 	}
 
 }
