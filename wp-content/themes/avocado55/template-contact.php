@@ -157,7 +157,7 @@ $email = get_field('contact_email', 'option');
   </div>
 </section>
 
-<script>
+<script<?php avocado55_csp_nonce_attr(); ?>>
 document.addEventListener('DOMContentLoaded', function() {
   // Initialize Experts Carousel
   if (typeof jQuery !== 'undefined' && jQuery.fn.slick) {

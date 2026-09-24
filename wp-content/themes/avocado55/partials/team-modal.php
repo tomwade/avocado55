@@ -66,7 +66,7 @@
   </div>
 </div>
 
-<script>
+<script<?php avocado55_csp_nonce_attr(); ?>>
 (function() {
   // Only initialize once
   if (window.teamModalInitialized) return;

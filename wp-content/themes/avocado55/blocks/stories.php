@@ -67,7 +67,7 @@ $block_id = 'stories-' . uniqid();
       </div>
 
       <!-- Carousel Script -->
-      <script>
+      <script<?php avocado55_csp_nonce_attr(); ?>>
         (function() {
           const blockId = '<?php echo esc_js($block_id); ?>';
           const container = document.querySelector('[data-carousel="' + blockId + '"]');
