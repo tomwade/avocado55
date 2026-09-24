@@ -109,7 +109,7 @@ $block_id = 'featured-clients-' . wp_unique_id();
     <?php endforeach; ?>
   </div>
 
-  <script>
+  <script<?php avocado55_csp_nonce_attr(); ?>>
   document.addEventListener('DOMContentLoaded', function() {
     if (typeof jQuery === 'undefined' || !jQuery.fn.slick) {
       return;

@@ -152,7 +152,7 @@
   <?php wp_footer(); ?>
 
   <?php if (get_field('enable_animation', 'option')) : ?>
-  <script>
+  <script<?php avocado55_csp_nonce_attr(); ?>>
   document.addEventListener('DOMContentLoaded', function() {
     const animatedElements = document.querySelectorAll('.animate-on-scroll');
     

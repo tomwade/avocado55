@@ -107,7 +107,7 @@ if (!empty($selected_members) && is_array($selected_members)) {
   </div>
 </section>
 
-<script>
+<script<?php avocado55_csp_nonce_attr(); ?>>
 document.addEventListener('DOMContentLoaded', function() {
   // Initialize Slick Carousel
   if (typeof jQuery !== 'undefined' && jQuery.fn.slick) {

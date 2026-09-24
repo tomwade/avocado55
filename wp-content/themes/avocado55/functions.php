@@ -44,6 +44,11 @@ class Avocado55 {
     // Add core security headers at the app layer.
     add_filter('wp_headers', [$this, 'add_security_headers']);
 
+    // Content-Security-Policy: nonce every script tag so 'unsafe-inline' can be dropped from script-src.
+    add_filter('wp_script_attributes', [$this, 'add_script_nonce_attribute']);
+    add_filter('wp_inline_script_attributes', [$this, 'add_script_nonce_attribute']);
+    add_action('template_redirect', [$this, 'start_csp_output_buffer'], 0);
+
     // Ensure all public URLs output a self-referencing canonical tag.
     add_action('init', [$this, 'register_seo_hooks']);
 
@@ -210,7 +215,196 @@ class Avocado55 {
       $headers['Permissions-Policy'] = 'camera=(), microphone=(), geolocation=()';
     }
 
+    // Content-Security-Policy.
+    //
+    // AVOCADO55_CSP_MODE (wp-config.php) controls the rollout:
+    //   'enforce'     (default) enforce the strict nonce-based policy.
+    //   'report-only' enforce the legacy policy (script-src 'unsafe-inline') and send the strict
+    //                 policy as Content-Security-Policy-Report-Only so violations can be observed first.
+    //   'off'         send no CSP at all.
+    $mode = defined( 'AVOCADO55_CSP_MODE' ) ? AVOCADO55_CSP_MODE : 'enforce';
+
+    if ( $mode !== 'off' ) {
+      $report_uri = self::csp_report_uri();
+      if ( $report_uri ) {
+        $headers['Reporting-Endpoints'] = 'csp-endpoint="' . $report_uri . '"';
+      }
+
+      if ( $mode === 'report-only' ) {
+        $headers['Content-Security-Policy']             = self::build_csp( false );
+        $headers['Content-Security-Policy-Report-Only'] = self::build_csp( true, true );
+      } else {
+        $headers['Content-Security-Policy'] = self::build_csp( true );
+      }
+    }
+
     return $headers;
+  }
+
+  /**
+   * Per-request CSP nonce.
+   *
+   * Generated once per request and shared between the header and every script tag. Note that
+   * full-page caching (WP Engine) will serve the same nonce to every visitor for the lifetime of
+   * the cached copy; that is still a materially stronger position than 'unsafe-inline'.
+   *
+   * @return string
+   */
+  public static function csp_nonce() {
+    static $nonce = null;
+    if ( $nonce === null ) {
+      $nonce = base64_encode( random_bytes( 18 ) );
+    }
+    return $nonce;
+  }
+
+  /**
+   * Optional CSP violation reporting endpoint (AVOCADO55_CSP_REPORT_URI in wp-config.php).
+   *
+   * @return string Empty when reporting is not configured.
+   */
+  public static function csp_report_uri() {
+    $uri = defined( 'AVOCADO55_CSP_REPORT_URI' ) ? AVOCADO55_CSP_REPORT_URI : '';
+    $uri = apply_filters( 'avocado55_csp_report_uri', $uri );
+    return is_string( $uri ) ? esc_url_raw( trim( $uri ) ) : '';
+  }
+
+  /**
+   * CSP directives as directive => list of sources.
+   *
+   * The host allowlist mirrors what the site actually loads: Google Tag Manager / GA4, Calendly,
+   * slick-carousel from jsDelivr, Google Fonts, YouTube embeds and Gravatar. Anything new that the
+   * site needs to load must be added here (or via the avocado55_csp_directives filter) or the
+   * browser will block it.
+   *
+   * Google Signals (GA4 advertising features) is deliberately NOT allowed. If it is turned on in
+   * the GA4 property, gtag will try https://stats.g.doubleclick.net (connect-src) and
+   * https://www.google.<tld>/ads/ga-audiences (img-src) and be blocked. Either keep Signals off
+   * or add those hosts through the filter.
+   *
+   * @param bool $strict      True for the nonce-based policy, false for the legacy 'unsafe-inline' policy.
+   * @param bool $report_only True when the policy will be sent as Content-Security-Policy-Report-Only.
+   * @return array
+   */
+  public static function csp_directives( $strict = true, $report_only = false ) {
+    $script_src = [ "'report-sample'", "'self'" ];
+    if ( $strict ) {
+      // With a nonce present browsers ignore 'unsafe-inline'; 'strict-dynamic' lets nonced scripts
+      // (e.g. the GTM snippet) load further scripts without a host allowlist. The hosts below remain
+      // as a fallback for browsers without CSP3 support.
+      $script_src[] = "'nonce-" . self::csp_nonce() . "'";
+      $script_src[] = "'strict-dynamic'";
+    } else {
+      $script_src[] = "'unsafe-inline'";
+    }
+    $script_src = array_merge( $script_src, [
+      'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js',
+      'https://www.googletagmanager.com',
+      'https://assets.calendly.com',
+    ] );
+
+    $directives = [
+      'default-src'     => [ "'self'" ],
+      'script-src'      => $script_src,
+      // Inline style attributes are pervasive in WordPress/plugin output; nonces cannot cover
+      // style="" attributes, so 'unsafe-inline' is retained for styles by design (low risk).
+      'style-src'       => [ "'report-sample'", "'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net', 'https://fonts.googleapis.com', 'https://assets.calendly.com' ],
+      'object-src'      => [ "'none'" ],
+      'base-uri'        => [ "'self'" ],
+      'form-action'     => [ "'self'" ],
+      'frame-ancestors' => [ "'self'" ],
+      'connect-src'     => [ "'self'", 'https://www.googletagmanager.com', 'https://*.google-analytics.com', 'https://*.analytics.google.com', 'https://calendly.com' ],
+      'font-src'        => [ "'self'", 'data:', 'https://cdn.jsdelivr.net', 'https://fonts.gstatic.com' ],
+      'frame-src'       => [ "'self'", 'https://www.youtube.com', 'https://calendly.com' ],
+      'img-src'         => [ "'self'", 'data:', 'blob:', 'https://cdn.jsdelivr.net', 'https://www.googletagmanager.com', 'https://*.google-analytics.com', 'https://assets.calendly.com', 'https://calendly.com', 'https://secure.gravatar.com' ],
+      'manifest-src'    => [ "'self'" ],
+      'media-src'       => [ "'self'" ],
+      'worker-src'      => [ "'none'" ],
+    ];
+
+    // Browsers ignore (and warn about) this directive in a report-only policy.
+    if ( ! $report_only ) {
+      $directives['upgrade-insecure-requests'] = [];
+    }
+
+    $report_uri = self::csp_report_uri();
+    if ( $report_uri ) {
+      $directives['report-to']  = [ 'csp-endpoint' ];
+      $directives['report-uri'] = [ $report_uri ]; // Legacy fallback for browsers without Reporting API.
+    }
+
+    return apply_filters( 'avocado55_csp_directives', $directives, $strict, $report_only );
+  }
+
+  /**
+   * Serialise the directives into a header value.
+   *
+   * @param bool $strict      See csp_directives().
+   * @param bool $report_only See csp_directives().
+   * @return string
+   */
+  public static function build_csp( $strict = true, $report_only = false ) {
+    $parts = [];
+    foreach ( self::csp_directives( $strict, $report_only ) as $directive => $sources ) {
+      $sources = array_values( array_unique( array_filter( (array) $sources ) ) );
+      $parts[] = trim( $directive . ' ' . implode( ' ', $sources ) );
+    }
+    return implode( '; ', $parts );
+  }
+
+  /**
+   * Add the nonce to scripts WordPress prints via wp_get_script_tag() / wp_get_inline_script_tag().
+   *
+   * @param array $attributes
+   * @return array
+   */
+  public function add_script_nonce_attribute( $attributes ) {
+    if ( is_array( $attributes ) && ! isset( $attributes['nonce'] ) ) {
+      $attributes['nonce'] = self::csp_nonce();
+    }
+    return $attributes;
+  }
+
+  /**
+   * Buffer front-end HTML so script tags that bypass the WordPress script API (plugins echoing raw
+   * <script> tags, admin-pasted head snippets) still receive the nonce.
+   *
+   * Trade-off: a <script> tag already present in the server-rendered HTML is trusted by this pass,
+   * so the policy guards against runtime injection (inline event handlers, javascript: URLs, eval,
+   * DOM-inserted scripts) rather than against a script tag stored in post content.
+   */
+  public function start_csp_output_buffer() {
+    if ( is_admin() || is_feed() || is_robots() || wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+      return;
+    }
+    $mode = defined( 'AVOCADO55_CSP_MODE' ) ? AVOCADO55_CSP_MODE : 'enforce';
+    if ( $mode === 'off' ) {
+      return;
+    }
+    ob_start( [ $this, 'stamp_script_nonces' ] );
+  }
+
+  /**
+   * Add nonce="" to every <script> opening tag that does not already carry one.
+   *
+   * @param string $html
+   * @return string
+   */
+  public function stamp_script_nonces( $html ) {
+    if ( ! is_string( $html ) || stripos( $html, '<script' ) === false ) {
+      return $html;
+    }
+    $nonce = esc_attr( self::csp_nonce() );
+    return preg_replace_callback(
+      '/<script\b([^>]*)>/i',
+      function ( $m ) use ( $nonce ) {
+        if ( preg_match( '/\snonce\s*=/i', $m[1] ) ) {
+          return $m[0];
+        }
+        return '<script nonce="' . $nonce . '"' . $m[1] . '>';
+      },
+      $html
+    );
   }
 
   /**
@@ -261,7 +455,7 @@ class Avocado55 {
 
       $custom = get_field( 'custom_head_scripts', $post_id );
       if ( is_string( $custom ) && trim( $custom ) !== '' ) {
-        echo "\n" . $custom . "\n";
+        echo "\n" . $this->stamp_script_nonces( $custom ) . "\n";
       }
       return;
     }
@@ -284,7 +478,7 @@ class Avocado55 {
 
       $custom = get_field( 'archive_custom_head_scripts_' . $post_type, 'option' );
       if ( is_string( $custom ) && trim( $custom ) !== '' ) {
-        echo "\n" . $custom . "\n";
+        echo "\n" . $this->stamp_script_nonces( $custom ) . "\n";
       }
       return;
     }
@@ -675,6 +869,15 @@ function avocado55_avatar_url_from_team_member( $url, $id_or_email, $args ) {
   return $thumb ? $thumb : $url;
 }
 add_filter( 'get_avatar_url', 'avocado55_avatar_url_from_team_member', 10, 3 );
+
+/**
+ * Echo the CSP nonce attribute for a hand-written <script> tag in a template.
+ *
+ * Usage: <script<?php avocado55_csp_nonce_attr(); ?>>
+ */
+function avocado55_csp_nonce_attr() {
+  echo ' nonce="' . esc_attr( Avocado55::csp_nonce() ) . '"';
+}
 
 /**
  * Get linked team member ID for a WordPress user.
