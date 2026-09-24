@@ -120,19 +120,22 @@ class Avocado55 {
     # Set our version
     $ver = wp_get_theme()->get( 'Version' );
 
+    # Self-hosted web fonts (Geist + Raleway). Loaded first so the @font-face rules precede any use.
+    wp_enqueue_style( 'avocado55-fonts', get_template_directory_uri() . '/assets/css/fonts.css', [], $ver );
+
     # Include styles
-    wp_enqueue_style( 'avocado55-app', get_template_directory_uri() . '/assets/css/output.css', [], $ver );
+    wp_enqueue_style( 'avocado55-app', get_template_directory_uri() . '/assets/css/output.css', ['avocado55-fonts'], $ver );
     wp_enqueue_style( 'avocado55-styles', get_template_directory_uri() . '/style.css', [], $ver );
-    
-    # Slick Carousel (CDN)
-    wp_enqueue_style( 'slick-carousel', 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css', [], '1.8.1' );
-    wp_enqueue_style( 'slick-carousel-theme', 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css', ['slick-carousel'], '1.8.1' );
+
+    # Slick Carousel 1.8.1 (vendored in assets/vendor/slick; previously loaded from cdn.jsdelivr.net)
+    wp_enqueue_style( 'slick-carousel', get_template_directory_uri() . '/assets/vendor/slick/slick.css', [], '1.8.1' );
+    wp_enqueue_style( 'slick-carousel-theme', get_template_directory_uri() . '/assets/vendor/slick/slick-theme.css', ['slick-carousel'], '1.8.1' );
 
     # Enqueue jQuery (required for Slick)
     wp_enqueue_script( 'jquery' );
-    
+
     # Slick Carousel JS
-    wp_enqueue_script( 'slick-carousel', 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js', ['jquery'], '1.8.1', true );
+    wp_enqueue_script( 'slick-carousel', get_template_directory_uri() . '/assets/vendor/slick/slick.min.js', ['jquery'], '1.8.1', true );
 
     # Add our scripts
     wp_enqueue_script( 'avocado55-app', get_template_directory_uri() . '/assets/js/app.js', ['jquery'], $ver, true);
@@ -273,7 +276,7 @@ class Avocado55 {
    * CSP directives as directive => list of sources.
    *
    * The host allowlist mirrors what the site actually loads: Google Tag Manager / GA4, Calendly,
-   * slick-carousel from jsDelivr, Google Fonts, YouTube embeds and Gravatar. Anything new that the
+   * YouTube embeds and Gravatar. Fonts and slick-carousel are self-hosted. Anything new that the
    * site needs to load must be added here (or via the avocado55_csp_directives filter) or the
    * browser will block it.
    *
@@ -298,7 +301,6 @@ class Avocado55 {
       $script_src[] = "'unsafe-inline'";
     }
     $script_src = array_merge( $script_src, [
-      'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js',
       'https://www.googletagmanager.com',
       'https://assets.calendly.com',
     ] );
@@ -308,15 +310,15 @@ class Avocado55 {
       'script-src'      => $script_src,
       // Inline style attributes are pervasive in WordPress/plugin output; nonces cannot cover
       // style="" attributes, so 'unsafe-inline' is retained for styles by design (low risk).
-      'style-src'       => [ "'report-sample'", "'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net', 'https://fonts.googleapis.com', 'https://assets.calendly.com' ],
+      'style-src'       => [ "'report-sample'", "'self'", "'unsafe-inline'", 'https://assets.calendly.com' ],
       'object-src'      => [ "'none'" ],
       'base-uri'        => [ "'self'" ],
       'form-action'     => [ "'self'" ],
       'frame-ancestors' => [ "'self'" ],
       'connect-src'     => [ "'self'", 'https://www.googletagmanager.com', 'https://*.google-analytics.com', 'https://*.analytics.google.com', 'https://calendly.com' ],
-      'font-src'        => [ "'self'", 'data:', 'https://cdn.jsdelivr.net', 'https://fonts.gstatic.com' ],
+      'font-src'        => [ "'self'", 'data:' ],
       'frame-src'       => [ "'self'", 'https://www.youtube.com', 'https://calendly.com' ],
-      'img-src'         => [ "'self'", 'data:', 'blob:', 'https://cdn.jsdelivr.net', 'https://www.googletagmanager.com', 'https://*.google-analytics.com', 'https://assets.calendly.com', 'https://calendly.com', 'https://secure.gravatar.com' ],
+      'img-src'         => [ "'self'", 'data:', 'blob:', 'https://www.googletagmanager.com', 'https://*.google-analytics.com', 'https://assets.calendly.com', 'https://calendly.com', 'https://secure.gravatar.com' ],
       'manifest-src'    => [ "'self'" ],
       'media-src'       => [ "'self'" ],
       'worker-src'      => [ "'none'" ],
